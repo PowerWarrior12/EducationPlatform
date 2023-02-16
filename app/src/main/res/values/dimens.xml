@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    //Text size
+    <dimen name="header_first">48sp</dimen>
+    <dimen name="header_second">36sp</dimen>
+    <dimen name="header_third">24sp</dimen>
+
+    <dimen name="body_first">40sp</dimen>
+    <dimen name="body_second">12sp</dimen>
+    <dimen name="body_third">10sp</dimen>
+    //Margins
+    <dimen name="edit_text_margin">32dp</dimen>
+</resources>

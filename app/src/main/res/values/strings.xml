@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">EducationPlatform</string>
+    //Registration block
+    <string name="login_label">Login</string>
+    <string name="registration_label">Registration</string>
+    <string name="email_label">e-mail</string>
+    <string name="password_label">password</string>
 </resources>

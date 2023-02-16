@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="TextAppearance.EducationPlatform.V24.Header" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="android:textSize">@dimen/header_first</item>
+        <item name="fontFamily">@font/mariupol_bold</item>
+    </style>
+
+    <style name="TextAppearance.EducationPlatform.Header" parent="TextAppearance.EducationPlatform.V24.Header"/>
+
+    <style name="TextAppearance.EducationPlatform.V24.BodyFirst" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="android:textSize">@dimen/body_first</item>
+        <item name="fontFamily">@font/mariupol_regular</item>
+    </style>
+
+    <style name="TextAppearance.EducationPlatform.BodyFirst" parent="TextAppearance.EducationPlatform.V24.BodyFirst"/>
+</resources>

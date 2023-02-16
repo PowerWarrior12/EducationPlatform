@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Widget.EducationPlatform.V24.HeaderFirstTextView" parent="Widget.AppCompat.TextView">
+        <item name="android:textAppearance">@style/TextAppearance.EducationPlatform.Header</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
+    </style>
+
+    <style name="Widget.EducationPlatform.HeaderFirstTextView" parent="Widget.EducationPlatform.V24.HeaderFirstTextView"/>
+
+    <style name="Widget.EducationPlatform.V24.EditTextView" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="android:textAppearance">@style/TextAppearance.EducationPlatform.BodyFirst</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_marginStart">@dimen/edit_text_margin</item>
+        <item name="android:layout_marginEnd">@dimen/edit_text_margin</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
+    </style>
+
+    <style name="Widget.EducationPlatform.EditTextView" parent="Widget.EducationPlatform.V24.EditTextView"/>
+
+</resources>
