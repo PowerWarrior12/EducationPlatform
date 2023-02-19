@@ -8,3 +8,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "EducationPlatform"
 include ':app'
+include ':app:educationtools'
