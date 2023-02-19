@@ -6,8 +6,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
-        android:id="@+id/textView"
         style="@style/Widget.EducationPlatform.HeaderFirstTextView"
+        android:id="@+id/textView"
         android:layout_marginTop="32dp"
         android:text="@string/login_label"
         app:layout_constraintEnd_toEndOf="parent"
@@ -22,22 +22,24 @@
         app:layout_constraintGuide_percent="0.4" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/login_text"
         style="@style/Widget.EducationPlatform.EditTextView"
+        android:id="@+id/login_text"
         android:hint="@string/email_label"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_login_text"
+            android:textAppearance="@style/TextAppearance.EducationPlatform.BodyFirst"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/password_text"
         style="@style/Widget.EducationPlatform.EditTextView"
+        android:id="@+id/password_text"
         android:layout_marginTop="32dp"
         android:hint="@string/password_label"
         app:layout_constraintEnd_toEndOf="parent"
@@ -45,24 +47,24 @@
         app:layout_constraintTop_toBottomOf="@+id/login_text">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_password_text"
+            android:textAppearance="@style/TextAppearance.EducationPlatform.BodyFirst"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
+        style="@style/Widget.EducationPlatform.PrimaryButton"
         android:id="@+id/login_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:text="@string/login_label"
         app:layout_constraintStart_toStartOf="@+id/password_text"
         app:layout_constraintTop_toBottomOf="@+id/password_text" />
 
     <Button
+        style="@style/Widget.EducationPlatform.SecondaryButton"
         android:id="@+id/registration_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:text="@string/registration_label"
         app:layout_constraintEnd_toEndOf="@+id/password_text"

@@ -1,8 +1,12 @@
 <resources>
     <string name="app_name">EducationPlatform</string>
-    //Registration block
+    //Registration and Login block
     <string name="login_label">Login</string>
     <string name="registration_label">Registration</string>
     <string name="email_label">e-mail</string>
     <string name="password_label">password</string>
+    <string name="name_label">name</string>
+    <string name="second_name_label">second name</string>
+    <string name="reply_password_label">reply password</string>
+    <string name="confirm_label">Confirm</string>
 </resources>

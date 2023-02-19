@@ -7,7 +7,12 @@
         <item name="android:textColor">?attr/colorPrimary</item>
     </style>
 
-    <style name="Widget.EducationPlatform.HeaderFirstTextView" parent="Widget.EducationPlatform.V24.HeaderFirstTextView"/>
+    <style name="Widget.EducationPlatform.V24.HeaderSecondTextView" parent="Widget.AppCompat.TextView">
+        <item name="android:textAppearance">@style/TextAppearance.EducationPlatform.HeaderSecond</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
+    </style>
 
     <style name="Widget.EducationPlatform.V24.EditTextView" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="android:textAppearance">@style/TextAppearance.EducationPlatform.BodyFirst</item>
@@ -18,6 +23,50 @@
         <item name="android:textColor">?attr/colorPrimary</item>
     </style>
 
+    <style name="Widget.EducationPlatform.V24.PrimaryButton" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textAppearance">@style/TextAppearance.EducationPlatform.ButtonText</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="backgroundTint">?attr/colorPrimary</item>
+        <item name="rippleColor">?attr/colorPrimaryVariant</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.Material3.Corner.ExtraSmall</item>
+        <item name="android:elevation">@dimen/primary_elevation</item>
+        <item name="android:paddingStart">@dimen/button_padding_horizontal</item>
+        <item name="android:paddingEnd">@dimen/button_padding_horizontal</item>
+    </style>
+
+    <style name="Widget.EducationPlatform.V24.SecondaryButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:textAppearance">@style/TextAppearance.EducationPlatform.ButtonText</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="backgroundTint">?attr/colorOnPrimary</item>
+        <item name="strokeColor">?attr/colorPrimary</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.Material3.Corner.ExtraSmall</item>
+        <item name="android:elevation">@dimen/primary_elevation</item>
+        <item name="android:paddingStart">@dimen/button_padding_horizontal</item>
+        <item name="android:paddingEnd">@dimen/button_padding_horizontal</item>
+        <item name="strokeWidth">@dimen/primary_button_border</item>
+    </style>
+
+    <style name="Widget.EducationPlatform.V24.IconButton" parent="Widget.Material3.Button.IconButton">
+        <item name="android:layout_height">@dimen/icon_size</item>
+        <item name="android:layout_width">@dimen/icon_size</item>
+        <item name="android:foreground">@drawable/menu_item_ripple</item>
+        <item name="tint">?attr/colorPrimary</item>
+    </style>
+
     <style name="Widget.EducationPlatform.EditTextView" parent="Widget.EducationPlatform.V24.EditTextView"/>
+
+    <style name="Widget.EducationPlatform.HeaderFirstTextView" parent="Widget.EducationPlatform.V24.HeaderFirstTextView"/>
+
+    <style name="Widget.EducationPlatform.HeaderSecondTextView" parent="Widget.EducationPlatform.V24.HeaderSecondTextView"/>
+
+    <style name="Widget.EducationPlatform.PrimaryButton" parent="Widget.EducationPlatform.V24.PrimaryButton"/>
+
+    <style name="Widget.EducationPlatform.SecondaryButton" parent="Widget.EducationPlatform.V24.SecondaryButton"/>
+
+    <style name="Widget.EducationPlatform.IconButton" parent="Widget.EducationPlatform.V24.IconButton"/>
 
 </resources>
