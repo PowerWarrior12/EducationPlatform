@@ -3,9 +3,8 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        jcenter() // Warning: this repository is going to shut down soon
     }
 }
 rootProject.name = "EducationPlatform"
 include ':app'
-include ':app:educationtools'
+include ':educationtools'
