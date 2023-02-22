@@ -1,5 +1,7 @@
 package com.example.educationtools.base
 
+import android.animation.PointFEvaluator
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
@@ -8,8 +10,12 @@ import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.View
+import android.view.animation.AccelerateInterpolator
 import androidx.core.graphics.withScale
 import androidx.core.graphics.withTranslation
+
+const val SCROLL_VELOCITY_FACTOR = 0.005f
+const val FLING_DURATION = 100L
 
 class EditorViewBase @JvmOverloads constructor(
     context: Context,
@@ -21,9 +27,6 @@ class EditorViewBase @JvmOverloads constructor(
     private val transformations = Transformations()
     private val scaleGestureDetector = ScaleGestureDetector(context, ScaleListener())
     private val gestureDetector = GestureDetector(context, ScrollListener())
-
-    //Данные о тачах
-    private val touchData = TouchData()
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val width = MeasureSpec.getSize(widthMeasureSpec)
@@ -106,7 +109,7 @@ class EditorViewBase @JvmOverloads constructor(
         }
     }
 
-    private inner class ScrollListener: GestureDetector.SimpleOnGestureListener() {
+    private inner class ScrollListener : GestureDetector.SimpleOnGestureListener() {
 
         override fun onDown(e: MotionEvent): Boolean {
             return true
@@ -118,8 +121,11 @@ class EditorViewBase @JvmOverloads constructor(
             velocityX: Float,
             velocityY: Float
         ): Boolean {
-            Log.d("ScrollListener", "xVelocity = $velocityX yVelocity = $velocityY")
-            return super.onFling(e1, e2, velocityX, velocityY)
+            animateFling(PointF(-velocityX * SCROLL_VELOCITY_FACTOR, -velocityY * SCROLL_VELOCITY_FACTOR)) { dXY ->
+                transformations.addTranslation(dXY.x, dXY.y)
+            }
+            Log.d("EditorViewBase", "velocityX: $velocityX, velocityY: $velocityY")
+            return true
         }
 
         override fun onScroll(
@@ -133,6 +139,17 @@ class EditorViewBase @JvmOverloads constructor(
                 distanceY
             )
             return true
+        }
+
+        private fun animateFling(velocity: PointF, update: (PointF) -> Unit) {
+            ValueAnimator.ofObject(PointFEvaluator(), velocity, PointF()).apply {
+                interpolator = AccelerateInterpolator()
+                duration = FLING_DURATION
+                addUpdateListener { animator ->
+                    update(animator.animatedValue as PointF)
+                    Log.d("EditorViewBase", "new value: ${animator.animatedValue}")
+                }
+            }.start()
         }
     }
 }
