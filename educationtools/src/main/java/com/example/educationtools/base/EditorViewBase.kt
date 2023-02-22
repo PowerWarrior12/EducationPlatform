@@ -28,6 +28,9 @@ class EditorViewBase @JvmOverloads constructor(
     private val scaleGestureDetector = ScaleGestureDetector(context, ScaleListener())
     private val gestureDetector = GestureDetector(context, ScrollListener())
 
+    //Дочерние блоки
+    private val children: MutableList<EditableBlock> = mutableListOf()
+
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val width = MeasureSpec.getSize(widthMeasureSpec)
         val height = MeasureSpec.getSize(heightMeasureSpec)
@@ -47,17 +50,9 @@ class EditorViewBase @JvmOverloads constructor(
                     x = transformations.translation.x,
                     y = transformations.translation.y
                 ) {
-                    drawRect(Rect(10, 10, 300, 200), Paint().apply {
-                        isAntiAlias = true
-                        style = Paint.Style.FILL
-                        color = Color.RED
-                    })
-
-                    drawRect(Rect(30, 250, 330, 450), Paint().apply {
-                        isAntiAlias = true
-                        style = Paint.Style.FILL
-                        color = Color.RED
-                    })
+                    children.forEach {
+                        it.draw(this)
+                    }
                 }
             }
         }
@@ -68,6 +63,11 @@ class EditorViewBase @JvmOverloads constructor(
         event ?: return false
 
         return processTouch(event)
+    }
+
+    fun addChild(child: EditableBlock) {
+        children.add(child)
+        invalidate()
     }
 
     /**
