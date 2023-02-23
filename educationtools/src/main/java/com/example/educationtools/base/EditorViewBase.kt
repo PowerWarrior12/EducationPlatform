@@ -13,6 +13,7 @@ import android.view.View
 import android.view.animation.AccelerateInterpolator
 import androidx.core.graphics.withScale
 import androidx.core.graphics.withTranslation
+import com.example.educationtools.control.SelectManager
 
 const val SCROLL_VELOCITY_FACTOR = 0.005f
 const val FLING_DURATION = 100L
@@ -30,6 +31,8 @@ class EditorViewBase @JvmOverloads constructor(
 
     //Дочерние блоки
     private val children: MutableList<EditableBlock> = mutableListOf()
+
+    private val selectorManager = SelectManager(children.toMutableList())
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val width = MeasureSpec.getSize(widthMeasureSpec)
@@ -68,6 +71,7 @@ class EditorViewBase @JvmOverloads constructor(
     fun addChild(child: EditableBlock) {
         children.add(child)
         child.setEditorParent(this)
+        selectorManager.addEditable(child)
         invalidate()
     }
 
@@ -113,6 +117,11 @@ class EditorViewBase @JvmOverloads constructor(
     private inner class ScrollListener : GestureDetector.SimpleOnGestureListener() {
 
         override fun onDown(e: MotionEvent): Boolean {
+            return true
+        }
+
+        override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
+            selectorManager.onSingleTap(PointF(e.x - transformations.translation.x, e.y - transformations.translation.y))
             return true
         }
 

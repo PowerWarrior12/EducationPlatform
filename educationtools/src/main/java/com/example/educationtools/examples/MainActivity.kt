@@ -31,5 +31,12 @@ class MainActivity : AppCompatActivity() {
             updatePosition(PointF(500f, 500f))
             updateSize(500f, 200f)
         }
+
+        val block2 = NotifyBlock()
+        editor.addChild(block2)
+        block2.apply {
+            updatePosition(PointF(500f, 800f))
+            updateSize(500f, 200f)
+        }
     }
 }

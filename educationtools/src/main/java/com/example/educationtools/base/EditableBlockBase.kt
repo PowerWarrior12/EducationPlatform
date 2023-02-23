@@ -1,38 +1,41 @@
 package com.example.educationtools.base
 
 import android.graphics.*
+import android.text.Layout
 import android.text.TextPaint
 import android.util.Log
-import com.example.educationtools.utils.drawMultilineText
+import com.example.educationtools.control.SimpleSelector
+import com.example.educationtools.utils.drawBlockText
 
 const val defaultCenterX = 0f
 const val defaultCenterY = 0f
 const val textMargin = 10f
 const val NOT_PARENT_MESSAGE = "Missing a editor parent"
 val TAG = EditableBlockBase::class.simpleName
+
 /**
  * @property V - Текущий класс, построить который необходимо создать
  * @property T - Конфигурации, на основе которых необходимо создать блок
  */
-abstract class EditableBlockBase protected constructor(): EditableBlock{
+abstract class EditableBlockBase protected constructor() : EditableBlock {
     //Sizes
-    val center: PointF = PointF(defaultCenterX, defaultCenterY)
-    var width = 0f
+    private val center: PointF = PointF(defaultCenterX, defaultCenterY)
+    private var width = 0f
         private set
-    var height = 0f
+    private var height = 0f
         private set
 
     //Text
-    var text: String = "МОЯ ВОЛЯ МОЯ ВОЛЯ МОЯ ВОЛЯ МОЯ ВОЛЯ МОЯ ВОЛЯ МОЯ ВОЛЯ МОЯ ВОЛЯ МОЯ ВОЛЯ МОЯ ВОЛЯ МОЯ ВОЛЯ"
-        private set
+    private var text: String =
+        "Какой то текст"
 
-    private var selector: Selector? = null
+    private var selector: Selector = SimpleSelector()
 
     private var parentEditor: ParentEditor? = null
 
     //Rects
     protected val mainRect: RectF
-    protected val textRect: RectF
+    private val textRect: RectF
 
     //Paints
 
@@ -58,12 +61,14 @@ abstract class EditableBlockBase protected constructor(): EditableBlock{
             mainRect.right - textMargin,
             mainRect.bottom - textMargin
         )
+        selector.setEditableBlock(this)
     }
 
     override fun draw(canvas: Canvas) {
         canvas.apply {
             drawFigure(this)
             drawText(this)
+            selector.drawSelection(this)
         }
     }
 
@@ -85,7 +90,7 @@ abstract class EditableBlockBase protected constructor(): EditableBlock{
         invalidate()
     }
 
-    override fun getSelector(): Selector? {
+    override fun getSelector(): Selector {
         return selector
     }
 
@@ -94,7 +99,7 @@ abstract class EditableBlockBase protected constructor(): EditableBlock{
     }
 
     /**
-     * Перерисовывает экран, необходимо обязательно инициализировать _parentEditor
+     * Перерисовывает экран, необходимо обязательно инициализировать parentEditor
      */
     override fun invalidate() {
         parentEditor?.invalidate() ?: Log.w(TAG, NOT_PARENT_MESSAGE)
@@ -102,6 +107,22 @@ abstract class EditableBlockBase protected constructor(): EditableBlock{
 
     override fun setText(newText: String) {
         text = newText
+    }
+
+    override fun getCenter(): PointF {
+        return center
+    }
+
+    override fun getHeight(): Float {
+        return height
+    }
+
+    override fun getText(): String {
+        return text
+    }
+
+    override fun getWidth(): Float {
+        return width
     }
 
     private fun updateMainRect() {
@@ -113,7 +134,7 @@ abstract class EditableBlockBase protected constructor(): EditableBlock{
         }
     }
 
-    private fun updateTextRect() {
+    open fun updateTextRect() {
         textRect.apply {
             left = mainRect.left + textMargin
             top = mainRect.top + textMargin
@@ -125,12 +146,18 @@ abstract class EditableBlockBase protected constructor(): EditableBlock{
     abstract fun drawFigure(canvas: Canvas)
     open fun drawText(canvas: Canvas) {
         canvas.apply {
-            drawMultilineText(text, textPaint, textRect.width().toInt(), textRect.left, textRect.centerY())
+            drawBlockText(
+                text,
+                textPaint,
+                textRect.width().toInt(),
+                textRect,
+                horizontalAlignment = Layout.Alignment.ALIGN_CENTER,
+                verticalAlignment = Layout.Alignment.ALIGN_CENTER
+            )
         }
     }
-
-
 }
+
 interface EditableBlockFactory<V : EditableBlock> {
     fun create(): EditableBlock
 }

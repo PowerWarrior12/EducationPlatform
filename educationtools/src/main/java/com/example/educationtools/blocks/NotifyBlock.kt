@@ -25,7 +25,9 @@ class NotifyBlock(): EditableBlockBase() {
     }
 
     override fun checkPointConsists(point: PointF): Boolean {
-        return false
+        if (mainRect.contains(point.x, point.y)) {
+            return true
+        } else return false
     }
 
 
