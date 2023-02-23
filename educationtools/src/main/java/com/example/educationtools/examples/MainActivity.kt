@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.example.educationtools.R
 import com.example.educationtools.base.EditableBlockBase
 import com.example.educationtools.base.EditorViewBase
+import com.example.educationtools.blocks.NotifyBlock
 import org.w3c.dom.Text
 
 class MainActivity : AppCompatActivity() {
@@ -22,5 +23,13 @@ class MainActivity : AppCompatActivity() {
         val button = findViewById<Button>(R.id.button)
         val textOne = findViewById<EditText>(R.id.textView)
         val textTwo = findViewById<EditText>(R.id.textView2)
+
+        val editor = findViewById<EditorViewBase>(R.id.editor)
+        val block = NotifyBlock()
+        editor.addChild(block)
+        block.apply {
+            updatePosition(PointF(500f, 500f))
+            updateSize(500f, 200f)
+        }
     }
 }

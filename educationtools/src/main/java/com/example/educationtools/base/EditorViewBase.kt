@@ -21,7 +21,7 @@ class EditorViewBase @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : View(context, attrs, defStyleAttr) {
+) : View(context, attrs, defStyleAttr), ParentEditor {
 
     //Данные о изменениях экрана
     private val transformations = Transformations()
@@ -67,6 +67,7 @@ class EditorViewBase @JvmOverloads constructor(
 
     fun addChild(child: EditableBlock) {
         children.add(child)
+        child.setEditorParent(this)
         invalidate()
     }
 

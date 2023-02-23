@@ -15,9 +15,10 @@ interface EditableBlock {
      * @param point Точка, принадлежность области блоку которой необходимо проверить
      */
     fun checkPointConsists(point: PointF): Boolean
+    fun setEditorParent(parentEditor: ParentEditor)
     fun updatePosition(newPosition: PointF)
     fun updateSize(newWidth: Float, newHeight: Float)
     fun getSelector(): Selector?
-
+    fun setText(newText: String)
     fun invalidate()
 }
