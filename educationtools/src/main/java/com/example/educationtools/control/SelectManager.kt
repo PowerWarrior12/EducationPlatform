@@ -9,9 +9,14 @@ class SelectManager(
     private val editable: MutableList<EditableBlock>
 ) {
     private var selectedEditable: EditableBlock? = null
+    private val longPressListeners = mutableListOf<(EditableBlock) -> Unit>()
 
     fun addEditable(editableBlock: EditableBlock) {
         editable.add(editableBlock)
+    }
+
+    fun addLongPressListener(listener: (EditableBlock) -> Unit) {
+        longPressListeners.add(listener)
     }
 
     fun onSingleTap(pointF: PointF) {
@@ -22,6 +27,16 @@ class SelectManager(
                 val selector = selectedEditable.getSelector()
                 selector.deselect()
                 this.selectedEditable = null
+            }
+        }
+    }
+
+    fun onLongPress(pointF: PointF) {
+        this.editable.firstOrNull { block ->
+            block.checkPointConsists(pointF)
+        }?.let { block ->
+            longPressListeners.forEach { listener ->
+                listener(block)
             }
         }
     }
