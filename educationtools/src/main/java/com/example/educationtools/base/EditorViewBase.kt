@@ -15,6 +15,8 @@ import androidx.core.graphics.withScale
 import androidx.core.graphics.withTranslation
 import com.example.educationtools.control.DragAndDropManager
 import com.example.educationtools.control.SelectManager
+import com.example.educationtools.control.TouchManager
+import com.example.educationtools.utils.Transformations
 
 const val SCROLL_VELOCITY_FACTOR = 0.005f
 const val FLING_DURATION = 100L
@@ -26,18 +28,19 @@ class EditorViewBase @JvmOverloads constructor(
 ) : View(context, attrs, defStyleAttr), ParentEditor {
 
     //Данные о изменениях экрана
-    private val transformations = Transformations()
+    private val transformations = Transformations(0f, 0f)
     private val scaleGestureDetector = ScaleGestureDetector(context, ScaleListener())
     private val gestureDetector = GestureDetector(context, ScrollListener())
 
     //Дочерние блоки
     private val children: MutableList<EditableBlock> = mutableListOf()
 
-    private val selectorManager = SelectManager(children.toMutableList())
-    private val dadManager = DragAndDropManager()
+    //Managers
+    private val touchManager = TouchManager(transformations)
+    private val selectManager = SelectManager(touchManager)
 
     init {
-        selectorManager.addLongPressListener(dadManager::drag)
+        selectManager.start()
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -45,6 +48,11 @@ class EditorViewBase @JvmOverloads constructor(
         val height = MeasureSpec.getSize(heightMeasureSpec)
 
         setMeasuredDimension(width, height)
+    }
+
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        transformations.updateSize(width.toFloat(), height.toFloat())
+        super.onSizeChanged(w, h, oldw, oldh)
     }
 
     override fun onDraw(canvas: Canvas?) {
@@ -59,8 +67,6 @@ class EditorViewBase @JvmOverloads constructor(
                     pivotX = width/2 - transformations.translation.x,
                     pivotY = height/2 - transformations.translation.y
                 ) {
-                    Log.d(EditorViewBase::class.simpleName, "focusX: ${transformations.scalePivot.x} defaultFocusX: ${width/2 - transformations.translation.x}")
-                    Log.d(EditorViewBase::class.simpleName, "focusY: ${transformations.scalePivot.y} defaultFocusY: ${height/2 - transformations.translation.y}")
                     children.forEach {
                         it.draw(this)
                     }
@@ -79,7 +85,9 @@ class EditorViewBase @JvmOverloads constructor(
     fun addChild(child: EditableBlock) {
         children.add(child)
         child.setEditorParent(this)
-        selectorManager.addEditable(child)
+        if (child is Touchable) {
+            touchManager.addTouchable(child)
+        }
         invalidate()
     }
 
@@ -91,73 +99,19 @@ class EditorViewBase @JvmOverloads constructor(
             scaleGestureDetector.onTouchEvent(event)
         } else {
             if (event.action == MotionEvent.ACTION_MOVE) {
-                dadManager.dragProcess(event.x, event.y)
-                Log.d(EditorViewBase::class.simpleName, "move")
+                touchManager.move(event.x, event.y)
             } else if (event.action == MotionEvent.ACTION_UP) {
-                dadManager.drop()
-                Log.d(EditorViewBase::class.simpleName, "release")
+                Log.d("JOPA", "up")
+                touchManager.releaseTouch(event.x, event.y)
             }
             gestureDetector.onTouchEvent(event)
         }
     }
 
-    /**
-     * Класс для трансформаций, происходящих с рабочей областью View
-     */
-    private inner class Transformations() {
-        val translation = PointF(0f, 0f)
- 
-        var scale: Float = 1f
-            private set
-
-        val scalePivot = PointF(width/2f, height/2f)
-        private val originScalePivot = PointF(width/2f, height/2f)
-
-        fun addTranslation(dx: Float, dy: Float) {
-            translation.x = translation.x - dx
-            translation.y = translation.y - dy
-            updateScalePivot()
-            invalidate()
-        }
-
-        fun addScale(scale: Float) {
-            this.scale *= scale
-            invalidate()
-        }
-
-        fun convertPointToTransform(x: Float, y: Float): PointF {
-            return PointF().apply {
-                this.x = (width / 2 - translation.x) + ((x - width / 2) / scale)
-                this.y = (height / 2 - translation.y) + ((y - height / 2 ) / scale)
-            }
-        }
-
-        fun convertPointToTransform(pointF: PointF): PointF {
-            return convertPointToTransform(pointF.x, pointF.y)
-        }
-
-        fun updateScalePivot() {
-            val convertedPivot = transformations.convertPointToTransform(originScalePivot)
-            scalePivot.apply {
-                this.x = convertedPivot.x
-                this.y = convertedPivot.y
-            }
-        }
-
-        fun updateScalePivot(x: Float, y: Float) {
-            originScalePivot.apply {
-                this.x = x
-                this.y = y
-            }
-            updateScalePivot()
-        }
-    }
-
     private inner class ScaleListener : ScaleGestureDetector.SimpleOnScaleGestureListener() {
         override fun onScale(detector: ScaleGestureDetector): Boolean {
-            Log.d(EditorViewBase::class.simpleName, "heightFocus: ${detector.focusY} just need focus: ${height/2f}")
-            transformations.updateScalePivot(detector.focusX, detector.focusY + 97)
             transformations.addScale(detector.scaleFactor)
+            invalidate()
             return true
         }
     }
@@ -165,18 +119,25 @@ class EditorViewBase @JvmOverloads constructor(
     private inner class ScrollListener : GestureDetector.SimpleOnGestureListener() {
 
         override fun onDown(e: MotionEvent): Boolean {
+            Log.d("JOPA", "down")
+            touchManager.touchDown(e.x, e.y)
             return true
         }
 
         override fun onLongPress(e: MotionEvent) {
-            selectorManager.onLongPress(transformations.convertPointToTransform(e.x, e.y))
+            Log.d("JOPA", "long")
+            touchManager.longTouch(e.x, e.y)
             super.onLongPress(e)
         }
 
+        override fun onSingleTapUp(e: MotionEvent): Boolean {
+            Log.d("JOPA", "Single up")
+            return super.onSingleTapUp(e)
+        }
+
         override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
-            selectorManager.onSingleTap(
-                transformations.convertPointToTransform(e.x, e.y)
-            )
+            Log.d("JOPA", "Single")
+            touchManager.singleTouch(e.x, e.y)
             invalidate()
             return true
         }
@@ -189,6 +150,7 @@ class EditorViewBase @JvmOverloads constructor(
         ): Boolean {
             animateFling(PointF(-velocityX * SCROLL_VELOCITY_FACTOR, -velocityY * SCROLL_VELOCITY_FACTOR)) { dXY ->
                 transformations.addTranslation(dXY.x, dXY.y)
+                invalidate()
             }
             return true
         }
@@ -203,6 +165,7 @@ class EditorViewBase @JvmOverloads constructor(
                 distanceX,
                 distanceY
             )
+            invalidate()
             return true
         }
 
@@ -212,7 +175,6 @@ class EditorViewBase @JvmOverloads constructor(
                 duration = FLING_DURATION
                 addUpdateListener { animator ->
                     update(animator.animatedValue as PointF)
-                    Log.d("EditorViewBase", "new value: ${animator.animatedValue}")
                 }
             }.start()
         }

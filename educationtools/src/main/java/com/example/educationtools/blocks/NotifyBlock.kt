@@ -24,10 +24,19 @@ class NotifyBlock(): EditableBlockBase() {
         }
     }
 
-    override fun checkPointConsists(point: PointF): Boolean {
-        if (mainRect.contains(point.x, point.y)) {
-            return true
-        } else return false
+    override fun checkPointAvailability(x: Float, y: Float): Boolean {
+        return mainRect.contains(x, y)
+    }
+
+    override fun checkPointAvailability(point: PointF): Boolean {
+        return checkPointAvailability(point.x, point.y)
+    }
+
+    override fun checkAndTouch(x: Float, y: Float) {
+    }
+
+    override fun getPriority(): Int {
+        return 2
     }
 
 

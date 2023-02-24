@@ -4,72 +4,41 @@ import android.app.usage.UsageEvents.Event
 import android.graphics.PointF
 import android.view.MotionEvent
 import com.example.educationtools.base.EditableBlock
+import com.example.educationtools.base.Selectable
+import com.example.educationtools.base.Selector
+import com.example.educationtools.base.Touchable
 
 class SelectManager(
-    private val editable: MutableList<EditableBlock>
+    private val touchManager: TouchManager
 ) {
-    private var selectedEditable: EditableBlock? = null
-    private val longPressListeners = mutableListOf<(EditableBlock) -> Unit>()
+    private var currentSelectable: Selectable? = null
 
-    fun addEditable(editableBlock: EditableBlock) {
-        editable.add(editableBlock)
+    fun start() {
+        touchManager.addSingleTouchListener(::onSingleTap)
     }
 
-    fun addLongPressListener(listener: (EditableBlock) -> Unit) {
-        longPressListeners.add(listener)
-    }
-
-    fun onSingleTap(pointF: PointF) {
-        if (processSelected(pointF))
-        else if (processEditable(pointF))
-        else {
-            selectedEditable?.let { selectedEditable ->
-                val selector = selectedEditable.getSelector()
-                selector.deselect()
-                this.selectedEditable = null
-            }
+    private fun onSingleTap(touchInfo: TouchManager.TouchInfo) {
+        if (touchInfo.touchable is Selector) {
+            processSelector(touchInfo.touchable)
+        } else if (touchInfo.touchable is Selectable) {
+            processSelectable(touchInfo.touchable)
         }
     }
 
-    fun onLongPress(pointF: PointF) {
-        this.editable.firstOrNull { block ->
-            block.checkPointConsists(pointF)
-        }?.let { block ->
-            longPressListeners.forEach { listener ->
-                listener(block)
-            }
+    private fun processSelectable(selectable: Selectable) {
+        val selector = selectable.getSelector()
+        if (selector.isSelected()) {
+            selector.deselect()
+            currentSelectable = null
+            touchManager.deleteTouchable(selector)
+        } else {
+            selector.select()
+            currentSelectable = selectable
+            touchManager.addTouchable(selector)
         }
     }
 
-    private fun processEditable(pointF: PointF): Boolean {
-        for (block in editable) {
-            val selector = block.getSelector()
-            if (block.checkPointConsists(pointF)) {
-                selectedEditable = if (block == selectedEditable) {
-                    selector.deselect()
-                    null
-                } else {
-                    selectedEditable?.getSelector()?.deselect()
-                    selector.select()
-                    block
-                }
-                return true
-            }
-        }
-        return false
-    }
-
-    private fun processSelected(pointF: PointF): Boolean {
-        selectedEditable?.let { selectedEditable ->
-            val selector = selectedEditable.getSelector()
-            if (selector.checkPointConsists(pointF) && selector.onSingleTap(pointF)) {
-                return true
-            }
-        }
-        return false
-    }
-
-    fun onScroll() {
+    private fun processSelector(selector: Selector) {
 
     }
 }

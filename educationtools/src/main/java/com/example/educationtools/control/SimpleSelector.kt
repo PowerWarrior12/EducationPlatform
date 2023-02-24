@@ -6,10 +6,10 @@ import com.example.educationtools.base.EditableBlock
 import com.example.educationtools.base.Selector
 
 val TAG = SimpleSelector::class.simpleName
-const val missingEditBlock = "Editable block is null"
-open class SimpleSelector: Selector {
+open class SimpleSelector(
+    private val editableBlock: EditableBlock
+): Selector {
     private var isSelected: Boolean = false
-    private var editableBlock: EditableBlock? = null
     private val selectListeners = mutableListOf<Runnable>()
 
     private val paint = Paint().apply {
@@ -17,10 +17,6 @@ open class SimpleSelector: Selector {
         isAntiAlias = true
         strokeWidth = 10f
         style = Paint.Style.STROKE
-    }
-
-    override fun setEditableBlock(block: EditableBlock) {
-        this.editableBlock = block
     }
 
     override fun isSelected(): Boolean {
@@ -33,14 +29,14 @@ open class SimpleSelector: Selector {
         selectListeners.forEach { listener ->
             listener.run()
         }
-        editableBlock?.invalidate() ?: Log.d(TAG, missingEditBlock)
+        editableBlock.invalidate()
         return true
     }
 
     override fun deselect(): Boolean {
         if (!isSelected) return false
         isSelected = false
-        editableBlock?.invalidate() ?: Log.d(TAG, missingEditBlock)
+        editableBlock.invalidate()
         return true
     }
 
@@ -51,7 +47,7 @@ open class SimpleSelector: Selector {
     override fun drawSelection(canvas: Canvas) {
         if (isSelected) {
             canvas.apply {
-                editableBlock?.let {editBlock ->
+                editableBlock.let {editBlock ->
                     drawRect(RectF().apply {
                         left = editBlock.getCenter().x - editBlock.getWidth()/2 - 30f
                         right = editBlock.getCenter().x + editBlock.getWidth()/2 + 30f
@@ -63,15 +59,19 @@ open class SimpleSelector: Selector {
         }
     }
 
-    override fun checkPointConsists(point: PointF): Boolean {
+    override fun checkPointAvailability(x: Float, y: Float): Boolean {
         return false
     }
 
-    override fun onSingleTap(point: PointF): Boolean {
-        return false
+    override fun checkPointAvailability(point: PointF): Boolean {
+        return checkPointAvailability(point.x, point.y)
     }
 
-    override fun onScroll(distances: PointF): Boolean {
-        return false
+    override fun checkAndTouch(x: Float, y: Float) {
+
+    }
+
+    override fun getPriority(): Int {
+        return 1
     }
 }

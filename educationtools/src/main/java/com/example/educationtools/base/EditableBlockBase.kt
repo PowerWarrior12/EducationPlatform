@@ -17,19 +17,17 @@ val TAG = EditableBlockBase::class.simpleName
  * @property V - Текущий класс, построить который необходимо создать
  * @property T - Конфигурации, на основе которых необходимо создать блок
  */
-abstract class EditableBlockBase protected constructor() : EditableBlock {
+abstract class EditableBlockBase protected constructor() : EditableBlock, Selectable {
     //Sizes
     private val center: PointF = PointF(defaultCenterX, defaultCenterY)
     private var width = 0f
-        private set
     private var height = 0f
-        private set
 
     //Text
     private var text: String =
         "Какой то текст"
 
-    private var selector: Selector = SimpleSelector()
+    private var selector: Selector = SimpleSelector(this)
 
     private var parentEditor: ParentEditor? = null
 
@@ -61,7 +59,6 @@ abstract class EditableBlockBase protected constructor() : EditableBlock {
             mainRect.right - textMargin,
             mainRect.bottom - textMargin
         )
-        selector.setEditableBlock(this)
     }
 
     override fun draw(canvas: Canvas) {
