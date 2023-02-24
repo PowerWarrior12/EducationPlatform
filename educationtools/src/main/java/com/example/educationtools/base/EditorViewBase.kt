@@ -92,8 +92,10 @@ class EditorViewBase @JvmOverloads constructor(
         } else {
             if (event.action == MotionEvent.ACTION_MOVE) {
                 dadManager.dragProcess(event.x, event.y)
-            } else if (event.action == MotionEvent.ACTION_BUTTON_RELEASE) {
+                Log.d(EditorViewBase::class.simpleName, "move")
+            } else if (event.action == MotionEvent.ACTION_UP) {
                 dadManager.drop()
+                Log.d(EditorViewBase::class.simpleName, "release")
             }
             gestureDetector.onTouchEvent(event)
         }
@@ -167,7 +169,7 @@ class EditorViewBase @JvmOverloads constructor(
         }
 
         override fun onLongPress(e: MotionEvent) {
-            selectorManager.onLongPress(PointF(e.x, e.y))
+            selectorManager.onLongPress(transformations.convertPointToTransform(e.x, e.y))
             super.onLongPress(e)
         }
 
