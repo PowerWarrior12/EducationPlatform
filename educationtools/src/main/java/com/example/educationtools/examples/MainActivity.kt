@@ -35,10 +35,6 @@ class MainActivity : AppCompatActivity() {
             updateSize(500f, 200f)
         }
 
-
-
-
-
         //Logic test
         val startBlock = StartBlock()
         startBlock.updateVariables(listOf("x", "y"))
