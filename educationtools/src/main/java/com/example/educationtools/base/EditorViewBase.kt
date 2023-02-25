@@ -3,9 +3,9 @@ package com.example.educationtools.base
 import android.animation.PointFEvaluator
 import android.animation.ValueAnimator
 import android.content.Context
-import android.graphics.*
+import android.graphics.Canvas
+import android.graphics.PointF
 import android.util.AttributeSet
-import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
@@ -13,9 +13,10 @@ import android.view.View
 import android.view.animation.AccelerateInterpolator
 import androidx.core.graphics.withScale
 import androidx.core.graphics.withTranslation
-import com.example.educationtools.control.DragAndDropManager
-import com.example.educationtools.control.SelectManager
-import com.example.educationtools.control.TouchManager
+import com.example.educationtools.dragging.DragAndDropManager
+import com.example.educationtools.selection.SelectManager
+import com.example.educationtools.touching.TouchManager
+import com.example.educationtools.touching.Touchable
 import com.example.educationtools.utils.Transformations
 
 const val SCROLL_VELOCITY_FACTOR = 0.005f
@@ -38,9 +39,11 @@ class EditorViewBase @JvmOverloads constructor(
     //Managers
     private val touchManager = TouchManager(transformations)
     private val selectManager = SelectManager(touchManager)
+    private val dragAndDropManager = DragAndDropManager(touchManager, transformations)
 
     init {
         selectManager.start()
+        dragAndDropManager.start()
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -101,7 +104,6 @@ class EditorViewBase @JvmOverloads constructor(
             if (event.action == MotionEvent.ACTION_MOVE) {
                 touchManager.move(event.x, event.y)
             } else if (event.action == MotionEvent.ACTION_UP) {
-                Log.d("JOPA", "up")
                 touchManager.releaseTouch(event.x, event.y)
             }
             gestureDetector.onTouchEvent(event)
@@ -119,24 +121,16 @@ class EditorViewBase @JvmOverloads constructor(
     private inner class ScrollListener : GestureDetector.SimpleOnGestureListener() {
 
         override fun onDown(e: MotionEvent): Boolean {
-            Log.d("JOPA", "down")
             touchManager.touchDown(e.x, e.y)
             return true
         }
 
         override fun onLongPress(e: MotionEvent) {
-            Log.d("JOPA", "long")
             touchManager.longTouch(e.x, e.y)
             super.onLongPress(e)
         }
 
         override fun onSingleTapUp(e: MotionEvent): Boolean {
-            Log.d("JOPA", "Single up")
-            return super.onSingleTapUp(e)
-        }
-
-        override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
-            Log.d("JOPA", "Single")
             touchManager.singleTouch(e.x, e.y)
             invalidate()
             return true

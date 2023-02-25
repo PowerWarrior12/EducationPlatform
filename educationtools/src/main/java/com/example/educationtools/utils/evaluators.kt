@@ -1,7 +1,6 @@
 package com.example.educationtools.utils
 
 import android.animation.TypeEvaluator
-import android.graphics.Point
 import android.graphics.PointF
 
 private class PointEvaluator(): TypeEvaluator<PointF> {

@@ -1,9 +1,7 @@
 package com.example.educationtools.base
 
 import android.graphics.Canvas
-import android.graphics.Point
 import android.graphics.PointF
-import android.graphics.RectF
 
 interface EditableBlock {
     fun draw(canvas: Canvas)

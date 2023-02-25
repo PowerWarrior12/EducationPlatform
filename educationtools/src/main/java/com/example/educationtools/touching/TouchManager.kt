@@ -1,7 +1,5 @@
-package com.example.educationtools.control
+package com.example.educationtools.touching
 
-import android.view.MotionEvent
-import com.example.educationtools.base.Touchable
 import com.example.educationtools.utils.Transformations
 
 class TouchManager(
@@ -44,8 +42,12 @@ class TouchManager(
         }?.let { touchable ->
             touchableInFocus = touchable
             onTouchListeners.forEach { listener ->
-                listener(TouchInfo(touchable, transformPoint.x, transformPoint.y))
+                listener(TouchInfo.FilledInfo(transformPoint.x, transformPoint.y, touchable))
             }
+            return
+        }
+        onTouchListeners.forEach { listener ->
+            listener(TouchInfo.EmptyInfo(transformPoint.x, transformPoint.y))
         }
     }
 
@@ -53,9 +55,13 @@ class TouchManager(
         val transformPoint = transformations.convertPointToTransform(x, y)
         touchableInFocus?.let { touchable ->
             onSingleTouchListeners.forEach { listener ->
-                listener(TouchInfo(touchable, transformPoint.x, transformPoint.y))
+                listener(TouchInfo.FilledInfo(transformPoint.x, transformPoint.y, touchable))
             }
             touchableInFocus = null
+            return
+        }
+        onSingleTouchListeners.forEach { listener ->
+            listener(TouchInfo.EmptyInfo(transformPoint.x, transformPoint.y))
         }
     }
 
@@ -64,8 +70,12 @@ class TouchManager(
         longProcess = true
         touchableInFocus?.let { touchable ->
             onLongTouchListeners.forEach { listener ->
-                listener(TouchInfo(touchable, transformPoint.x, transformPoint.y))
+                listener(TouchInfo.FilledInfo(transformPoint.x, transformPoint.y, touchable))
             }
+            return
+        }
+        onLongTouchListeners.forEach { listener ->
+            listener(TouchInfo.EmptyInfo(transformPoint.x, transformPoint.y))
         }
     }
 
@@ -73,8 +83,12 @@ class TouchManager(
         val transformPoint = transformations.convertPointToTransform(x, y)
         touchableInFocus?.let { touchable ->
             onMoveListeners.forEach { listener ->
-                listener(TouchInfo(touchable, transformPoint.x, transformPoint.y))
+                listener(TouchInfo.FilledInfo(transformPoint.x, transformPoint.y, touchable))
             }
+            return
+        }
+        onMoveListeners.forEach { listener ->
+            listener(TouchInfo.EmptyInfo(transformPoint.x, transformPoint.y))
         }
     }
 
@@ -82,12 +96,16 @@ class TouchManager(
         val transformPoint = transformations.convertPointToTransform(x, y)
         touchableInFocus?.let { touchable ->
             onTouchReleaseListeners.forEach { listener ->
-                listener(TouchInfo(touchable, transformPoint.x, transformPoint.y))
+                listener(TouchInfo.FilledInfo(transformPoint.x, transformPoint.y, touchable))
             }
+            if (longProcess) {
+                touchableInFocus = null
+                longProcess = false
+            }
+            return
         }
-        if (longProcess) {
-            touchableInFocus = null
-            longProcess = false
+        onTouchReleaseListeners.forEach { listener ->
+            listener(TouchInfo.EmptyInfo(transformPoint.x, transformPoint.y))
         }
     }
 
@@ -109,9 +127,11 @@ class TouchManager(
         touchableSet.addAll(sorted)
     }
 
-    data class TouchInfo(
-        val touchable: Touchable,
+    sealed class TouchInfo(
         val xPos: Float,
         val yPos: Float
-    )
+    ) {
+        class FilledInfo(xPos: Float, yPos: Float, val touchable: Touchable) : TouchInfo(xPos, yPos)
+        class EmptyInfo(xPos: Float, yPos: Float): TouchInfo(xPos, yPos)
+    }
 }

@@ -1,7 +1,7 @@
-package com.example.educationtools.base
+package com.example.educationtools.selection
 
 import android.graphics.Canvas
-import android.graphics.PointF
+import com.example.educationtools.touching.Touchable
 
 interface Selector: Touchable {
     fun isSelected(): Boolean

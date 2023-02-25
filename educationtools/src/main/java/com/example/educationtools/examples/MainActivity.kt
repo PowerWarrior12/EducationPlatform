@@ -1,19 +1,15 @@
 package com.example.educationtools.examples
 
 import android.graphics.PointF
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView
-import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.Adapter
+import androidx.appcompat.app.AppCompatActivity
 import com.example.educationtools.R
-import com.example.educationtools.base.EditableBlockBase
 import com.example.educationtools.base.EditorViewBase
 import com.example.educationtools.blocks.NotifyBlock
-import org.w3c.dom.Text
+import com.example.educationtools.logic.StartBlock
+import com.example.educationtools.logic.Variable
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,5 +34,15 @@ class MainActivity : AppCompatActivity() {
             updatePosition(PointF(500f, 800f))
             updateSize(500f, 200f)
         }
+
+
+
+
+
+        //Logic test
+        val startBlock = StartBlock()
+        startBlock.updateVariables(listOf("x", "y"))
+        startBlock.start(listOf(Variable(value = 10, type = "Int"), Variable(value = 5, type = "Int")))
+        startBlock.work()
     }
 }

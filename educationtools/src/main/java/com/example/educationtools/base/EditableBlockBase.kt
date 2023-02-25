@@ -4,7 +4,9 @@ import android.graphics.*
 import android.text.Layout
 import android.text.TextPaint
 import android.util.Log
-import com.example.educationtools.control.SimpleSelector
+import com.example.educationtools.selection.Selectable
+import com.example.educationtools.selection.Selector
+import com.example.educationtools.selection.SimpleSelector
 import com.example.educationtools.utils.drawBlockText
 
 const val defaultCenterX = 0f
