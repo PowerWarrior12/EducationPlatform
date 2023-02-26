@@ -3,13 +3,13 @@ package com.example.educationtools.logic
 import kotlin.reflect.KClass
 import kotlin.reflect.full.allSuperclasses
 
-abstract class Function() {
+abstract class Function {
 
-    protected abstract var parameters: List<Parameter>
+    abstract var parameters: List<Parameter>
 
     abstract var type: KClass<*>
 
-    abstract fun run(): Any
+    abstract fun run(): Any?
 
     private var variablesCount: Int = 0
 

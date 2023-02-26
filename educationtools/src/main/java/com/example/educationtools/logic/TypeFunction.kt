@@ -2,7 +2,7 @@ package com.example.educationtools.logic
 
 import kotlin.reflect.KClass
 
-class TypeFunction(private val _type: KClass<*>, private val value: Any): Function() {
+class TypeFunction private constructor(private val _type: KClass<*>, private val value: Any): Function() {
     override var parameters: List<Parameter>
         get() = emptyList()
         set(value) {}
@@ -11,7 +11,7 @@ class TypeFunction(private val _type: KClass<*>, private val value: Any): Functi
         get() = _type
         set(value) {}
 
-    override fun run(): Any {
+    override fun run(): Any? {
         return value
     }
 
