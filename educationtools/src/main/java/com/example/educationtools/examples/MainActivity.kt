@@ -2,14 +2,19 @@ package com.example.educationtools.examples
 
 import android.graphics.PointF
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import com.example.educationtools.R
 import com.example.educationtools.base.EditorViewBase
 import com.example.educationtools.blocks.NotifyBlock
+import com.example.educationtools.logic.NumberCalculationFunction
 import com.example.educationtools.logic.StartBlock
+import com.example.educationtools.logic.TypeFunction
 import com.example.educationtools.logic.Variable
+import kotlin.reflect.KClass
+import kotlin.reflect.full.allSuperclasses
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,6 +39,15 @@ class MainActivity : AppCompatActivity() {
             updatePosition(PointF(500f, 800f))
             updateSize(500f, 200f)
         }
+
+        val fun1 = NumberCalculationFunction.sumFunction()
+        fun1.setVariableOrThrow(TypeFunction.generateTypeFunction(4))
+        fun1.setVariableOrThrow(TypeFunction.generateTypeFunction(10))
+        val fun2 = NumberCalculationFunction.sumFunction()
+        fun2.setVariableOrThrow(fun1)
+        fun2.setVariableOrThrow(fun1)
+        Log.d("MainActivityMine", fun2.run().toString())
+
 
         //Logic test
         val startBlock = StartBlock()

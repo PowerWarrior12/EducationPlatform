@@ -1,10 +1,13 @@
 package com.example.educationtools.logic
 
-abstract class Function {
+import kotlin.reflect.KClass
+import kotlin.reflect.full.allSuperclasses
+
+abstract class Function() {
 
     protected abstract var parameters: List<Parameter>
 
-    abstract var type: String
+    abstract var type: KClass<*>
 
     abstract fun run(): Any
 
@@ -17,7 +20,7 @@ abstract class Function {
             throw java.lang.Exception("Invalid number of parameters")
         }
         val parameter = parameters[variablesCount]
-        if (parameter.type != variable.type) {
+        if (parameter.type !in variable.type.allSuperclasses && parameter.type != variable.type) {
             throw java.lang.Exception("Invalid type")
         }
         variables[parameter.name] = variable
@@ -25,7 +28,7 @@ abstract class Function {
     }
 
     class Parameter (
-        val type: String,
+        val type: KClass<*>,
         val name: String
     )
 }

@@ -1,11 +1,13 @@
 package com.example.educationtools.logic
 
-class TypeFunction(private val _type: String, private val value: Any): Function() {
+import kotlin.reflect.KClass
+
+class TypeFunction(private val _type: KClass<*>, private val value: Any): Function() {
     override var parameters: List<Parameter>
         get() = emptyList()
         set(value) {}
 
-    override var type: String
+    override var type: KClass<*>
         get() = _type
         set(value) {}
 
@@ -14,8 +16,8 @@ class TypeFunction(private val _type: String, private val value: Any): Function(
     }
 
     companion object {
-        inline fun<reified T: Any> generateTypeFunction(value: T): TypeFunction {
-            return TypeFunction(T::class.toString(), value)
+        fun generateTypeFunction(value: Any): TypeFunction {
+            return TypeFunction(value::class, value)
         }
     }
 }
