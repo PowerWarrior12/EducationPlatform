@@ -34,6 +34,10 @@ class MainActivity : AppCompatActivity() {
             updateSize(500f, 200f)
         }
 
+        val x = 4
+        val y = 5
+        val z = x + y
+
         val block2 = NotifyBlock()
         editor.addChild(block2)
         block2.apply {

@@ -6,5 +6,5 @@ data class Variable(
     var id: Int = -1,
     var name: String = "",
     val type: KClass<*>,
-    val value: Any?
+    var value: Any?
 )

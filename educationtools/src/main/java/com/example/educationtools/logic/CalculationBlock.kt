@@ -11,8 +11,19 @@ class CalculationBlock: LogicBlock() {
     }
 
     override fun work() {
-        changeableVar?.let { changeableVar ->
-            function
+        if (changeableVar != null && function != null) {
+            val resultValue = function!!.run()
+            val resultType = function!!.type
+            if (variables.contains(changeableVar)) {
+                if (variables[changeableVar!!]?.type != resultType) {
+                    throw Exception("Different types of data")
+                }
+                variables[changeableVar!!]?.value = resultValue
+            } else {
+                variables[changeableVar!!] = Variable(id, changeableVar!!, resultType, resultValue)
+            }
         }
+        nextBlock?.start(variables.values.toList())
+        nextBlock?.work()
     }
 }
