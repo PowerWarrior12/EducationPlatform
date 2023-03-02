@@ -10,8 +10,6 @@ import com.example.educationtools.R
 import com.example.educationtools.base.EditorViewBase
 import com.example.educationtools.blocks.NotifyBlock
 import com.example.educationtools.logic.*
-import com.github.adriankuta.datastructure.tree.TreeNode
-import com.github.adriankuta.datastructure.tree.tree
 import java.lang.Double.sum
 import kotlin.reflect.KClass
 import kotlin.reflect.KType

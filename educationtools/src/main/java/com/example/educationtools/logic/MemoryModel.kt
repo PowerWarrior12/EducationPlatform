@@ -14,24 +14,30 @@ class MemoryModel {
     //Коллекция всех переменных
     private val variables = mutableMapOf<String, Variable>()
 
+    private val freeBlocks = mutableListOf<TreeNode<Block>>()
+
     fun declareVarBlock(blockId: String) {
         blocksAreaViewMap[blockId] = TreeNode(Block.VariableBlock(blockId, null))
         blocksAreaLinkMap[blockId] = GraphNode(Block.VariableBlock(blockId, null))
+        freeBlocks.add(blocksAreaViewMap.getValue(blockId))
     }
 
     fun declareConditionBlock(blockId: String) {
         blocksAreaViewMap[blockId] = TreeNode(Block.ConditionBlock(blockId))
         blocksAreaLinkMap[blockId] = GraphNode(Block.VariableBlock(blockId, null))
+        freeBlocks.add(blocksAreaViewMap.getValue(blockId))
     }
 
     fun declareWhileDoBlock(blockId: String) {
         blocksAreaViewMap[blockId] = TreeNode(Block.WhileDoBlock(blockId))
         blocksAreaLinkMap[blockId] = GraphNode(Block.VariableBlock(blockId, null))
+        freeBlocks.add(blocksAreaViewMap.getValue(blockId))
     }
 
     fun declareDoWhileBlock(blockId: String) {
         blocksAreaViewMap[blockId] = TreeNode(Block.DoWhileBlock(blockId))
         blocksAreaLinkMap[blockId] = GraphNode(Block.VariableBlock(blockId, null))
+        freeBlocks.add(blocksAreaViewMap.getValue(blockId))
     }
 
     fun declareVariable(blockId: String, variable: Variable) {
@@ -39,6 +45,17 @@ class MemoryModel {
         if (block is Block.VariableBlock) {
             variables[variable.name] = variable
             block.variable = variable
+        }
+    }
+
+    fun bindBlockLinkOrThrow(parentId: String, childId: String) {
+        val parentNode = blocksAreaLinkMap.getValue(parentId)
+        val childNode = blocksAreaLinkMap.getValue(childId)
+
+        val availableBlocks = if (parentNode.value is Block.DoWhileBlock) {
+            getDoWhileNodes(parentNode)
+        } else {
+            null
         }
     }
 
@@ -70,7 +87,7 @@ class MemoryModel {
 
     }
 
-    fun getDoWhileNodes(parentNode: GraphNode<Block>): List<GraphNode<Block>> {
+    private fun getDoWhileNodes(parentNode: GraphNode<Block>): List<GraphNode<Block>> {
         if (parentNode.children.count() > 1) return emptyList()
 
         val cycleBlocks = mutableListOf<GraphNode<Block>>()
@@ -125,15 +142,6 @@ class MemoryModel {
                 }
             }
 
-            //Проверяем циклическую связь с While-Do
-            val childWhileDo = parent.children.firstOrNull { it.value.id != lastParent.value.id }
-            if (childWhileDo != null && childWhileDo.value is Block.WhileDoBlock && !checkedWhileDo.contains(childWhileDo)) {
-                parent = childWhileDo
-                checkedWhileDo.add(parent)
-                lastParent = parent.children.first()
-            }
-
-
             //Проверяем вложенный блок If-Else
             checkConditionBlock = blocksAreaViewMap[parent.value.id]?.parent?.value
             if (checkConditionBlock is Block.ConditionBlock) {
@@ -164,23 +172,58 @@ class MemoryModel {
                 continue
             }
 
+            //Проверяем блок While-Do
             val parentWhileDoBlock = parent.parents.firstOrNull { it.value is Block.WhileDoBlock }
             if (parentWhileDoBlock != null && !checkedWhileDo.contains(parentWhileDoBlock)) {
-                checkedWhileDo.add(parentWhileDoBlock)
-                lastParent = parentWhileDoBlock.children.firstOrNull { it.value != parent } ?: parent
+
+                var cycleParent: TreeNode<Block>? = null
+                parentWhileDoBlock.parents.forEach { node ->
+                    var whileParent = blocksAreaViewMap.getValue(node.value.id)
+                    if (whileParent.children.isEmpty()) {
+                        cycleParent = whileParent
+                    }
+                }
+                if (cycleParent != null) {
+                    var inCycle = cycleParent!!.checkInParentsWhileTrue( { node ->
+                        node.value.id == parentNode.value.id
+                    }, { node ->
+                        node.children.count() <= 1
+                    } )
+
+                    if (inCycle) {
+                        afterDoNeed = false
+                        break
+                    }
+                }
+                lastParent = parent
                 parent = parentWhileDoBlock
+                checkedWhileDo.add(parentWhileDoBlock)
                 continue
             }
 
-            if (parent.value is Block.WhileDoBlock && !checkedWhileDo.contains(parent)) {
-                break
-            }
-
             lastParent = parent
+            cycleBlocks.add(parent)
             parent = parent.parents.firstOrNull()
-
         }
+
+        // Когда проанализировали все блоки, доступные для цикла, выясним, для какой связи блоки можно искать
+        // У кадого Do-While блока может быть только два наследника
+
+        if (cycleNeed && parentNode.children.isNotEmpty()) {
+            return cycleBlocks
+        }
+        afterDoBlocks.addAll(freeBlocks.map { blocksAreaLinkMap.getValue(it.value.id) })
+        if (afterDoNeed && parentNode.children.isNotEmpty()) {
+            return afterDoBlocks
+        }
+
+        val result = mutableListOf<GraphNode<Block>>()
+        result.addAll(cycleBlocks)
+        result.addAll(afterDoBlocks)
+        return result
     }
+
+    private fun getWhileDoNodes()
 
     private fun <T> TreeNode<Block>.parentsMap(action: (Block) -> T): List<T> {
         val result = mutableListOf<T>()
@@ -212,6 +255,18 @@ class MemoryModel {
             parent = parent.parent
         }
         return result
+    }
+
+    private fun TreeNode<Block>.checkInParentsWhileTrue(
+        checkCondition: (TreeNode<Block>) -> Boolean,
+        conditionSearch: (TreeNode<Block>) -> Boolean
+    ): Boolean {
+        var parent = this.parent
+        while (parent != null && conditionSearch(parent)) {
+            if (checkCondition(parent))
+            parent = parent.parent
+        }
+        return false
     }
 
     private fun TreeNode<Block>.firstAmongParentsOrNull(condition: (Block) -> Boolean): TreeNode<Block>? {
