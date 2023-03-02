@@ -20,7 +20,7 @@ class CalculationBlock: LogicBlock() {
                 }
                 variables[changeableVar!!]?.value = resultValue
             } else {
-                variables[changeableVar!!] = Variable(id, changeableVar!!, resultType, resultValue)
+                //variables[changeableVar!!] = Variable(id, changeableVar!!, resultType, resultValue)
             }
         }
         nextBlock?.start(variables.values.toList())

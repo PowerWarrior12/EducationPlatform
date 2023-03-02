@@ -2,9 +2,6 @@ package com.example.educationtools.logic
 
 class StartBlock: LogicBlock() {
 
-    init {
-        id = 0
-    }
 
     var nextBlock: LogicBlock? = null
     private val startVariables = mutableListOf<String>()

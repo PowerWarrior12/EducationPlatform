@@ -1,7 +1,9 @@
 package com.example.educationtools.logic
 
+import java.util.UUID
+
 abstract class LogicBlock {
-    var id: Int = -1
+    val id = UUID.randomUUID().toString()
     val variables = mutableMapOf<String, Variable>()
 
     /**

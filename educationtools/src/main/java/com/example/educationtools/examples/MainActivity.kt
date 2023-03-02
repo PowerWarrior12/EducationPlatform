@@ -10,6 +10,8 @@ import com.example.educationtools.R
 import com.example.educationtools.base.EditorViewBase
 import com.example.educationtools.blocks.NotifyBlock
 import com.example.educationtools.logic.*
+import com.github.adriankuta.datastructure.tree.TreeNode
+import com.github.adriankuta.datastructure.tree.tree
 import java.lang.Double.sum
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
@@ -33,10 +35,6 @@ class MainActivity : AppCompatActivity() {
             updatePosition(PointF(500f, 500f))
             updateSize(500f, 200f)
         }
-
-        val x = 4
-        val y = 5
-        val z = x + y
 
         val block2 = NotifyBlock()
         editor.addChild(block2)
