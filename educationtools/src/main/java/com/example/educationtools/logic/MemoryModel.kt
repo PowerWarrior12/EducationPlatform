@@ -52,43 +52,116 @@ class MemoryModel {
         val parentNode = blocksAreaLinkMap.getValue(parentId)
         val childNode = blocksAreaLinkMap.getValue(childId)
 
-        val availableBlocks = if (parentNode.value is Block.DoWhileBlock) {
-            getDoWhileNodes(parentNode)
-        } else {
-            null
-        }
+        val availableBlocks = getDoWhileNodes(parentNode)
+        if (childNode !in availableBlocks) throw Exception("Error")
+        parentNode.addChild(childNode)
     }
 
     fun bindBlockViewOrThrow(parentId: String, childId: String) {
         val parentNode = blocksAreaViewMap.getValue(parentId)
         val childNode = blocksAreaViewMap.getValue(childId)
 
-        //Если у блока родителя нет наследников и у наследника нет родителя то просто связываем эти блоки
-        if ((parentNode.children.isEmpty() || parentNode.value is Block.ConditionBlock) && childNode.parent == null) {
+        // Если у родителя нет наследников, а у наследника нет родителей, то связываем без доп трансформаций
+        if (parentNode.children.isEmpty() && childNode.parent == null) {
             parentNode.addChild(childNode)
+            freeBlocks.remove(childNode)
+            return
+        }
+        // Если родитель это условный блок, а у наследника нет родителей, то связываем без доп трансформаций
+        if (parentNode.value is Block.ConditionBlock && childNode.parent == null) {
+            parentNode.addChild(childNode)
+            freeBlocks.remove(childNode)
             return
         }
 
         if (parentNode.value is Block.DoWhileBlock) {
-            if (parentNode.children.isNotEmpty()) {
+            val parentNodeLink = blocksAreaLinkMap.getValue(parentId)
+            if (parentNodeLink.children.count() == 1) {
+                val isCycle = parentNode.checkInParentsWhileTrue({ node ->
+                    node.value.id == childId
+                }, { true })
+                if (!isCycle && childNode.parent == null) {
+                    parentNode.addChild(childNode)
+                    freeBlocks.remove(childNode)
+                    return
+                }
+            } else {
+                val currentChildren = parentNode.children.firstOrNull()
+                if (currentChildren != null) {
+                    parentNode.removeChild(currentChildren)
+                    childNode.addChild(currentChildren)
+                } else {
+                    val isPreviousWhileDo = parentNode.checkInParentsWhileTrue({ node ->
+                        node.value.id == childId
+                    }, { true })
+                    if (!(childNode.value is Block.WhileDoBlock && isPreviousWhileDo) && childNode.parent == null) {
+                        val cycleChild =
+                            blocksAreaViewMap.getValue(parentNodeLink.children.first { it.value.id != childNode.value.id }.value.id)
 
+                        cycleChild.addChild(childNode)
+                        freeBlocks.remove(childNode)
+                        return
+                    }
+                }
             }
         }
 
-        // Если соединяем блок с наследником, у которого уже есть родитель, значит это выход из if-else и связываем родителя условного блока с поступившим наследником
-        if (childNode.parent != null) {
-            childNode.firstAmongParentsOrNull { it is Block.ConditionBlock }?.parent?.let { newParent ->
+        if (childNode.value is Block.WhileDoBlock) {
+            if (parentNode.checkInParentsWhileTrue({ it.value.id == childId }, { true })) {
+                val translateChild = childNode.children.firstOrNull()
+                if (translateChild != null) {
+                    childNode.removeChild(translateChild)
+                    childNode.addChild(translateChild)
+                    return
+                }
+            }
+        }
+
+        if (childNode.parent != null && parentNode.value !is Block.WhileDoBlock) {
+            val parentIfElse = mutableListOf<Pair<TreeNode<Block>, TreeNode<Block>>>()
+            val childIfElse = mutableListOf<Pair<TreeNode<Block>, TreeNode<Block>>>()
+
+            fun fillIfElse(list: MutableList<Pair<TreeNode<Block>, TreeNode<Block>>>, startNode: TreeNode<Block>) {
+                var parent = startNode.parent
+                var lastNode = startNode
+                while (parent != null) {
+                    if (parent.value is Block.ConditionBlock && parent.children.count() <= 2) {
+                        list.add(Pair(parent, lastNode))
+                    }
+                    lastNode = parent
+                    parent = parent.parent
+                }
+            }
+
+            fillIfElse(parentIfElse, parentNode)
+            fillIfElse(childIfElse, childNode)
+
+            var findingBlock: TreeNode<Block>? = null
+            for (pIfElse in parentIfElse) {
+                for (cIfElse in childIfElse) {
+                    if (pIfElse.first == cIfElse.first && pIfElse.second != cIfElse.second) {
+                        findingBlock = pIfElse.first
+                        break
+                    }
+                }
+                if (findingBlock != null) {
+                    break
+                }
+            }
+
+            if (findingBlock != null) {
                 childNode.parent?.removeChild(childNode)
-                newParent.addChild(childNode)
+                findingBlock.addChild(childNode)
             }
-
         }
-
-
     }
 
     private fun getDoWhileNodes(parentNode: GraphNode<Block>): List<GraphNode<Block>> {
-        if (parentNode.children.count() > 1) return emptyList()
+        if (parentNode.value is Block.VariableBlock) {
+            if (parentNode.children.isNotEmpty()) return emptyList()
+        } else {
+            if (parentNode.children.count() > 1) return emptyList()
+        }
 
         val cycleBlocks = mutableListOf<GraphNode<Block>>()
         val afterDoBlocks = mutableListOf<GraphNode<Block>>()
@@ -173,28 +246,37 @@ class MemoryModel {
             }
 
             //Проверяем блок While-Do
+            val childWhileDoBlock = parent.children.firstOrNull { it.value is Block.WhileDoBlock }
+            if (childWhileDoBlock != null && !checkedWhileDo.contains(childWhileDoBlock)) {
+                lastParent =
+                    blocksAreaLinkMap.getValue(blocksAreaViewMap.getValue(childWhileDoBlock.value.id).children.first().value.id)
+                parent = childWhileDoBlock
+                checkedWhileDo.add(childWhileDoBlock)
+            }
+
             val parentWhileDoBlock = parent.parents.firstOrNull { it.value is Block.WhileDoBlock }
             if (parentWhileDoBlock != null && !checkedWhileDo.contains(parentWhileDoBlock)) {
 
                 var cycleParent: TreeNode<Block>? = null
                 parentWhileDoBlock.parents.forEach { node ->
                     var whileParent = blocksAreaViewMap.getValue(node.value.id)
-                    if (whileParent.children.isEmpty()) {
+                    if (whileParent.parent!!.value.id != parentWhileDoBlock.value.id) {
                         cycleParent = whileParent
                     }
                 }
                 if (cycleParent != null) {
-                    var inCycle = cycleParent!!.checkInParentsWhileTrue( { node ->
+                    var inCycle = cycleParent!!.checkInParentsWhileTrue({ node ->
                         node.value.id == parentNode.value.id
                     }, { node ->
                         node.children.count() <= 1
-                    } )
+                    })
 
                     if (inCycle) {
                         afterDoNeed = false
                         break
                     }
                 }
+                cycleBlocks.add(parent)
                 lastParent = parent
                 parent = parentWhileDoBlock
                 checkedWhileDo.add(parentWhileDoBlock)
@@ -209,21 +291,24 @@ class MemoryModel {
         // Когда проанализировали все блоки, доступные для цикла, выясним, для какой связи блоки можно искать
         // У кадого Do-While блока может быть только два наследника
 
-        if (cycleNeed && parentNode.children.isNotEmpty()) {
-            return cycleBlocks
-        }
-        afterDoBlocks.addAll(freeBlocks.map { blocksAreaLinkMap.getValue(it.value.id) })
-        if (afterDoNeed && parentNode.children.isNotEmpty()) {
+        if (parentNode.value is Block.DoWhileBlock) {
+            if (cycleNeed && parentNode.children.isNotEmpty()) {
+                return cycleBlocks
+            }
+            afterDoBlocks.addAll(freeBlocks.map { blocksAreaLinkMap.getValue(it.value.id) })
+            if (afterDoNeed && parentNode.children.isNotEmpty()) {
+                return afterDoBlocks
+            }
+
+            val result = mutableListOf<GraphNode<Block>>()
+            result.addAll(cycleBlocks)
+            result.addAll(afterDoBlocks)
+            return result
+        } else {
+            afterDoBlocks.addAll(freeBlocks.map { blocksAreaLinkMap.getValue(it.value.id) })
             return afterDoBlocks
         }
-
-        val result = mutableListOf<GraphNode<Block>>()
-        result.addAll(cycleBlocks)
-        result.addAll(afterDoBlocks)
-        return result
     }
-
-    private fun getWhileDoNodes()
 
     private fun <T> TreeNode<Block>.parentsMap(action: (Block) -> T): List<T> {
         val result = mutableListOf<T>()
@@ -264,7 +349,7 @@ class MemoryModel {
         var parent = this.parent
         while (parent != null && conditionSearch(parent)) {
             if (checkCondition(parent))
-            parent = parent.parent
+                parent = parent.parent
         }
         return false
     }
