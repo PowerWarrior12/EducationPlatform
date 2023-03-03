@@ -1,5 +1,6 @@
 package com.example.educationtools.logic
 
+import android.util.Log
 import com.example.educationtools.utils.graph.GraphNode
 import com.github.adriankuta.datastructure.tree.TreeNode
 
@@ -24,19 +25,19 @@ class MemoryModel {
 
     fun declareConditionBlock(blockId: String) {
         blocksAreaViewMap[blockId] = TreeNode(Block.ConditionBlock(blockId))
-        blocksAreaLinkMap[blockId] = GraphNode(Block.VariableBlock(blockId, null))
+        blocksAreaLinkMap[blockId] = GraphNode(Block.ConditionBlock(blockId))
         freeBlocks.add(blocksAreaViewMap.getValue(blockId))
     }
 
     fun declareWhileDoBlock(blockId: String) {
         blocksAreaViewMap[blockId] = TreeNode(Block.WhileDoBlock(blockId))
-        blocksAreaLinkMap[blockId] = GraphNode(Block.VariableBlock(blockId, null))
+        blocksAreaLinkMap[blockId] = GraphNode(Block.WhileDoBlock(blockId))
         freeBlocks.add(blocksAreaViewMap.getValue(blockId))
     }
 
     fun declareDoWhileBlock(blockId: String) {
         blocksAreaViewMap[blockId] = TreeNode(Block.DoWhileBlock(blockId))
-        blocksAreaLinkMap[blockId] = GraphNode(Block.VariableBlock(blockId, null))
+        blocksAreaLinkMap[blockId] = GraphNode(Block.DoWhileBlock(blockId))
         freeBlocks.add(blocksAreaViewMap.getValue(blockId))
     }
 
@@ -48,11 +49,21 @@ class MemoryModel {
         }
     }
 
+    fun bindBlocks(parentId: String, childId: String) {
+        Log.d("Block-Shames", "Связываем блоки:  $parentId and $childId")
+        bindBlockLinkOrThrow(parentId, childId)
+
+        bindBlockViewOrThrow(parentId, childId)
+    }
+
     fun bindBlockLinkOrThrow(parentId: String, childId: String) {
         val parentNode = blocksAreaLinkMap.getValue(parentId)
         val childNode = blocksAreaLinkMap.getValue(childId)
 
         val availableBlocks = getDoWhileNodes(parentNode)
+        Log.d("Block-Shames", "${availableBlocks.map { 
+          it.value.id  
+        }}")
         if (childNode !in availableBlocks) throw Exception("Error")
         parentNode.addChild(childNode)
     }
@@ -62,15 +73,21 @@ class MemoryModel {
         val childNode = blocksAreaViewMap.getValue(childId)
 
         // Если у родителя нет наследников, а у наследника нет родителей, то связываем без доп трансформаций
-        if (parentNode.children.isEmpty() && childNode.parent == null) {
+        if (parentNode.children.isEmpty() && childNode.parent == null && parentNode.value !is Block.DoWhileBlock) {
             parentNode.addChild(childNode)
             freeBlocks.remove(childNode)
+            freeBlocks.forEach {
+                Log.d("Block-Shames",it.prettyString())
+            }
             return
         }
         // Если родитель это условный блок, а у наследника нет родителей, то связываем без доп трансформаций
-        if (parentNode.value is Block.ConditionBlock && childNode.parent == null) {
+        if ((parentNode.value is Block.ConditionBlock || parentNode.value is Block.WhileDoBlock) && childNode.parent == null) {
             parentNode.addChild(childNode)
             freeBlocks.remove(childNode)
+            freeBlocks.forEach {
+                Log.d("Block-Shames",it.prettyString())
+            }
             return
         }
 
@@ -83,6 +100,9 @@ class MemoryModel {
                 if (!isCycle && childNode.parent == null) {
                     parentNode.addChild(childNode)
                     freeBlocks.remove(childNode)
+                    freeBlocks.forEach {
+                        Log.d("Block-Shames",it.prettyString())
+                    }
                     return
                 }
             } else {
@@ -100,6 +120,9 @@ class MemoryModel {
 
                         cycleChild.addChild(childNode)
                         freeBlocks.remove(childNode)
+                        freeBlocks.forEach {
+                            Log.d("Block-Shames",it.prettyString())
+                        }
                         return
                     }
                 }
@@ -112,6 +135,9 @@ class MemoryModel {
                 if (translateChild != null) {
                     childNode.removeChild(translateChild)
                     childNode.addChild(translateChild)
+                    freeBlocks.forEach {
+                        Log.d("Block-Shames",it.prettyString())
+                    }
                     return
                 }
             }
@@ -154,6 +180,10 @@ class MemoryModel {
                 findingBlock.addChild(childNode)
             }
         }
+
+        freeBlocks.forEach {
+            Log.d("Block-Shames",it.prettyString())
+        }
     }
 
     private fun getDoWhileNodes(parentNode: GraphNode<Block>): List<GraphNode<Block>> {
@@ -173,21 +203,25 @@ class MemoryModel {
         val checkedIfElse = mutableListOf<GraphNode<Block>>()
 
         var parent: GraphNode<Block>? = parentNode
+        var lastParent = parent?.children?.firstOrNull() ?: parentNode
 
-        //Ноды, доступные для создания связи типа цикл
+        if (parent?.value is Block.WhileDoBlock) {
+            checkedWhileDo.add(parent)
+        }
+
+        /*//Ноды, доступные для создания связи типа цикл
         var checkConditionBlock = blocksAreaViewMap[parent!!.value.id]?.parent?.value
         if (checkConditionBlock is Block.ConditionBlock) {
             parent = blocksAreaLinkMap[checkConditionBlock.id]!!
             cycleBlocks.add(parent)
         } else {
             parent = parent.parents.firstOrNull()
-        }
+        }*/
 
-        var lastParent = parentNode
         while (parent != null) {
             //Смотрим, ссылался ли в данный блок ещё один Do-While цикл
             var anotherDoWhile =
-                parent.parents.takeWhile { it.value.id != parent!!.value.id && it.value is Block.DoWhileBlock }
+                parent.parents.filter { it.value is Block.DoWhileBlock }
 
             //Если такой цикл существует, то это значит либо из проверяемого блока уже существует цикличная ссылка,
             //либо она исходит из внешнего цикла, либо исходит из внутреннего цикла
@@ -216,9 +250,9 @@ class MemoryModel {
             }
 
             //Проверяем вложенный блок If-Else
-            checkConditionBlock = blocksAreaViewMap[parent.value.id]?.parent?.value
-            if (checkConditionBlock is Block.ConditionBlock) {
-                parent = blocksAreaLinkMap[checkConditionBlock.id]!!
+            val checkConditionBlockParent = blocksAreaViewMap[parent.value.id]?.parent
+            if (checkConditionBlockParent?.value is Block.ConditionBlock && checkConditionBlockParent.children.count() >= 2) {
+                parent = blocksAreaLinkMap[checkConditionBlockParent.value.id]!!
                 checkedIfElse.add(parent)
                 cycleBlocks.add(parent)
                 continue
@@ -228,7 +262,7 @@ class MemoryModel {
                 break
             }
             //Проверяем блок Do-While
-            if (parent.value is Block.DoWhileBlock) {
+            if (parent.value is Block.DoWhileBlock && parent.value.id != parentNode.value.id) {
                 //Это означает, что цикл Do-While ещё не имеет обозначенную область do, на которую мы не можем ссылаться
                 //На сам блок c условием ссылаться не можем, поэтому пропускаем его
                 if (parent.children.count() == 1) {
@@ -240,7 +274,7 @@ class MemoryModel {
                 var startDoBlock = parent.children.first { it.value.id != lastParent.value.id }
                 cycleBlocks.add(startDoBlock)
 
-                lastParent = startDoBlock.children.first { !anotherDoWhile.contains(it) }
+                lastParent = startDoBlock.children.first()
                 parent = startDoBlock
                 continue
             }
@@ -260,7 +294,7 @@ class MemoryModel {
                 var cycleParent: TreeNode<Block>? = null
                 parentWhileDoBlock.parents.forEach { node ->
                     var whileParent = blocksAreaViewMap.getValue(node.value.id)
-                    if (whileParent.parent!!.value.id != parentWhileDoBlock.value.id) {
+                    if (whileParent.children.firstOrNull { it.value.id == parentWhileDoBlock.value.id} == null) {
                         cycleParent = whileParent
                     }
                 }
@@ -278,6 +312,7 @@ class MemoryModel {
                 }
                 cycleBlocks.add(parent)
                 lastParent = parent
+                afterDoBlocks.add(parentWhileDoBlock)
                 parent = parentWhileDoBlock
                 checkedWhileDo.add(parentWhileDoBlock)
                 continue
@@ -348,8 +383,10 @@ class MemoryModel {
     ): Boolean {
         var parent = this.parent
         while (parent != null && conditionSearch(parent)) {
-            if (checkCondition(parent))
-                parent = parent.parent
+            if (checkCondition(parent)) {
+                return true
+            }
+            parent = parent.parent
         }
         return false
     }
@@ -371,5 +408,9 @@ class MemoryModel {
         class ConditionBlock(id: String) : Block(id)
         class WhileDoBlock(id: String) : Block(id)
         class DoWhileBlock(id: String) : Block(id)
+
+        override fun toString(): String {
+            return id
+        }
     }
 }

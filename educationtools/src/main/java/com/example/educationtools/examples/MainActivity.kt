@@ -27,18 +27,45 @@ class MainActivity : AppCompatActivity() {
         val textTwo = findViewById<EditText>(R.id.textView2)
 
         val editor = findViewById<EditorViewBase>(R.id.editor)
-        val block = NotifyBlock()
-        editor.addChild(block)
-        block.apply {
-            updatePosition(PointF(500f, 500f))
-            updateSize(500f, 200f)
-        }
 
-        val block2 = NotifyBlock()
-        editor.addChild(block2)
-        block2.apply {
-            updatePosition(PointF(500f, 800f))
-            updateSize(500f, 200f)
-        }
+        val list = listOf<Int>(1, 2, 3, 4, 5, 6, 8)
+        Log.d("Block-Shames", list.takeWhile { it > 4 }.toString())
+
+        val memoryModel = MemoryModel()
+        memoryModel.declareVarBlock("0")
+        memoryModel.declareConditionBlock("1")
+        memoryModel.declareVarBlock("2")
+        memoryModel.declareVarBlock("3")
+        memoryModel.declareDoWhileBlock("4")
+        memoryModel.declareVarBlock("5")
+        memoryModel.declareWhileDoBlock("6")
+        memoryModel.declareVarBlock("7")
+        memoryModel.declareVarBlock("8")
+        memoryModel.declareWhileDoBlock("9")
+        memoryModel.declareVarBlock("10")
+
+        memoryModel.bindBlocks("0", "1")
+
+        memoryModel.bindBlocks("1", "2")
+
+        memoryModel.bindBlocks("2", "4")
+
+        memoryModel.bindBlocks("4", "2")
+
+        memoryModel.bindBlocks("5", "6")
+
+        memoryModel.bindBlocks("6", "7")
+
+        memoryModel.bindBlocks("7", "8")
+
+        memoryModel.bindBlocks("8", "9")
+
+        memoryModel.bindBlocks("9", "10")
+
+        memoryModel.bindBlocks("10", "9")
+
+        memoryModel.bindBlocks("9", "6")
+
+        memoryModel.bindBlocks("4", "5")
     }
 }
