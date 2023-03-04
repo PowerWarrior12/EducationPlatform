@@ -1,5 +1,6 @@
 package com.example.educationtools.logic
 
+import android.util.Log
 import com.example.educationtools.utils.graph.GraphNode
 import com.github.adriankuta.datastructure.tree.TreeNode
 
@@ -46,11 +47,284 @@ class MemoryModel2 {
         }
     }
 
-    private fun endWhileDoBlocks(parentBlock: TreeNode<Block>) {
-        var parent = parentBlock.parent
-        while (parent != null) {
+    fun bindBlocksOrThrow(parentId: String, childId: String, direction: Boolean? = null) {
+        var parentNode = blocksMap.getValue(parentId)
+        var childNode = blocksMap.getValue(childId)
+
+        var variants = mutableListOf<TreeNode<Block>>()
+        if (parentNode.value is Block.VariableBlock) {
+
+            variants = getFreeBlocks(parentNode) as MutableList<TreeNode<Block>>
+            if (childNode in variants) {
+                freeBlocks.remove(childNode)
+                if (childNode.parent != null && childNode.parent!!.parent != null) {
+                    childNode = childNode.parent!!.parent!!
+                }
+                parentNode.addChild(childNode)
+                Log.d("Block-Shames", "${variants.map { it.toString() }}")
+                return
+            }
+            if (childNode == endWhileDoBlocks(parentNode)) {
+                parentNode.addChild(TreeNode(Block.EndWhileBlock()))
+                Log.d("Block-Shames", "$childNode")
+                return
+            }
+            if (parentNode.children.isEmpty()) {
+                variants = getEndIfElseBlocks(parentNode) as MutableList<TreeNode<Block>>
+
+                Log.d("Block-Shames", "${variants.map { it.toString() }}")
+
+                if (childNode in variants) {
+                    val childIfElse = findUnusedIfElse(childNode)
+                    val parentIfElse = findUnusedIfElse(parentNode)
+                    val needBlock = childIfElse.firstOrNull { it in parentIfElse }
+                    if (needBlock != null) {
+                        if (childNode.parent != null && childNode.parent!!.parent != null && childNode.parent!!.parent!!.value is Block.DoBlock) {
+                            childNode.parent!!.parent!!.parent!!.removeChild(childNode.parent!!.parent!!)
+                            needBlock.addChild(childNode.parent!!.parent!!)
+                        } else {
+                            childNode.parent!!.removeChild(childNode)
+                            needBlock.addChild(childNode)
+                        }
+                        return
+                    }
+                }
+            }
+            throw java.lang.Exception("Невозможно связать блоки $parentId и $childId")
+        }
+        if (parentNode.value is Block.ConditionBlock) {
+            if (direction == null) throw java.lang.Exception("Для условного блока необходимо указывать направление")
+
+            parentNode = if (direction) {
+                parentNode.children.first { it.value is Block.TrueBlock }
+            } else {
+                parentNode.children.first { it.value is Block.FalseBlock }
+            }
+            variants = getFreeBlocks(parentNode) as MutableList<TreeNode<Block>>
+            if (childNode in variants) {
+                freeBlocks.remove(childNode)
+                if (childNode.parent != null && childNode.parent!!.parent != null) {
+                    childNode = childNode.parent!!.parent!!
+                }
+                parentNode.addChild(childNode)
+                Log.d("Block-Shames", "${variants.map { it.toString() }}")
+                return
+            }
+            if (parentNode.children.isEmpty()) {
+                variants = getEndIfElseBlocks(parentNode) as MutableList<TreeNode<Block>>
+
+                Log.d("Block-Shames", "${variants.map { it.toString() }}")
+
+                if (childNode in variants) {
+                    val childIfElse = findUnusedIfElse(childNode)
+                    val parentIfElse = findUnusedIfElse(parentNode)
+                    val needBlock = childIfElse.firstOrNull { it in parentIfElse }
+                    if (needBlock != null) {
+                        if (childNode.parent != null && childNode.parent!!.parent != null && childNode.parent!!.parent!!.value is Block.DoBlock) {
+                            childNode.parent!!.parent!!.parent!!.removeChild(childNode.parent!!.parent!!)
+                            needBlock.addChild(childNode.parent!!.parent!!)
+                        } else {
+                            childNode.parent!!.removeChild(childNode)
+                            needBlock.addChild(childNode)
+                        }
+                        return
+                    }
+                }
+            }
+            throw java.lang.Exception("Невозможно связать блоки $parentId и $childId")
 
         }
+        if (parentNode.value is Block.WhileDoBlock) {
+            if (direction == null) throw java.lang.Exception("Для блока While-Do необходимо указывать направление")
+
+            if (direction) {
+                variants = getFreeBlocks(parentNode) as MutableList<TreeNode<Block>>
+                if (childNode in variants) {
+                    freeBlocks.remove(childNode)
+                    if (childNode.parent != null && childNode.parent!!.parent != null) {
+                        childNode = childNode.parent!!.parent!!
+                    }
+                    parentNode.children.first { it.value is Block.TrueBlock }.addChild(childNode)
+                    Log.d("Block-Shames", "${variants.map { it.toString() }}")
+                    return
+                }
+                throw java.lang.Exception("Невозможно связать блоки $parentId и $childId")
+            } else {
+                if (childNode == endWhileDoBlocks(parentNode)) {
+                    parentNode.children.first { it.value is Block.FalseBlock }.addChild(TreeNode(Block.EndWhileBlock()))
+                    Log.d("Block-Shames", "$childNode")
+                    return
+                }
+                if (parentNode.children.first { it.value is Block.FalseBlock }.children.isEmpty()) {
+                    variants = getEndIfElseBlocks(parentNode) as MutableList<TreeNode<Block>>
+
+                    Log.d("Block-Shames", "${variants.map { it.toString() }}")
+
+                    if (childNode in variants) {
+                        val childIfElse = findUnusedIfElse(childNode)
+                        val parentIfElse = findUnusedIfElse(parentNode)
+                        val needBlock = childIfElse.firstOrNull { it in parentIfElse }
+                        if (needBlock != null) {
+                            if (childNode.parent != null && childNode.parent!!.parent != null && childNode.parent!!.parent!!.value is Block.DoBlock) {
+                                childNode.parent!!.parent!!.parent!!.removeChild(childNode.parent!!.parent!!)
+                                needBlock.addChild(childNode.parent!!.parent!!)
+                            } else {
+                                childNode.parent!!.removeChild(childNode)
+                                needBlock.addChild(childNode)
+                            }
+                            return
+                        }
+                    }
+                }
+                throw java.lang.Exception("Невозможно связать блоки $parentId и $childId")
+            }
+
+        }
+        if (parentNode.value is Block.DoWhileBlock) {
+            if (direction == null) throw java.lang.Exception("Для блока While-Do необходимо указывать направление")
+
+            if (direction) {
+
+            } else {
+
+            }
+        }
+
+    }
+
+    private fun findUnusedIfElse(parentBlock: TreeNode<Block>): List<TreeNode<Block>> {
+        var parent = parentBlock.parent
+        val result = mutableListOf<TreeNode<Block>>()
+        while (parent != null) {
+            if ((parent.value is Block.FalseBlock || parent.value is Block.TrueBlock) && parent.parent!!.value is Block.ConditionBlock) {
+                if (parent.parent!!.children.count() > 2) break
+                result.add(parent.parent!!)
+                parent = parent.parent!!.parent
+                continue
+            }
+
+            if (parent.value is Block.TrueBlock) break
+            parent = parent.parent
+        }
+        return result
+    }
+
+    /**
+     * Поиск блока While-Do, к которому можно перейти из конца цикла
+     * @param parentBlock блок от которого ищется переход
+     */
+    private fun endWhileDoBlocks(parentBlock: TreeNode<Block>): TreeNode<Block>? {
+        if (parentBlock.children.firstOrNull{ it.value is Block.EndWhileBlock } != null) {
+            return null
+        }
+        var parent = parentBlock.parent
+
+        while (parent != null) {
+            if (parent.value is Block.TrueBlock && parent.parent!!.value is Block.WhileDoBlock) {
+                return parent.parent!!
+            }
+            parent = parent.parent
+        }
+        return null
+    }
+
+    /**
+     * Поиск свободных блоков
+     * @param parentBlock блок, от которого необходимо построить связь
+     */
+    private fun getFreeBlocks(parentBlock: TreeNode<Block>): List<TreeNode<Block>> {
+        var parent: TreeNode<Block>? = parentBlock
+        var lastParent = parent
+        while (true) {
+            if (parent!!.parent == null) break
+            if (parent.parent!!.value is Block.DoBlock) {
+                parent = parent.parent
+                continue
+            }
+            lastParent = parent
+            parent = parent.parent
+        }
+        if (parent?.value is Block.DoBlock) {
+            parent = lastParent
+        }
+        return freeBlocks.filter { it != parent }
+    }
+
+    /**
+     * Поиск блока для завершения области If-Else
+     * @param parentBlock блок, от которого необходимо построить связь
+     */
+    private fun getEndIfElseBlocks(parentBlock: TreeNode<Block>): List<TreeNode<Block>> {
+        val resultList = mutableListOf<TreeNode<Block>>()
+
+        fun findBlocks(conditionNode: Pair<TreeNode<Block>, TreeNode<Block>>) {
+            var child = conditionNode.first.children.first { it != conditionNode.second }.firstOrNull()
+            while (child != null) {
+                if (child.value is Block.ConditionBlock) {
+                    if (child.children.count() > 2) {
+                        resultList.add(child)
+                        child = child.children.firstOrNull { it.value !is Block.TrueBlock && it.value !is Block.FalseBlock }
+                        continue
+                    } else {
+                        findBlocks(Pair(child, child.children.first { it.value is Block.TrueBlock }))
+                        findBlocks(Pair(child, child.children.first { it.value is Block.FalseBlock }))
+                        break
+                    }
+                }
+                if (child.value is Block.WhileDoBlock || child.value is Block.DoBlock) {
+                    if (child.value !is Block.DoBlock) {
+                        resultList.add(child)
+                    }
+                    child = child.children.first { it.value is Block.FalseBlock }
+                    child = child.children.first()
+                    continue
+                }
+                if (child.value !is Block.EndWhileBlock) {
+                    resultList.add(child)
+                }
+                child = child.children.firstOrNull()
+            }
+        }
+
+        var parent: TreeNode<Block>? = parentBlock
+        while (parent != null) {
+            if ((parent.value is Block.FalseBlock || parent.value is Block.TrueBlock) && parent.parent!!.value is Block.ConditionBlock) {
+                if (parent.parent!!.children.count() > 2) break
+                findBlocks(Pair(parent.parent!!, parent))
+                parent = parent.parent!!.parent
+                continue
+            }
+
+            if (parent.value is Block.TrueBlock) break
+            parent = parent.parent
+        }
+
+        return resultList
+    }
+
+    /**
+     * Поиск блока для обозначения области do в цикле Do-While
+     * @param parentBlock блок, от которого необходимо построить связь
+     */
+    private fun doWhileEnd(parentBlock: TreeNode<Block>): List<TreeNode<Block>> {
+        var parent = parentBlock.parent
+        val resultList = mutableListOf<TreeNode<Block>>()
+        while (parent != null) {
+            if ((parent.value is Block.TrueBlock || parent.value is Block.FalseBlock) && parent.parent!!.value is Block.ConditionBlock) {
+                if (parent.parent!!.children.count() > 2) break
+                resultList.add(parent.parent!!)
+                parent = parent.parent!!.parent
+                continue
+            }
+
+            if (parent.value is Block.TrueBlock) break
+            if (parent.value is Block.FalseBlock) continue
+
+            resultList.add(parent)
+            parent = parent.parent
+        }
+
+        return resultList
     }
 
     sealed class Block {
@@ -69,14 +343,30 @@ class MemoryModel2 {
                 return id
             }
         }
-        class DoWhileBlock(val id: String) : Block() {
+        class DoWhileBlock(val id: String) : Block(){
             override fun toString(): String {
                 return id
             }
         }
-        class TrueBlock: Block()
-        class FalseBlock: Block()
-        class DoBlock: Block()
-        class EndWhileBlock: Block()
+        class TrueBlock: Block(){
+            override fun toString(): String {
+                return "TRUE"
+            }
+        }
+        class FalseBlock: Block(){
+            override fun toString(): String {
+                return "FALSE"
+            }
+        }
+        class DoBlock: Block(){
+            override fun toString(): String {
+                return "DO"
+            }
+        }
+        class EndWhileBlock: Block(){
+            override fun toString(): String {
+                return "END WHILE"
+            }
+        }
     }
 }
