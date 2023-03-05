@@ -50,6 +50,10 @@ class MemoryModel2 {
     fun bindBlocksOrThrow(parentId: String, childId: String, direction: Boolean? = null) {
         var parentNode = blocksMap.getValue(parentId)
         var childNode = blocksMap.getValue(childId)
+        Log.d("Block-Shames","Связь блока $parentId с блоком $childId")
+        freeBlocks.forEach {
+            Log.d("Block-Shames",it.prettyString())
+        }
 
         var variants = mutableListOf<TreeNode<Block>>()
         if (parentNode.value is Block.VariableBlock) {
@@ -136,18 +140,23 @@ class MemoryModel2 {
         }
         if (parentNode.value is Block.WhileDoBlock) {
             if (direction == null) throw java.lang.Exception("Для блока While-Do необходимо указывать направление")
+            variants = getFreeBlocks(parentNode) as MutableList<TreeNode<Block>>
+            if (childNode in variants) {
+                freeBlocks.remove(childNode)
+                if (childNode.parent != null && childNode.parent!!.parent != null) {
+                    childNode = childNode.parent!!.parent!!
+                }
+                if (direction) {
+                    parentNode.children.first { it.value is Block.TrueBlock }.addChild(childNode)
+                } else {
+                    parentNode.children.first { it.value is Block.FalseBlock }.addChild(childNode)
+                }
+
+                Log.d("Block-Shames", "${variants.map { it.toString() }}")
+                return
+            }
 
             if (direction) {
-                variants = getFreeBlocks(parentNode) as MutableList<TreeNode<Block>>
-                if (childNode in variants) {
-                    freeBlocks.remove(childNode)
-                    if (childNode.parent != null && childNode.parent!!.parent != null) {
-                        childNode = childNode.parent!!.parent!!
-                    }
-                    parentNode.children.first { it.value is Block.TrueBlock }.addChild(childNode)
-                    Log.d("Block-Shames", "${variants.map { it.toString() }}")
-                    return
-                }
                 throw java.lang.Exception("Невозможно связать блоки $parentId и $childId")
             } else {
                 if (childNode == endWhileDoBlocks(parentNode)) {
@@ -184,12 +193,108 @@ class MemoryModel2 {
             if (direction == null) throw java.lang.Exception("Для блока While-Do необходимо указывать направление")
 
             if (direction) {
+                variants = doWhileEnd(parentNode) as MutableList<TreeNode<Block>>
+                if (childNode in variants) {
+                    var childCurrentParent = childNode.parent
+                    val doBlock: TreeNode<Block> = TreeNode(Block.DoBlock())
+                    val trueBlock: TreeNode<Block> = TreeNode(Block.TrueBlock())
+                    val falseBlock: TreeNode<Block> = TreeNode(Block.FalseBlock())
+                    doBlock.addChild(trueBlock)
+                    doBlock.addChild(falseBlock)
 
+                    if (childCurrentParent?.parent != null && childCurrentParent.parent!!.value is Block.DoBlock) {
+                        childNode = childCurrentParent.parent!!
+                        childCurrentParent = childCurrentParent.parent!!.parent
+                    }
+
+                    if (childCurrentParent != null) {
+
+                        childCurrentParent.removeChild(childNode)
+                        childCurrentParent.addChild(doBlock)
+                    }
+                    trueBlock.addChild(childNode)
+                    val doWhileChild = parentNode.children.firstOrNull()
+                    if (doWhileChild != null) {
+                        parentNode.removeChild(doWhileChild)
+                        falseBlock.addChild(doWhileChild)
+                    }
+                    parentNode.addChild(TreeNode(Block.EndDoBlock()))
+                    return
+                }
             } else {
+                val falseBlock = if (parentNode.children.firstOrNull { it.value is Block.EndDoBlock } != null ) {
+                    var parent = parentNode.parent
+                    while (parent != null) {
+                        if (parent.value is Block.TrueBlock && parent.parent!!.value is Block.DoBlock) {
+                            parent = parent.parent!!.children.firstOrNull { it.value is Block.FalseBlock }
+                            break
+                        }
+                        parent = parent.parent
+                    }
+                    parent
+                } else {
+                    null
+                }
+
+                variants = getFreeBlocks(parentNode) as MutableList<TreeNode<Block>>
+                if (childNode in variants) {
+                    freeBlocks.remove(childNode)
+                    if (childNode.parent != null && childNode.parent!!.parent != null) {
+                        childNode = childNode.parent!!.parent!!
+                    }
+                    if (falseBlock != null) {
+                        falseBlock.addChild(childNode)
+                    } else {
+                        parentNode.addChild(childNode)
+                    }
+
+                    Log.d("Block-Shames", "${variants.map { it.toString() }}")
+                    return
+                }
+                if (childNode == endWhileDoBlocks(parentNode)) {
+                    if (falseBlock != null) {
+                        falseBlock.addChild(TreeNode(Block.EndWhileBlock()))
+                    } else {
+                        parentNode.addChild(TreeNode(Block.EndWhileBlock()))
+                    }
+
+                    Log.d("Block-Shames", "$childNode")
+                    return
+                }
+                if (parentNode.children.isEmpty() || falseBlock?.children?.isEmpty() != null) {
+                    variants = if (falseBlock != null) {
+                        getEndIfElseBlocks(falseBlock.parent!!) as MutableList<TreeNode<Block>>
+                    } else {
+                        getEndIfElseBlocks(parentNode) as MutableList<TreeNode<Block>>
+                    }
+
+
+                    Log.d("Block-Shames", "${variants.map { it.toString() }}")
+
+                    if (childNode in variants) {
+                        val childIfElse = findUnusedIfElse(childNode)
+                        val parentIfElse = if (falseBlock != null) {
+                            findUnusedIfElse(falseBlock.parent!!)
+                        } else {
+                            findUnusedIfElse(parentNode)
+                        }
+                        val needBlock = childIfElse.firstOrNull { it in parentIfElse }
+                        if (needBlock != null) {
+                            if (childNode.parent != null && childNode.parent!!.parent != null && childNode.parent!!.parent!!.value is Block.DoBlock) {
+                                childNode.parent!!.parent!!.parent!!.removeChild(childNode.parent!!.parent!!)
+                                needBlock.addChild(childNode.parent!!.parent!!)
+                            } else {
+                                childNode.parent!!.removeChild(childNode)
+                                needBlock.addChild(childNode)
+                            }
+                            return
+                        }
+                    }
+                }
 
             }
+            throw java.lang.Exception("Невозможно связать блоки $parentId и $childId")
         }
-
     }
 
     private fun findUnusedIfElse(parentBlock: TreeNode<Block>): List<TreeNode<Block>> {
@@ -276,10 +381,10 @@ class MemoryModel2 {
                         resultList.add(child)
                     }
                     child = child.children.first { it.value is Block.FalseBlock }
-                    child = child.children.first()
+                    child = child.children.firstOrNull()
                     continue
                 }
-                if (child.value !is Block.EndWhileBlock) {
+                if (child.value !is Block.EndWhileBlock && child.value !is Block.TrueBlock && child.value !is Block.FalseBlock) {
                     resultList.add(child)
                 }
                 child = child.children.firstOrNull()
@@ -318,7 +423,10 @@ class MemoryModel2 {
             }
 
             if (parent.value is Block.TrueBlock) break
-            if (parent.value is Block.FalseBlock) continue
+            if (parent.value is Block.FalseBlock) {
+                parent = parent.parent
+                continue
+            }
 
             resultList.add(parent)
             parent = parent.parent
@@ -366,6 +474,12 @@ class MemoryModel2 {
         class EndWhileBlock: Block(){
             override fun toString(): String {
                 return "END WHILE"
+            }
+        }
+
+        class EndDoBlock: Block(){
+            override fun toString(): String {
+                return "END DO"
             }
         }
     }
