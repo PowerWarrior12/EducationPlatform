@@ -1,4 +1,4 @@
-package com.example.educationtools.logic
+package com.example.educationtools.logic.functions
 
 import kotlin.reflect.KClass
 

@@ -1,29 +1,56 @@
 package com.example.educationtools.logic
 
-class CalculationBlock: LogicBlock() {
-    var nextBlock: LogicBlock? = null
-    var function: Function? = null
-    var changeableVar: String? = null
-    override fun start(inputVariables: List<Variable>) {
-        inputVariables.forEach { variable ->
-            variables[variable.name] = variable
-        }
+import com.example.educationtools.logic.functions.Function
+
+class CalculationBlock(private val memoryModel: MemoryModel): LogicBlock() {
+    private var nextBlock: LogicBlock? = null
+    private var function: Function? = null
+    private var changeableVar: Variable? = null
+
+    init {
+        memoryModel.declareVarBlock(id)
     }
 
     override fun work() {
         if (changeableVar != null && function != null) {
-            val resultValue = function!!.run()
-            val resultType = function!!.type
-            if (variables.contains(changeableVar)) {
-                if (variables[changeableVar!!]?.type != resultType) {
-                    throw Exception("Different types of data")
+            val funcResult = function!!.run()
+            changeableVar!!.value = funcResult
+            memoryModel.updateVariable(changeableVar!!)
+        }
+        nextBlock?.work()
+    }
+
+    fun setFunctionAndVar(function: Function, variable: String): Boolean {
+        //Смотрим, содержалась ли в данном блоке переменная, и если да, была ли она объявлена в этом блоке
+        //Если так, то удаляем её
+        changeableVar?.let { currentVar ->
+            memoryModel.getBlockVariable(id)?.let {
+                if (currentVar.name == it) {
+                    memoryModel.deleteVariable(id, currentVar)
                 }
-                variables[changeableVar!!]?.value = resultValue
-            } else {
-                //variables[changeableVar!!] = Variable(id, changeableVar!!, resultType, resultValue)
             }
         }
-        nextBlock?.start(variables.values.toList())
-        nextBlock?.work()
+
+        //Получаем все доступные для данного блока переменные
+        val declaredVars = memoryModel.getAvailableVariablesOrThrow(id)
+        //Проверяем, была ли эта переменная уже объявлена
+        if (variable in declaredVars) {
+            val currentVar = memoryModel.getVariable(variable)
+            if (currentVar.type != function.type) return false
+        } else {
+            memoryModel.declareVariable(id, Variable(variable, function.type))
+        }
+        this.changeableVar = Variable(variable, function.type)
+        this.function = function
+        return true
+    }
+
+    fun setNextBlock(newNextBlock: LogicBlock) {
+        nextBlock = newNextBlock
+        memoryModel.bindBlocksOrThrow(id, newNextBlock.id)
+    }
+
+    fun deleteNextBlock() {
+        nextBlock = null
     }
 }

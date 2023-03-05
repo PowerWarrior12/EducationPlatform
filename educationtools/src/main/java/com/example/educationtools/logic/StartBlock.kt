@@ -1,28 +1,45 @@
 package com.example.educationtools.logic
 
-class StartBlock: LogicBlock() {
+class StartBlock(private val memoryModel: MemoryModel) : LogicBlock() {
 
+    private var nextBlock: LogicBlock? = null
+    private val startVariables = mutableListOf<Variable>()
 
-    var nextBlock: LogicBlock? = null
-    private val startVariables = mutableListOf<String>()
+    init {
+        memoryModel.declareVarBlock(id)
+    }
 
-    override fun start(inputVariables: List<Variable>) {
-        if (inputVariables.count() != inputVariables.count()) return
+    fun startOrThrow(inputVariables: List<Variable>) {
+        if (startVariables.count() != inputVariables.count()) return
         startVariables.zip(inputVariables).forEach { pair ->
-            variables[pair.first] = pair.second.apply {
-                name = pair.first
-                id = this@StartBlock.id
-            }
+            if (pair.first.type != pair.second.type)
+                throw java.lang.Exception("Типы параметра и введённого данного не совпадают: ${pair.first.name} and ${pair.second.value.toString()}")
+            memoryModel.updateVariable(Variable(pair.first.name, pair.first.type, pair.second.value))
         }
+        work()
     }
 
     override fun work() {
-        nextBlock?.start(variables.values.toList())
         nextBlock?.work()
     }
 
-    fun updateVariables(list: List<String>) {
+    fun setNextBlock(newNextBlock: LogicBlock) {
+        nextBlock = newNextBlock
+        memoryModel.bindBlocksOrThrow(id, newNextBlock.id)
+    }
+
+    fun deleteNextBlock() {
+        nextBlock = null
+    }
+
+    fun updateVariables(list: List<Variable>) {
+        startVariables.forEach {
+            memoryModel.deleteVariable(id, it)
+        }
         startVariables.clear()
         startVariables.addAll(list)
+        startVariables.forEach {
+            memoryModel.declareVariable(id, it)
+        }
     }
 }
