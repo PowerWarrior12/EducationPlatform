@@ -155,12 +155,15 @@ class EditorViewBase @JvmOverloads constructor(
             distanceX: Float,
             distanceY: Float
         ): Boolean {
-            transformations.addTranslation(
-                distanceX,
-                distanceY
-            )
-            invalidate()
-            return true
+            if (!touchManager.isProcess()) {
+                transformations.addTranslation(
+                    distanceX,
+                    distanceY
+                )
+                invalidate()
+                return true
+            }
+            return false
         }
 
         private fun animateFling(velocity: PointF, update: (PointF) -> Unit) {

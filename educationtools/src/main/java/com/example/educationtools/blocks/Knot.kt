@@ -1,0 +1,121 @@
+package com.example.educationtools.blocks
+
+import android.graphics.*
+import androidx.core.graphics.toRegion
+import com.example.educationtools.touching.Touchable
+
+class Knot(
+    private val isOutput: Boolean,
+    private val radius: Float,
+    private val logicBlockView: LogicBlockView,
+    private val side: Side
+) : Touchable {
+
+    private var xPos: Float = 0f
+
+    private var yPos: Float = 0f
+
+    private val pathMain = Path().apply {
+        addCircle(xPos, yPos, radius, Path.Direction.CCW)
+    }
+
+    private val rectMain = RectF().apply {
+        left = xPos - radius
+        right = xPos + radius
+        top = yPos - radius
+        bottom = yPos + radius
+    }
+
+    private val pathCore = Path().apply {
+        addCircle(xPos, yPos, radius/2f, Path.Direction.CCW)
+    }
+
+    private var mainRegion = Region().apply {
+        setPath(pathMain, rectMain.toRegion())
+    }
+
+    private val fillPaint = Paint().apply {
+        isAntiAlias = true
+        style = Paint.Style.FILL
+        color = Color.WHITE
+    }
+
+    private val borderPaint = Paint().apply {
+        isAntiAlias = true
+        style = Paint.Style.STROKE
+        color = Color.BLACK
+        strokeWidth = 3f
+    }
+
+    private val fillCorePaint = Paint().apply {
+        isAntiAlias = true
+        style = Paint.Style.FILL
+        color = Color.BLACK
+    }
+
+    private val onPositionChangedListeners: MutableList<(Float, Float) -> Unit> = mutableListOf()
+
+    override fun checkPointAvailability(x: Float, y: Float): Boolean {
+        return mainRegion.contains(x.toInt(), y.toInt())
+    }
+
+    override fun checkPointAvailability(point: PointF): Boolean {
+        return checkPointAvailability(point.x, point.y)
+    }
+
+    override fun checkAndTouch(x: Float, y: Float) {
+
+    }
+
+    override fun getPriority(): Int {
+        return 1
+    }
+
+    fun updatePosition(newX: Float, newY: Float) {
+        xPos = newX
+        yPos = newY
+        rectMain.apply {
+            left = xPos - radius
+            right = xPos + radius
+            top = yPos - radius
+            bottom = yPos + radius
+        }
+
+        pathMain.apply {
+            reset()
+            addCircle(xPos, yPos, radius, Path.Direction.CCW)
+        }
+
+        pathCore.apply {
+            reset()
+            addCircle(xPos, yPos, radius/2f, Path.Direction.CCW)
+        }
+
+        mainRegion = Region().apply {
+            setPath(pathMain, rectMain.toRegion())
+        }
+        onPositionChangedListeners.forEach { it(xPos, yPos) }
+    }
+
+    fun draw(canvas: Canvas) {
+        canvas.apply {
+            drawPath(pathMain, fillPaint)
+            drawPath(pathMain, borderPaint)
+            if (isOutput) {
+                drawPath(pathCore, fillCorePaint)
+            }
+        }
+    }
+
+    fun addOnPositionChangedListener(listener: (Float, Float) -> Unit) {
+        onPositionChangedListeners.add(listener)
+    }
+
+    fun getRadius(): Float {
+        return radius
+    }
+
+    enum class Side {
+        LEFT, RIGHT, TOP, BOTTOM
+    }
+}

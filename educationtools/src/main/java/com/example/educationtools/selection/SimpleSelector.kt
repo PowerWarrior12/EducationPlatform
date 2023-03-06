@@ -1,12 +1,15 @@
 package com.example.educationtools.selection
 
 import android.graphics.*
+import android.util.Log
 import com.example.educationtools.base.EditableBlock
 import com.example.educationtools.touching.TouchManager
 
 val TAG = SimpleSelector::class.simpleName
 const val MAIN_OFFSET = 60f
 const val EDIT_RECT_RAD = 15f
+const val MIN_HEIGHT = 30f
+const val MIN_WIDTH = 60f
 open class SimpleSelector(
     private val editableBlock: EditableBlock
 ): Selector {
@@ -46,29 +49,29 @@ open class SimpleSelector(
     private val leftEditRect = RectF().apply {
         left = mainRect.left - EDIT_RECT_RAD
         right = mainRect.left + EDIT_RECT_RAD
-        top = mainRect.centerY() + EDIT_RECT_RAD
-        bottom = mainRect.centerY() - EDIT_RECT_RAD
+        top = mainRect.centerY() - EDIT_RECT_RAD
+        bottom = mainRect.centerY() + EDIT_RECT_RAD
     }
 
     private val rightEditRect = RectF().apply {
         left = mainRect.right - EDIT_RECT_RAD
         right = mainRect.right + EDIT_RECT_RAD
-        top = mainRect.centerY() + EDIT_RECT_RAD
-        bottom = mainRect.centerY() - EDIT_RECT_RAD
+        top = mainRect.centerY() - EDIT_RECT_RAD
+        bottom = mainRect.centerY() + EDIT_RECT_RAD
     }
 
     private val topEditRect = RectF().apply {
         left = mainRect.centerX() - EDIT_RECT_RAD
         right = mainRect.centerX() + EDIT_RECT_RAD
-        top = mainRect.top + EDIT_RECT_RAD
-        bottom = mainRect.top - EDIT_RECT_RAD
+        top = mainRect.top - EDIT_RECT_RAD
+        bottom = mainRect.top + EDIT_RECT_RAD
     }
 
     private val bottomEditRect = RectF().apply {
         left = mainRect.centerX() - EDIT_RECT_RAD
         right = mainRect.centerX() + EDIT_RECT_RAD
-        top = mainRect.bottom + EDIT_RECT_RAD
-        bottom = mainRect.bottom - EDIT_RECT_RAD
+        top = mainRect.bottom - EDIT_RECT_RAD
+        bottom = mainRect.bottom + EDIT_RECT_RAD
     }
 
     override fun isSelected(): Boolean {
@@ -117,18 +120,45 @@ open class SimpleSelector(
     override fun move(touchInfo: TouchManager.TouchInfo) {
         if (sideEdit != null) {
             when(sideEdit) {
-                SideEdit.LEFT -> {
+                SideEdit.RIGHT -> {
                     val currentLeft = editableBlock.getCenter().x - editableBlock.getWidth()/2f
-                    val newWidth = touchInfo.xPos - MAIN_OFFSET - currentLeft
+                    val newWidth = (touchInfo.xPos - MAIN_OFFSET - currentLeft).coerceAtLeast(
+                        MIN_WIDTH)
                     val newCenterX = currentLeft + newWidth/2f
                     editableBlock.updatePosition(PointF(newCenterX, editableBlock.getCenter().y))
                     editableBlock.updateSize(newWidth, editableBlock.getHeight())
+                }
+                SideEdit.LEFT -> {
+                    val currentRight = editableBlock.getCenter().x + editableBlock.getWidth()/2f
+                    val newWidth = (currentRight - touchInfo.xPos - MAIN_OFFSET).coerceAtLeast(
+                    MIN_WIDTH)
+                    val newCenterX = currentRight - newWidth/2f
+                    editableBlock.updatePosition(PointF(newCenterX, editableBlock.getCenter().y))
+                    editableBlock.updateSize(newWidth, editableBlock.getHeight())
+                }
+                SideEdit.BOTTOM -> {
+                    val currentTop = editableBlock.getCenter().y - editableBlock.getHeight()/2f
+                    val newHeight = (touchInfo.yPos - MAIN_OFFSET - currentTop).coerceAtLeast(
+                        MIN_HEIGHT)
+                    val newCenterY = currentTop + newHeight/2f
+                    editableBlock.updatePosition(PointF(editableBlock.getCenter().x, newCenterY))
+                    editableBlock.updateSize(editableBlock.getWidth(), newHeight)
+                }
+                SideEdit.TOP -> {
+                    val currentBottom = editableBlock.getCenter().y + editableBlock.getHeight()/2f
+                    val newHeight = (currentBottom - touchInfo.yPos - MAIN_OFFSET).coerceAtLeast(
+                    MIN_HEIGHT)
+                    val newCenterY = currentBottom - newHeight/2f
+                    editableBlock.updatePosition(PointF(editableBlock.getCenter().x, newCenterY))
+                    editableBlock.updateSize(editableBlock.getWidth(), newHeight)
                 }
             }
         }
     }
 
     override fun checkPointAvailability(x: Float, y: Float): Boolean {
+        val recy = rightEditRect
+        val con = recy.contains(x, y)
         if (rightEditRect.contains(x, y)) {
             sideEdit = SideEdit.RIGHT
             return true
@@ -163,29 +193,29 @@ open class SimpleSelector(
         leftEditRect.apply {
             left = mainRect.left - EDIT_RECT_RAD
             right = mainRect.left + EDIT_RECT_RAD
-            top = mainRect.centerY() + EDIT_RECT_RAD
-            bottom = mainRect.centerY() - EDIT_RECT_RAD
+            top = mainRect.centerY() - EDIT_RECT_RAD
+            bottom = mainRect.centerY() + EDIT_RECT_RAD
         }
 
         rightEditRect.apply {
             left = mainRect.right - EDIT_RECT_RAD
             right = mainRect.right + EDIT_RECT_RAD
-            top = mainRect.centerY() + EDIT_RECT_RAD
-            bottom = mainRect.centerY() - EDIT_RECT_RAD
+            top = mainRect.centerY() - EDIT_RECT_RAD
+            bottom = mainRect.centerY() + EDIT_RECT_RAD
         }
 
         topEditRect.apply {
             left = mainRect.centerX() - EDIT_RECT_RAD
             right = mainRect.centerX() + EDIT_RECT_RAD
-            top = mainRect.top + EDIT_RECT_RAD
-            bottom = mainRect.top - EDIT_RECT_RAD
+            top = mainRect.top - EDIT_RECT_RAD
+            bottom = mainRect.top + EDIT_RECT_RAD
         }
 
         bottomEditRect.apply {
             left = mainRect.centerX() - EDIT_RECT_RAD
             right = mainRect.centerX() + EDIT_RECT_RAD
-            top = mainRect.bottom + EDIT_RECT_RAD
-            bottom = mainRect.bottom - EDIT_RECT_RAD
+            top = mainRect.bottom - EDIT_RECT_RAD
+            bottom = mainRect.bottom + EDIT_RECT_RAD
         }
     }
 

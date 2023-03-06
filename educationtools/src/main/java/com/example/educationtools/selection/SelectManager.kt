@@ -1,5 +1,6 @@
 package com.example.educationtools.selection
 
+import android.util.Log
 import com.example.educationtools.touching.TouchManager
 
 class SelectManager(
@@ -35,6 +36,7 @@ class SelectManager(
     private fun onTouch(touchInfo: TouchManager.TouchInfo) {
         if (touchInfo is TouchManager.TouchInfo.FilledInfo) {
             if (touchInfo.touchable is Selector) {
+                Log.d("Selector", "Touch")
                 touchManager.addMoveListener(touchInfo.touchable::move)
             }
         }
@@ -43,6 +45,7 @@ class SelectManager(
     private fun onTouchUp(touchInfo: TouchManager.TouchInfo) {
         if (touchInfo is TouchManager.TouchInfo.FilledInfo) {
             if (touchInfo.touchable is Selector) {
+                Log.d("Selector", "TouchUp")
                 touchManager.deleteMoveListener(touchInfo.touchable::move)
             }
         }

@@ -1,5 +1,6 @@
 package com.example.educationtools.examples
 
+import android.graphics.PointF
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -7,6 +8,7 @@ import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import com.example.educationtools.R
 import com.example.educationtools.base.EditorViewBase
+import com.example.educationtools.blocks.CalculationBlockView
 import com.example.educationtools.blocks.NotifyBlock
 import com.example.educationtools.logic.*
 import com.example.educationtools.logic.functions.ConditionFunction
@@ -30,6 +32,18 @@ class MainActivity : AppCompatActivity() {
 
         editor.addChild(NotifyBlock().apply {
             setEditorParent(editor)
+            updateSize(500f, 300f)
+        })
+
+        editor.addChild(NotifyBlock().apply {
+            setEditorParent(editor)
+            updatePosition(PointF(300f, 200f))
+            updateSize(500f, 300f)
+        })
+
+        editor.addChild(CalculationBlockView().apply {
+            setEditorParent(editor)
+            updatePosition(PointF(300f, 700f))
             updateSize(500f, 300f)
         })
     }

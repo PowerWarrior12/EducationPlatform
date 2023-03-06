@@ -14,6 +14,7 @@ class TouchManager(
     private val onTouchReleaseListeners = mutableListOf<(TouchInfo) -> Unit>()
 
     private var longProcess: Boolean = false
+    private var moveProcess: Boolean = false
 
     fun addTouchListener(listener: (TouchInfo) -> Unit) {
         onTouchListeners.add(listener)
@@ -97,6 +98,7 @@ class TouchManager(
 
     fun move(x: Float, y: Float) {
         val transformPoint = transformations.convertPointToTransform(x, y)
+        moveProcess = true
         touchableInFocus?.let { touchable ->
             onMoveListeners.forEach { listener ->
                 listener(TouchInfo.FilledInfo(transformPoint.x, transformPoint.y, touchable))
@@ -117,6 +119,10 @@ class TouchManager(
             if (longProcess) {
                 touchableInFocus = null
                 longProcess = false
+            }
+            if (moveProcess) {
+                touchableInFocus = null
+                moveProcess = false
             }
             return
         }
@@ -141,6 +147,10 @@ class TouchManager(
         }
         touchableSet.clear()
         touchableSet.addAll(sorted)
+    }
+
+    fun isProcess(): Boolean {
+        return touchableInFocus != null
     }
 
     sealed class TouchInfo(
