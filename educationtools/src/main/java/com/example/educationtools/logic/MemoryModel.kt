@@ -531,7 +531,7 @@ class MemoryModel {
         return resultList
     }
 
-    sealed class Block {
+    private sealed class Block {
         class VariableBlock(val id: String, var variableName: String?) : Block() {
             override fun toString(): String {
                 return id

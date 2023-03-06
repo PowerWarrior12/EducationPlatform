@@ -29,7 +29,7 @@ abstract class EditableBlockBase protected constructor() : EditableBlock, Select
     private var text: String =
         "Какой то текст"
 
-    private var selector: Selector = SimpleSelector(this)
+    private var selector = SimpleSelector(this)
 
     private var parentEditor: ParentEditor? = null
 
@@ -78,6 +78,7 @@ abstract class EditableBlockBase protected constructor() : EditableBlock, Select
         }
         updateMainRect()
         updateTextRect()
+        selector.updateSize()
         invalidate()
     }
 
@@ -86,6 +87,7 @@ abstract class EditableBlockBase protected constructor() : EditableBlock, Select
         height = newHeight
         updateMainRect()
         updateTextRect()
+        selector.updateSize()
         invalidate()
     }
 

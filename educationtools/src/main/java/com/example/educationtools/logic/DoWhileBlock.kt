@@ -1,15 +1,12 @@
 package com.example.educationtools.logic
 
-import android.util.Log
 import com.example.educationtools.logic.functions.ConditionFunction
-import com.example.educationtools.logic.functions.Function
-import kotlin.reflect.KFunction
 
-class ConditionBlock(): LogicBlock() {
-
+class DoWhileBlock: LogicBlock() {
     private var trueBlock: LogicBlock? = null
     private var falseBlock: LogicBlock? = null
     private var function: ConditionFunction? = null
+
     override fun work() {
         if (function != null) {
             val result = function!!.run() as Boolean
@@ -22,7 +19,7 @@ class ConditionBlock(): LogicBlock() {
     }
 
     override fun init() {
-        memoryModel.declareConditionBlock(id)
+        memoryModel.declareDoWhileBlock(id)
     }
 
     fun setFunction(newFunction: ConditionFunction) {

@@ -7,11 +7,15 @@ import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import com.example.educationtools.R
 import com.example.educationtools.base.EditorViewBase
+import com.example.educationtools.blocks.NotifyBlock
 import com.example.educationtools.logic.*
 import com.example.educationtools.logic.functions.ConditionFunction
 import com.example.educationtools.logic.functions.ReflectFunction
 import com.example.educationtools.logic.functions.TypeFunction
 import com.example.educationtools.logic.functions.VariableFunction
+import com.example.educationtools.logic.methods.ArrayF
+import com.example.educationtools.logic.methods.ConditionsF
+import com.example.educationtools.logic.methods.MathF
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,27 +28,9 @@ class MainActivity : AppCompatActivity() {
 
         val editor = findViewById<EditorViewBase>(R.id.editor)
 
-
-        val memoryModel = MemoryModel()
-
-        val startBlock = StartBlock(memoryModel)
-        startBlock.startOrThrow(listOf(Variable("x", Int::class)))
-
-        val calculationBlock = CalculationBlock(memoryModel)
-        val function = ReflectFunction(MathF.Companion::sumII)
-        function.setVariableOrThrow(VariableFunction(memoryModel, "x"))
-        val minFunction = ReflectFunction(MathF.Companion::minusII)
-        minFunction.setVariableOrThrow(TypeFunction.generateTypeFunction(8))
-        minFunction.setVariableOrThrow(TypeFunction.generateTypeFunction(3))
-        function.setVariableOrThrow(minFunction)
-        calculationBlock.setFunctionAndVar(function, "x")
-
-        val endBlock = EndBlock(memoryModel)
-        endBlock.setCloseVars(listOf("x"))
-
-        startBlock.setNextBlock(calculationBlock)
-        calculationBlock.setNextBlock(endBlock)
-
-        startBlock.startOrThrow(listOf(Variable(type = Int::class, value = 10)))
+        editor.addChild(NotifyBlock().apply {
+            setEditorParent(editor)
+            updateSize(500f, 300f)
+        })
     }
 }

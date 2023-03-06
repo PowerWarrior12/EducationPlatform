@@ -2,21 +2,28 @@ package com.example.educationtools.logic
 
 import android.util.Log
 
-class EndBlock(private val memoryModel: MemoryModel): LogicBlock() {
+class EndBlock(): LogicBlock() {
 
-    init {
-        memoryModel.declareVarBlock(id)
-    }
-
-    var closeVars = mutableListOf<String>()
-
+    private var variables = mutableListOf<String>()
+    private val onWorkEndListeners = mutableListOf<(List<Variable>) -> Unit>()
     override fun work() {
-        closeVars.forEach {
-            Log.d("MyTag", memoryModel.getVariable(it).value.toString())
+        val result = variables.map {
+            memoryModel.getVariable(it)
+        }
+        onWorkEndListeners.forEach {
+            it(result)
         }
     }
 
-    fun setCloseVars(variable: List<String>) {
-        closeVars = variable as MutableList<String>
+    fun addOnEndListener(listener: (List<Variable>) -> Unit) {
+        onWorkEndListeners.add(listener)
+    }
+
+    override fun init() {
+        memoryModel.declareVarBlock(id)
+    }
+
+    fun setVariables(variable: List<String>) {
+        variables = variable as MutableList<String>
     }
 }

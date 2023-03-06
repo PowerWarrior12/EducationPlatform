@@ -1,4 +1,4 @@
-package com.example.educationtools.logic
+package com.example.educationtools.logic.methods
 
 class MathF {
     companion object {

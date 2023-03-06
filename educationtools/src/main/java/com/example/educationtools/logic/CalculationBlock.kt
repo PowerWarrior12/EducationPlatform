@@ -2,14 +2,10 @@ package com.example.educationtools.logic
 
 import com.example.educationtools.logic.functions.Function
 
-class CalculationBlock(private val memoryModel: MemoryModel): LogicBlock() {
+class CalculationBlock(): LogicBlock() {
     private var nextBlock: LogicBlock? = null
     private var function: Function? = null
     private var changeableVar: Variable? = null
-
-    init {
-        memoryModel.declareVarBlock(id)
-    }
 
     override fun work() {
         if (changeableVar != null && function != null) {
@@ -18,6 +14,10 @@ class CalculationBlock(private val memoryModel: MemoryModel): LogicBlock() {
             memoryModel.updateVariable(changeableVar!!)
         }
         nextBlock?.work()
+    }
+
+    override fun init() {
+        memoryModel.declareVarBlock(id)
     }
 
     fun setFunctionAndVar(function: Function, variable: String): Boolean {

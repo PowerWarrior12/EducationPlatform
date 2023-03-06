@@ -1,13 +1,9 @@
 package com.example.educationtools.logic
 
-class StartBlock(private val memoryModel: MemoryModel) : LogicBlock() {
+class StartBlock() : LogicBlock() {
 
     private var nextBlock: LogicBlock? = null
     private val startVariables = mutableListOf<Variable>()
-
-    init {
-        memoryModel.declareVarBlock(id)
-    }
 
     fun startOrThrow(inputVariables: List<Variable>) {
         if (startVariables.count() != inputVariables.count()) return
@@ -21,6 +17,10 @@ class StartBlock(private val memoryModel: MemoryModel) : LogicBlock() {
 
     override fun work() {
         nextBlock?.work()
+    }
+
+    override fun init() {
+        memoryModel.declareVarBlock(id)
     }
 
     fun setNextBlock(newNextBlock: LogicBlock) {

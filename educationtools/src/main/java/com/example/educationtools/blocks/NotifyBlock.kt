@@ -7,6 +7,7 @@ import android.graphics.PointF
 import com.example.educationtools.base.EditableBlock
 import com.example.educationtools.base.EditableBlockBase
 import com.example.educationtools.base.EditableBlockFactory
+import com.example.educationtools.selection.SimpleSelector
 
 class NotifyBlock(): EditableBlockBase() {
 

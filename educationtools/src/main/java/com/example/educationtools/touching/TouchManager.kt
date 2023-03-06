@@ -35,6 +35,22 @@ class TouchManager(
         onTouchReleaseListeners.add(listener)
     }
 
+    fun deleteSingleTouchListener(listener: (TouchInfo) -> Unit) {
+        onSingleTouchListeners.remove(listener)
+    }
+
+    fun deleteLongTouchListener(listener: (TouchInfo) -> Unit) {
+        onLongTouchListeners.remove(listener)
+    }
+
+    fun deleteMoveListener(listener: (TouchInfo) -> Unit) {
+        onMoveListeners.remove(listener)
+    }
+
+    fun deleteTouchReleaseListener(listener: (TouchInfo) -> Unit) {
+        onTouchReleaseListeners.remove(listener)
+    }
+
     fun touchDown(x: Float, y: Float) {
         val transformPoint = transformations.convertPointToTransform(x, y)
         touchableSet.firstOrNull { touchable ->

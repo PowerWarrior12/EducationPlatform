@@ -98,3 +98,68 @@
 
                 Log.d("Block-Shames", memoryModel.getAvailableBlocksOrThrow("6", true).toString())
                 memoryModel.bindBlocksOrThrow("6", "5", true)
+
+        //Block-Diagram test
+                val memoryModel = MemoryModel()
+
+                val startBlock = StartBlock()
+                startBlock.setMemoryModel(memoryModel)
+                startBlock.updateVariables(listOf(Variable(name = "x", type = Int::class)))
+
+                val varBlock1 = CalculationBlock()
+                varBlock1.setMemoryModel(memoryModel)
+                var sumFunction = ReflectFunction(MathF.Companion::sumII)
+                sumFunction.setVariableOrThrow(VariableFunction(memoryModel, "x"))
+                sumFunction.setVariableOrThrow(TypeFunction.generateTypeFunction(10))
+                varBlock1.setFunctionAndVar(sumFunction, "y")
+
+                val conditionBlock = ConditionBlock()
+                conditionBlock.setMemoryModel(memoryModel)
+                var conditionFunction = ConditionFunction(ConditionsF.Companion::moreII)
+                conditionFunction.setVariableOrThrow(VariableFunction(memoryModel, "y"))
+                conditionFunction.setVariableOrThrow(TypeFunction.generateTypeFunction(20))
+                conditionBlock.setFunction(conditionFunction)
+
+                var varBlock2 = CalculationBlock()
+                varBlock2.setMemoryModel(memoryModel)
+                sumFunction = ReflectFunction(MathF.Companion::sumII)
+                sumFunction.setVariableOrThrow(VariableFunction(memoryModel, "y"))
+                sumFunction.setVariableOrThrow(TypeFunction.generateTypeFunction(10))
+                varBlock2.setFunctionAndVar(sumFunction, "g")
+
+                var varBlock3 = CalculationBlock()
+                varBlock3.setMemoryModel(memoryModel)
+                sumFunction = ReflectFunction(MathF.Companion::sumII)
+                sumFunction.setVariableOrThrow(VariableFunction(memoryModel, "g"))
+                sumFunction.setVariableOrThrow(TypeFunction.generateTypeFunction(2))
+                varBlock3.setFunctionAndVar(sumFunction, "x")
+
+                var varBlock4 = CalculationBlock()
+                varBlock4.setMemoryModel(memoryModel)
+                var minFunction = ReflectFunction(MathF.Companion::minusII)
+                minFunction.setVariableOrThrow(VariableFunction(memoryModel, "y"))
+                minFunction.setVariableOrThrow(TypeFunction.generateTypeFunction(10))
+                varBlock4.setFunctionAndVar(minFunction, "z")
+
+                var varBlock5 = CalculationBlock()
+                varBlock5.setMemoryModel(memoryModel)
+                minFunction = ReflectFunction(MathF.Companion::minusII)
+                minFunction.setVariableOrThrow(VariableFunction(memoryModel, "z"))
+                minFunction.setVariableOrThrow(TypeFunction.generateTypeFunction(2))
+                varBlock5.setFunctionAndVar(minFunction, "x")
+
+                var endBlock = EndBlock()
+                endBlock.setMemoryModel(memoryModel)
+                endBlock.setVariables(listOf("x"))
+
+                startBlock.setNextBlock(varBlock1)
+                varBlock1.setNextBlock(conditionBlock)
+                conditionBlock.setFalseBlock(varBlock2)
+                varBlock2.setNextBlock(varBlock3)
+                conditionBlock.setTrueBlock(varBlock4)
+                varBlock4.setNextBlock(varBlock5)
+                varBlock5.setNextBlock(endBlock)
+                varBlock3.setNextBlock(endBlock)
+
+                endBlock.addOnEndListener { Log.d("Block-Diagram", "$it") }
+                startBlock.startOrThrow(listOf(Variable(type = Int::class, value = 12)))

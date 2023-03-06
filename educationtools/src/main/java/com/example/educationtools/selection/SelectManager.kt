@@ -9,6 +9,8 @@ class SelectManager(
 
     fun start() {
         touchManager.addSingleTouchListener(::onSingleTap)
+        touchManager.addTouchListener(::onTouch)
+        touchManager.addTouchReleaseListener(::onTouchUp)
     }
 
     private fun onSingleTap(touchInfo: TouchManager.TouchInfo) {
@@ -26,6 +28,22 @@ class SelectManager(
                     touchManager.deleteTouchable(selector)
                     currentSelectable = null
                 }
+            }
+        }
+    }
+
+    private fun onTouch(touchInfo: TouchManager.TouchInfo) {
+        if (touchInfo is TouchManager.TouchInfo.FilledInfo) {
+            if (touchInfo.touchable is Selector) {
+                touchManager.addMoveListener(touchInfo.touchable::move)
+            }
+        }
+    }
+
+    private fun onTouchUp(touchInfo: TouchManager.TouchInfo) {
+        if (touchInfo is TouchManager.TouchInfo.FilledInfo) {
+            if (touchInfo.touchable is Selector) {
+                touchManager.deleteMoveListener(touchInfo.touchable::move)
             }
         }
     }
@@ -48,6 +66,6 @@ class SelectManager(
     }
 
     private fun processSelector(selector: Selector) {
-
+        touchManager.addMoveListener(selector::move)
     }
 }
