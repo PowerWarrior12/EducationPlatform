@@ -15,6 +15,7 @@ open class SimpleSelector(
 ): Selector {
     private var isSelected: Boolean = false
     private val selectListeners = mutableListOf<Runnable>()
+    private val deselectListeners = mutableListOf<Runnable>()
     private var sideEdit: SideEdit? = null
 
     private val paint = Paint().apply {
@@ -91,12 +92,19 @@ open class SimpleSelector(
     override fun deselect(): Boolean {
         if (!isSelected) return false
         isSelected = false
+        deselectListeners.forEach { listener ->
+            listener.run()
+        }
         editableBlock.invalidate()
         return true
     }
 
     override fun addOnSelectListener(runnable: Runnable) {
         selectListeners.add(runnable)
+    }
+
+    override fun addOnDeselectListener(runnable: Runnable) {
+        deselectListeners.add(runnable)
     }
 
     override fun drawSelection(canvas: Canvas) {

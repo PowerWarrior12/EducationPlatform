@@ -11,10 +11,10 @@ import com.example.educationtools.logic.MemoryModel
 class CalculationBlockView: LogicBlockView() {
 
     private val calculationBlock = CalculationBlock()
-    private val leftKnot = Knot(false, 20f, this, Knot.Side.LEFT)
-    private val rightKnot = Knot(false, 20f, this, Knot.Side.RIGHT)
-    private val topKnot = Knot(false, 20f, this, Knot.Side.TOP)
-    private val bottomKnot = Knot(true, 20f, this, Knot.Side.BOTTOM)
+    private val leftKnot = Knot(this, Knot.Side.LEFT, false, 20f)
+    private val rightKnot = Knot(this, Knot.Side.RIGHT, false, 20f)
+    private val topKnot = Knot(this, Knot.Side.TOP, false, 20f)
+    private val bottomKnot = Knot(this, Knot.Side.BOTTOM, true, 20f, onKnotConnected = ::connect)
 
 
     //Paints
@@ -25,15 +25,12 @@ class CalculationBlockView: LogicBlockView() {
         style = Paint.Style.STROKE
     }
 
-    override var logicBlock: LogicBlock
+    override val logicBlock: LogicBlock
         get() = calculationBlock
-        set(value) {}
-    override var inputKnots: List<Knot>
+    override val inputKnots: List<Knot>
         get() = listOf(leftKnot, rightKnot, topKnot)
-        set(value) {}
-    override var outputKnots: List<Knot>
+    override val outputKnots: List<Knot>
         get() = listOf(bottomKnot)
-        set(value) {}
 
     override fun drawBorder(canvas: Canvas) {
         canvas.apply {
@@ -62,8 +59,8 @@ class CalculationBlockView: LogicBlockView() {
     override fun checkAndTouch(x: Float, y: Float) {
     }
 
-    override fun getPriority(): Int {
-        return 2
+    private fun connect(knot: Knot) {
+        calculationBlock.setNextBlock(knot.logicBlockView.logicBlock)
     }
 
     private fun updateKnotsPosition() {
