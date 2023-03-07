@@ -7,6 +7,7 @@ class TouchManager(
 ) {
     private val touchableSet = mutableSetOf<Touchable>()
     private var touchableInFocus: Touchable? = null
+    private var startTouchableInFocus: Touchable? = null
     private val onTouchListeners = mutableListOf<(TouchInfo) -> Unit>()
     private val onSingleTouchListeners = mutableListOf<(TouchInfo) -> Unit>()
     private val onLongTouchListeners = mutableListOf<(TouchInfo) -> Unit>()
@@ -58,13 +59,14 @@ class TouchManager(
             touchable.checkPointAvailability(transformPoint)
         }?.let { touchable ->
             touchableInFocus = touchable
+            startTouchableInFocus = touchable
             onTouchListeners.forEach { listener ->
-                listener(TouchInfo.FilledInfo(transformPoint.x, transformPoint.y, touchable))
+                listener(TouchInfo.FilledInfo(transformPoint.x, transformPoint.y, startTouchableInFocus,  touchable))
             }
             return
         }
         onTouchListeners.forEach { listener ->
-            listener(TouchInfo.EmptyInfo(transformPoint.x, transformPoint.y))
+            listener(TouchInfo.EmptyInfo(transformPoint.x, transformPoint.y, startTouchableInFocus))
         }
     }
 
@@ -72,13 +74,14 @@ class TouchManager(
         val transformPoint = transformations.convertPointToTransform(x, y)
         touchableInFocus?.let { touchable ->
             onSingleTouchListeners.forEach { listener ->
-                listener(TouchInfo.FilledInfo(transformPoint.x, transformPoint.y, touchable))
+                listener(TouchInfo.FilledInfo(transformPoint.x, transformPoint.y, startTouchableInFocus,  touchable))
             }
             touchableInFocus = null
+            startTouchableInFocus = null
             return
         }
         onSingleTouchListeners.forEach { listener ->
-            listener(TouchInfo.EmptyInfo(transformPoint.x, transformPoint.y))
+            listener(TouchInfo.EmptyInfo(transformPoint.x, transformPoint.y, startTouchableInFocus))
         }
     }
 
@@ -87,12 +90,12 @@ class TouchManager(
         longProcess = true
         touchableInFocus?.let { touchable ->
             onLongTouchListeners.forEach { listener ->
-                listener(TouchInfo.FilledInfo(transformPoint.x, transformPoint.y, touchable))
+                listener(TouchInfo.FilledInfo(transformPoint.x, transformPoint.y, startTouchableInFocus,  touchable))
             }
             return
         }
         onLongTouchListeners.forEach { listener ->
-            listener(TouchInfo.EmptyInfo(transformPoint.x, transformPoint.y))
+            listener(TouchInfo.EmptyInfo(transformPoint.x, transformPoint.y, startTouchableInFocus))
         }
     }
 
@@ -104,12 +107,12 @@ class TouchManager(
         }?.let { touchable ->
             touchableInFocus = touchable
             onMoveListeners.forEach { listener ->
-                listener(TouchInfo.FilledInfo(transformPoint.x, transformPoint.y, touchable))
+                listener(TouchInfo.FilledInfo(transformPoint.x, transformPoint.y, startTouchableInFocus,  touchable))
             }
             return
         }
         onMoveListeners.forEach { listener ->
-            listener(TouchInfo.EmptyInfo(transformPoint.x, transformPoint.y))
+            listener(TouchInfo.EmptyInfo(transformPoint.x, transformPoint.y, startTouchableInFocus))
         }
     }
 
@@ -117,20 +120,22 @@ class TouchManager(
         val transformPoint = transformations.convertPointToTransform(x, y)
         touchableInFocus?.let { touchable ->
             onTouchReleaseListeners.forEach { listener ->
-                listener(TouchInfo.FilledInfo(transformPoint.x, transformPoint.y, touchable))
+                listener(TouchInfo.FilledInfo(transformPoint.x, transformPoint.y, startTouchableInFocus,  touchable))
             }
             if (longProcess) {
                 touchableInFocus = null
+                startTouchableInFocus = null
                 longProcess = false
             }
             if (moveProcess) {
                 touchableInFocus = null
+                startTouchableInFocus = null
                 moveProcess = false
             }
             return
         }
         onTouchReleaseListeners.forEach { listener ->
-            listener(TouchInfo.EmptyInfo(transformPoint.x, transformPoint.y))
+            listener(TouchInfo.EmptyInfo(transformPoint.x, transformPoint.y, startTouchableInFocus))
         }
     }
 
@@ -153,14 +158,18 @@ class TouchManager(
     }
 
     fun isProcess(): Boolean {
-        return touchableInFocus != null
+        if (startTouchableInFocus != null) {
+            return startTouchableInFocus!!.blockScroll
+        }
+        return false
     }
 
     sealed class TouchInfo(
         val xPos: Float,
-        val yPos: Float
+        val yPos: Float,
+        val startTouchable: Touchable?
     ) {
-        class FilledInfo(xPos: Float, yPos: Float, val touchable: Touchable) : TouchInfo(xPos, yPos)
-        class EmptyInfo(xPos: Float, yPos: Float): TouchInfo(xPos, yPos)
+        class FilledInfo(xPos: Float, yPos: Float, startTouchable: Touchable?, val touchable: Touchable) : TouchInfo(xPos, yPos, startTouchable)
+        class EmptyInfo(xPos: Float, yPos: Float, startTouchable: Touchable?): TouchInfo(xPos, yPos, startTouchable)
     }
 }

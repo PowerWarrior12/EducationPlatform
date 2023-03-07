@@ -1,8 +1,8 @@
 package com.example.educationtools.blocks
 
 import android.graphics.Canvas
-import android.graphics.PointF
 import com.example.educationtools.base.EditableBlockBase
+import com.example.educationtools.connection.Knot
 import com.example.educationtools.logic.LogicBlock
 import com.example.educationtools.logic.MemoryModel
 

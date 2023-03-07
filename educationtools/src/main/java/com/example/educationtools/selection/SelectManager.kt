@@ -36,18 +36,17 @@ class SelectManager(
     private fun onTouch(touchInfo: TouchManager.TouchInfo) {
         if (touchInfo is TouchManager.TouchInfo.FilledInfo) {
             if (touchInfo.touchable is Selector) {
-                Log.d("Selector", "Touch")
+
+                Log.d("Selector", "touchDown: ${touchInfo.touchable}")
                 touchManager.addMoveListener(touchInfo.touchable::move)
             }
         }
     }
 
     private fun onTouchUp(touchInfo: TouchManager.TouchInfo) {
-        if (touchInfo is TouchManager.TouchInfo.FilledInfo) {
-            if (touchInfo.touchable is Selector) {
-                Log.d("Selector", "TouchUp")
-                touchManager.deleteMoveListener(touchInfo.touchable::move)
-            }
+        if (touchInfo.startTouchable is Selector) {
+            Log.d("Selector", "touchUp: ${touchInfo.startTouchable}")
+            touchManager.deleteMoveListener(touchInfo.startTouchable::move)
         }
     }
 

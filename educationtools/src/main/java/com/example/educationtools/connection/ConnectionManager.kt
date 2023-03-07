@@ -2,7 +2,6 @@ package com.example.educationtools.connection
 
 import android.graphics.Canvas
 import com.example.educationtools.base.ParentEditor
-import com.example.educationtools.blocks.Knot
 import com.example.educationtools.blocks.LogicBlockView
 import com.example.educationtools.logic.MemoryModel
 import com.example.educationtools.touching.TouchManager
@@ -84,6 +83,7 @@ class ConnectionManager(private val memoryModel: MemoryModel, private val touchM
                 if (touchInfo.touchable != connectionLineShadow!!.startKnot) {
                     val startKnot = connectionLineShadow!!.startKnot
                     val endKnot = touchInfo.touchable
+                    startKnot.connectedWithKnot(endKnot)
                     connectionLines.add(ConnectionLine(startKnot, endKnot))
                 }
             }

@@ -157,6 +157,9 @@ abstract class EditableBlockBase protected constructor() : EditableBlock, Select
             )
         }
     }
+
+    override val blockScroll: Boolean
+        get() = false
 }
 
 interface EditableBlockFactory<V : EditableBlock> {

@@ -1,7 +1,8 @@
-package com.example.educationtools.blocks
+package com.example.educationtools.connection
 
 import android.graphics.*
 import androidx.core.graphics.toRegion
+import com.example.educationtools.blocks.LogicBlockView
 import com.example.educationtools.touching.Touchable
 
 class Knot(
@@ -72,6 +73,9 @@ class Knot(
     override fun getPriority(): Int {
         return 1
     }
+
+    override val blockScroll: Boolean
+        get() = true
 
     fun updatePosition(newX: Float, newY: Float) {
         xPos = newX

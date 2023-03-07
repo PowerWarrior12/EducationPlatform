@@ -1,7 +1,6 @@
 package com.example.educationtools.connection
 
 import android.graphics.*
-import com.example.educationtools.blocks.Knot
 
 class ConnectionLineShadow(val startKnot: Knot) {
 

@@ -235,6 +235,9 @@ open class SimpleSelector(
         return 1
     }
 
+    override val blockScroll: Boolean
+        get() = true
+
     enum class SideEdit {
         LEFT, RIGHT, TOP, BOTTOM
     }

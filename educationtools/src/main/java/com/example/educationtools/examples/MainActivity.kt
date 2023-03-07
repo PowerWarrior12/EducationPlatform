@@ -9,7 +9,9 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.educationtools.R
 import com.example.educationtools.base.EditorViewBase
 import com.example.educationtools.blocks.CalculationBlockView
+import com.example.educationtools.blocks.ConditionBlockView
 import com.example.educationtools.blocks.NotifyBlock
+import com.example.educationtools.blocks.StartBlockView
 import com.example.educationtools.logic.*
 import com.example.educationtools.logic.functions.ConditionFunction
 import com.example.educationtools.logic.functions.ReflectFunction
@@ -30,14 +32,15 @@ class MainActivity : AppCompatActivity() {
 
         val editor = findViewById<EditorViewBase>(R.id.editor)
 
-        editor.addChild(NotifyBlock().apply {
+        editor.addChild(CalculationBlockView().apply {
             setEditorParent(editor)
+            updatePosition(PointF(300f, 700f))
             updateSize(500f, 300f)
         })
 
-        editor.addChild(NotifyBlock().apply {
+        editor.addChild(CalculationBlockView().apply {
             setEditorParent(editor)
-            updatePosition(PointF(300f, 200f))
+            updatePosition(PointF(300f, 1000f))
             updateSize(500f, 300f)
         })
 
@@ -50,6 +53,18 @@ class MainActivity : AppCompatActivity() {
         editor.addChild(CalculationBlockView().apply {
             setEditorParent(editor)
             updatePosition(PointF(300f, 1000f))
+            updateSize(500f, 300f)
+        })
+
+        editor.addChild(StartBlockView().apply {
+            setEditorParent(editor)
+            updatePosition(PointF(500f, 900f))
+            updateSize(500f, 300f)
+        })
+
+        editor.addChild(ConditionBlockView().apply {
+            setEditorParent(editor)
+            updatePosition(PointF(500f, 900f))
             updateSize(500f, 300f)
         })
     }

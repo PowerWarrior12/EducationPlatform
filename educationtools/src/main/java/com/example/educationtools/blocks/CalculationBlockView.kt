@@ -4,9 +4,9 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PointF
+import com.example.educationtools.connection.Knot
 import com.example.educationtools.logic.CalculationBlock
 import com.example.educationtools.logic.LogicBlock
-import com.example.educationtools.logic.MemoryModel
 
 class CalculationBlockView: LogicBlockView() {
 
