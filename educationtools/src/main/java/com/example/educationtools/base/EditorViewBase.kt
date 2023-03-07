@@ -13,7 +13,11 @@ import android.view.View
 import android.view.animation.AccelerateInterpolator
 import androidx.core.graphics.withScale
 import androidx.core.graphics.withTranslation
+import com.example.educationtools.blocks.LogicBlockView
+import com.example.educationtools.connection.ConnectionManager
 import com.example.educationtools.dragging.DragAndDropManager
+import com.example.educationtools.logic.LogicBlock
+import com.example.educationtools.logic.MemoryModel
 import com.example.educationtools.selection.SelectManager
 import com.example.educationtools.touching.TouchManager
 import com.example.educationtools.touching.Touchable
@@ -36,10 +40,13 @@ class EditorViewBase @JvmOverloads constructor(
     //Дочерние блоки
     private val children: MutableList<EditableBlock> = mutableListOf()
 
+    private val memoryModel = MemoryModel()
+
     //Managers
     private val touchManager = TouchManager(transformations)
     private val selectManager = SelectManager(touchManager)
     private val dragAndDropManager = DragAndDropManager(touchManager, transformations)
+    private val connectionManager = ConnectionManager(memoryModel, touchManager, this)
 
     init {
         selectManager.start()
@@ -70,6 +77,7 @@ class EditorViewBase @JvmOverloads constructor(
                     pivotX = width/2 - transformations.translation.x,
                     pivotY = height/2 - transformations.translation.y
                 ) {
+                    connectionManager.draw(this)
                     children.forEach {
                         it.draw(this)
                     }
@@ -90,6 +98,10 @@ class EditorViewBase @JvmOverloads constructor(
         child.setEditorParent(this)
         if (child is Touchable) {
             touchManager.addTouchable(child)
+        }
+        if (child is LogicBlockView) {
+            child.setMemoryModel(memoryModel)
+            connectionManager.addLogicBlockView(child)
         }
         invalidate()
     }

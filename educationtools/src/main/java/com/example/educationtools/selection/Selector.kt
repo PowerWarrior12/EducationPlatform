@@ -9,6 +9,7 @@ interface Selector: Touchable {
     fun select(): Boolean
     fun deselect(): Boolean
     fun addOnSelectListener(runnable: Runnable)
+    fun addOnDeselectListener(runnable: Runnable)
     fun drawSelection(canvas: Canvas)
     fun move(touchInfo: TouchManager.TouchInfo)
 }

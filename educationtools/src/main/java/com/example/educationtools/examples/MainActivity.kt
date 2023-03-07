@@ -46,5 +46,11 @@ class MainActivity : AppCompatActivity() {
             updatePosition(PointF(300f, 700f))
             updateSize(500f, 300f)
         })
+
+        editor.addChild(CalculationBlockView().apply {
+            setEditorParent(editor)
+            updatePosition(PointF(300f, 1000f))
+            updateSize(500f, 300f)
+        })
     }
 }

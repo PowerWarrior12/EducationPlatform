@@ -5,10 +5,12 @@ import androidx.core.graphics.toRegion
 import com.example.educationtools.touching.Touchable
 
 class Knot(
+    val logicBlockView: LogicBlockView,
+    val side: Side,
     private val isOutput: Boolean,
     private val radius: Float,
-    private val logicBlockView: LogicBlockView,
-    private val side: Side
+    val direction: Boolean? = null,
+    val onKnotConnected: ((Knot) -> Unit)? = null
 ) : Touchable {
 
     private var xPos: Float = 0f
@@ -113,6 +115,18 @@ class Knot(
 
     fun getRadius(): Float {
         return radius
+    }
+
+    fun getX(): Float {
+        return xPos
+    }
+
+    fun getY(): Float {
+        return yPos
+    }
+
+    fun connectedWithKnot(knot: Knot) {
+        onKnotConnected?.invoke(knot)
     }
 
     enum class Side {

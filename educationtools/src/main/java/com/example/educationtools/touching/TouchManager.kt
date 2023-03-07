@@ -99,7 +99,10 @@ class TouchManager(
     fun move(x: Float, y: Float) {
         val transformPoint = transformations.convertPointToTransform(x, y)
         moveProcess = true
-        touchableInFocus?.let { touchable ->
+        touchableSet.firstOrNull { touchable ->
+            touchable.checkPointAvailability(transformPoint)
+        }?.let { touchable ->
+            touchableInFocus = touchable
             onMoveListeners.forEach { listener ->
                 listener(TouchInfo.FilledInfo(transformPoint.x, transformPoint.y, touchable))
             }
