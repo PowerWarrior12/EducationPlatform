@@ -22,19 +22,23 @@ class Knot(
         addCircle(xPos, yPos, radius, Path.Direction.CCW)
     }
 
-    private val rectMain = RectF().apply {
-        left = xPos - radius
-        right = xPos + radius
-        top = yPos - radius
-        bottom = yPos + radius
+    private val rectTouch = RectF().apply {
+        left = xPos - radius * 3
+        right = xPos + radius * 3
+        top = yPos - radius * 3
+        bottom = yPos + radius * 3
     }
 
     private val pathCore = Path().apply {
         addCircle(xPos, yPos, radius/2f, Path.Direction.CCW)
     }
 
+    private val pathTouch = Path().apply {
+        addCircle(xPos, yPos, radius * 3, Path.Direction.CCW)
+    }
+
     private var mainRegion = Region().apply {
-        setPath(pathMain, rectMain.toRegion())
+        setPath(pathTouch, rectTouch.toRegion())
     }
 
     private val fillPaint = Paint().apply {
@@ -80,16 +84,21 @@ class Knot(
     fun updatePosition(newX: Float, newY: Float) {
         xPos = newX
         yPos = newY
-        rectMain.apply {
-            left = xPos - radius
-            right = xPos + radius
-            top = yPos - radius
-            bottom = yPos + radius
+        rectTouch.apply {
+            left = xPos - radius * 3
+            right = xPos + radius * 3
+            top = yPos - radius * 3
+            bottom = yPos + radius * 3
         }
 
         pathMain.apply {
             reset()
             addCircle(xPos, yPos, radius, Path.Direction.CCW)
+        }
+
+        pathTouch.apply {
+            reset()
+            addCircle(xPos, yPos, radius * 3, Path.Direction.CCW)
         }
 
         pathCore.apply {
@@ -98,7 +107,7 @@ class Knot(
         }
 
         mainRegion = Region().apply {
-            setPath(pathMain, rectMain.toRegion())
+            setPath(pathTouch, rectTouch.toRegion())
         }
         onPositionChangedListeners.forEach { it(xPos, yPos) }
     }

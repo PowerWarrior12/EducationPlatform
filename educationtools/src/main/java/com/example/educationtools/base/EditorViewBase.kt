@@ -46,7 +46,7 @@ class EditorViewBase @JvmOverloads constructor(
     private val touchManager = TouchManager(transformations)
     private val selectManager = SelectManager(touchManager)
     private val dragAndDropManager = DragAndDropManager(touchManager, transformations)
-    private val connectionManager = ConnectionManager(memoryModel, touchManager, this)
+    private val connectionManager = ConnectionManager(memoryModel, touchManager, this, selectManager)
 
     init {
         selectManager.start()

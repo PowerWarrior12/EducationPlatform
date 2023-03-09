@@ -3,21 +3,20 @@ package com.example.educationtools.blocks
 import android.graphics.*
 import androidx.core.graphics.toRegion
 import com.example.educationtools.connection.Knot
-import com.example.educationtools.logic.CalculationBlock
-import com.example.educationtools.logic.ConditionBlock
 import com.example.educationtools.logic.LogicBlock
+import com.example.educationtools.logic.WhileDoBlock
 
-class ConditionBlockView: LogicBlockView() {
-    private val conditionBlock = ConditionBlock()
-    private val falseKnot = Knot(this, Knot.Side.LEFT, true, 20f, false, ::falseConnect)
-    private val trueKnot = Knot(this, Knot.Side.RIGHT, true, 20f, true, ::trueConnect)
+class WhileDoBlockView: LogicBlockView() {
+    private val conditionBlock = WhileDoBlock()
+    private val falseKnot = Knot(this, Knot.Side.RIGHT, true, 20f, false, ::falseConnect)
+    private val trueKnot = Knot(this, Knot.Side.BOTTOM, true, 20f, true, ::trueConnect)
+    private val leftKnot = Knot(this, Knot.Side.LEFT, false, 20f)
     private val topKnot = Knot(this, Knot.Side.TOP, false, 20f)
-    private val bottomKnot = Knot(this, Knot.Side.BOTTOM, false, 20f)
 
     override val logicBlock: LogicBlock
         get() = conditionBlock
     override val inputKnots: List<Knot>
-        get() = listOf(topKnot, bottomKnot)
+        get() = listOf(topKnot, leftKnot)
     override val outputKnots: List<Knot>
         get() = listOf(falseKnot, trueKnot)
 
@@ -30,10 +29,12 @@ class ConditionBlockView: LogicBlockView() {
     }
 
     private val mainPath = Path().apply {
-        moveTo(mainRect.centerX(), mainRect.top)
-        lineTo(mainRect.right, mainRect.centerY())
-        lineTo(mainRect.centerX(), mainRect.bottom)
-        lineTo(mainRect.left, mainRect.centerY())
+        moveTo(mainRect.left + mainRect.width()/4, mainRect.top)
+        lineTo(mainRect.right - mainRect.width()/4, mainRect.top)
+        lineTo(mainRect.right,mainRect.centerY())
+        lineTo(mainRect.right - mainRect.width()/4, mainRect.bottom)
+        lineTo(mainRect.left + mainRect.width()/4, mainRect.bottom)
+        lineTo(mainRect.left,mainRect.centerY())
         close()
     }
 
@@ -79,10 +80,12 @@ class ConditionBlockView: LogicBlockView() {
     private fun updateProperties() {
         mainPath.apply {
             reset()
-            moveTo(mainRect.centerX(), mainRect.top)
-            lineTo(mainRect.right, mainRect.centerY())
-            lineTo(mainRect.centerX(), mainRect.bottom)
-            lineTo(mainRect.left, mainRect.centerY())
+            moveTo(mainRect.left + mainRect.width()/4, mainRect.top)
+            lineTo(mainRect.right - mainRect.width()/4, mainRect.top)
+            lineTo(mainRect.right,mainRect.centerY())
+            lineTo(mainRect.right - mainRect.width()/4, mainRect.bottom)
+            lineTo(mainRect.left + mainRect.width()/4, mainRect.bottom)
+            lineTo(mainRect.left,mainRect.centerY())
             close()
         }
 
@@ -90,9 +93,9 @@ class ConditionBlockView: LogicBlockView() {
             setPath(mainPath, mainRect.toRegion())
         }
 
-        falseKnot.updatePosition(mainRect.left, mainRect.centerY())
-        trueKnot.updatePosition(mainRect.right, mainRect.centerY())
+        falseKnot.updatePosition(mainRect.right, mainRect.centerY())
+        trueKnot.updatePosition(mainRect.centerX(), mainRect.bottom)
         topKnot.updatePosition(mainRect.centerX(), mainRect.top)
-        bottomKnot.updatePosition(mainRect.centerX(), mainRect.bottom)
+        leftKnot.updatePosition(mainRect.left, mainRect.centerY())
     }
 }

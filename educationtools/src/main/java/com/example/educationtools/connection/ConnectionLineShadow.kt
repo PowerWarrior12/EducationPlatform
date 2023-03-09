@@ -1,8 +1,12 @@
 package com.example.educationtools.connection
 
 import android.graphics.*
+import com.example.educationtools.utils.extensions.coerceOut
 
-class ConnectionLineShadow(val startKnot: Knot) {
+private const val blockOffset = 80f
+
+class ConnectionLineShadow(val startKnot: Knot): ConnectionLineBase() {
+
 
     private val targetPoint = PointF()
     private val linePaint = Paint().apply {
@@ -15,7 +19,7 @@ class ConnectionLineShadow(val startKnot: Knot) {
 
     fun draw(canvas: Canvas) {
         canvas.apply {
-            drawLine(startKnot.getX(), startKnot.getY(), targetPoint.x, targetPoint.y, linePaint)
+            drawPath(path, linePaint)
         }
     }
 
@@ -24,5 +28,7 @@ class ConnectionLineShadow(val startKnot: Knot) {
             x = xPos
             y = yPos
         }
+
+        updatePath(PointF(startKnot.getX(), startKnot.getY()), targetPoint, startKnot, null)
     }
 }

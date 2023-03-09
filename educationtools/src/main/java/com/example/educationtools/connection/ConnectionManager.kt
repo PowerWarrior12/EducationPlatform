@@ -4,9 +4,15 @@ import android.graphics.Canvas
 import com.example.educationtools.base.ParentEditor
 import com.example.educationtools.blocks.LogicBlockView
 import com.example.educationtools.logic.MemoryModel
+import com.example.educationtools.selection.SelectManager
 import com.example.educationtools.touching.TouchManager
 
-class ConnectionManager(private val memoryModel: MemoryModel, private val touchManager: TouchManager, private val parentEditor: ParentEditor) {
+class ConnectionManager(
+    private val memoryModel: MemoryModel,
+    private val touchManager: TouchManager,
+    private val parentEditor: ParentEditor,
+    private val selectorManager: SelectManager
+) {
     private val logicBlocksView = mutableListOf<LogicBlockView>()
     private var connectionLineShadow: ConnectionLineShadow? = null
     private var connectableList = mutableListOf<String>()
@@ -44,7 +50,12 @@ class ConnectionManager(private val memoryModel: MemoryModel, private val touchM
     private fun onTouch(touchInfo: TouchManager.TouchInfo) {
         if (touchInfo is TouchManager.TouchInfo.FilledInfo) {
             if (touchInfo.touchable is Knot) {
-                connectableList.addAll(memoryModel.getAvailableBlocksOrThrow(touchInfo.touchable.logicBlockView.logicBlock.id, touchInfo.touchable.direction))
+                connectableList.addAll(
+                    memoryModel.getAvailableBlocksOrThrow(
+                        touchInfo.touchable.logicBlockView.logicBlock.id,
+                        touchInfo.touchable.direction
+                    )
+                )
                 logicBlocksView.forEach { block ->
                     if (block.logicBlock.id in connectableList) {
                         block.changeInputStatus()
@@ -53,6 +64,7 @@ class ConnectionManager(private val memoryModel: MemoryModel, private val touchM
                         }
                     }
                 }
+                selectorManager.cancelSelection()
                 connectionLineShadow = ConnectionLineShadow(touchInfo.touchable)
                 connectionLineShadow?.updateTargetPoint(touchInfo.xPos, touchInfo.yPos)
                 parentEditor.invalidate()
@@ -66,6 +78,7 @@ class ConnectionManager(private val memoryModel: MemoryModel, private val touchM
             parentEditor.invalidate()
         }
     }
+
     private fun onRelease(touchInfo: TouchManager.TouchInfo) {
         if (connectionLineShadow != null) {
             logicBlocksView.forEach { block ->

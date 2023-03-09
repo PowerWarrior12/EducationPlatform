@@ -14,6 +14,17 @@ class SelectManager(
         touchManager.addTouchReleaseListener(::onTouchUp)
     }
 
+    fun cancelSelection() {
+        currentSelectable?.let { selectable ->
+            val selector = selectable.getSelector()
+            if (selector.isSelected()) {
+                selector.deselect()
+                touchManager.deleteTouchable(selector)
+                currentSelectable = null
+            }
+        }
+    }
+
     private fun onSingleTap(touchInfo: TouchManager.TouchInfo) {
         if (touchInfo is TouchManager.TouchInfo.FilledInfo) {
             if (touchInfo.touchable is Selector) {
