@@ -74,6 +74,15 @@ class ConnectionManager(
 
     private fun onMove(touchInfo: TouchManager.TouchInfo) {
         if (connectionLineShadow != null) {
+            if (touchInfo is TouchManager.TouchInfo.FilledInfo && touchInfo.touchable is Knot && touchInfo.touchable != connectionLineShadow!!.startKnot) {
+                connectionLineShadow?.getFocusOrNull()?.deleteFocus()
+                connectionLineShadow?.deleteFocus()
+                connectionLineShadow?.setFocus(touchInfo.touchable)
+                touchInfo.touchable.setFocus()
+            } else {
+                connectionLineShadow?.getFocusOrNull()?.deleteFocus()
+                connectionLineShadow?.deleteFocus()
+            }
             connectionLineShadow?.updateTargetPoint(touchInfo.xPos, touchInfo.yPos)
             parentEditor.invalidate()
         }
@@ -81,6 +90,8 @@ class ConnectionManager(
 
     private fun onRelease(touchInfo: TouchManager.TouchInfo) {
         if (connectionLineShadow != null) {
+            connectionLineShadow?.getFocusOrNull()?.deleteFocus()
+            connectionLineShadow?.deleteFocus()
             logicBlocksView.forEach { block ->
                 if (block.logicBlock.id in connectableList) {
                     block.changeInputStatus()
@@ -102,6 +113,7 @@ class ConnectionManager(
             }
 
             connectionLineShadow = null
+            selectorManager.restoreSelectable()
             parentEditor.invalidate()
         }
     }

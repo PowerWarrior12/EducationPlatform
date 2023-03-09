@@ -9,6 +9,8 @@ class ConnectionLineShadow(val startKnot: Knot): ConnectionLineBase() {
 
 
     private val targetPoint = PointF()
+    private var focusKnot: Knot? = null
+
     private val linePaint = Paint().apply {
         isAntiAlias = true
         color = Color.GRAY
@@ -29,6 +31,22 @@ class ConnectionLineShadow(val startKnot: Knot): ConnectionLineBase() {
             y = yPos
         }
 
-        updatePath(PointF(startKnot.getX(), startKnot.getY()), targetPoint, startKnot, null)
+        if (focusKnot == null) {
+            updatePath(PointF(startKnot.getX(), startKnot.getY()), targetPoint, startKnot, focusKnot)
+        } else {
+            updatePath(PointF(startKnot.getX(), startKnot.getY()), PointF(focusKnot!!.getX(), focusKnot!!.getY()), startKnot, focusKnot)
+        }
+    }
+
+    fun setFocus(knot: Knot) {
+        focusKnot = knot
+    }
+
+    fun deleteFocus() {
+        focusKnot = null
+    }
+
+    fun getFocusOrNull(): Knot? {
+        return focusKnot
     }
 }

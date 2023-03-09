@@ -7,6 +7,7 @@ class SelectManager(
     private val touchManager: TouchManager
 ) {
     private var currentSelectable: Selectable? = null
+    private var cashSelectable: Selectable? = null
 
     fun start() {
         touchManager.addSingleTouchListener(::onSingleTap)
@@ -16,12 +17,19 @@ class SelectManager(
 
     fun cancelSelection() {
         currentSelectable?.let { selectable ->
+            cashSelectable = selectable
             val selector = selectable.getSelector()
             if (selector.isSelected()) {
                 selector.deselect()
                 touchManager.deleteTouchable(selector)
                 currentSelectable = null
             }
+        }
+    }
+
+    fun restoreSelectable() {
+        cashSelectable?.let { selectable ->
+            processSelectable(selectable)
         }
     }
 

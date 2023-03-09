@@ -22,6 +22,8 @@ class Knot(
         addCircle(xPos, yPos, radius, Path.Direction.CCW)
     }
 
+    private var isFocus = false
+
     private val rectTouch = RectF().apply {
         left = xPos - radius * 3
         right = xPos + radius * 3
@@ -45,6 +47,13 @@ class Knot(
         isAntiAlias = true
         style = Paint.Style.FILL
         color = Color.WHITE
+    }
+
+    private val focusPaint = Paint().apply {
+        isAntiAlias = true
+        style = Paint.Style.FILL
+        color = Color.GREEN
+        alpha = 100
     }
 
     private val borderPaint = Paint().apply {
@@ -119,6 +128,9 @@ class Knot(
             if (isOutput) {
                 drawPath(pathCore, fillCorePaint)
             }
+            if (isFocus) {
+                drawPath(pathTouch, focusPaint)
+            }
         }
     }
 
@@ -140,6 +152,14 @@ class Knot(
 
     fun connectedWithKnot(knot: Knot) {
         onKnotConnected?.invoke(knot)
+    }
+
+    fun setFocus() {
+        isFocus = true
+    }
+
+    fun deleteFocus() {
+        isFocus = false
     }
 
     enum class Side {
