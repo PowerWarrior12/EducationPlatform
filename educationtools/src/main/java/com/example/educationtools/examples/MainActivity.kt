@@ -3,6 +3,7 @@ package com.example.educationtools.examples
 import android.graphics.PointF
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
@@ -17,7 +18,10 @@ import com.example.educationtools.logic.functions.VariableFunction
 import com.example.educationtools.logic.methods.ArrayF
 import com.example.educationtools.logic.methods.ConditionsF
 import com.example.educationtools.logic.methods.MathF
+import com.example.educationtools.logic.parsers.CalculationBlockParser
+import com.example.educationtools.logic.parsers.PostfixExpressionParser
 import com.example.educationtools.logic.parsers.StartBlockParser
+import com.example.educationtools.utils.extensions.split
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,57 +29,103 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val button = findViewById<Button>(R.id.button)
+        button.visibility = View.GONE
         val textOne = findViewById<EditText>(R.id.textView)
+        textOne.visibility = View.GONE
         val textTwo = findViewById<EditText>(R.id.textView2)
+        textTwo.visibility = View.GONE
 
         val editor = findViewById<EditorViewBase>(R.id.editor)
 
         editor.addChild(CalculationBlockView().apply {
             setEditorParent(editor)
-            updatePosition(PointF(300f, 700f))
-            updateSize(500f, 300f)
+            updatePosition(PointF(0f, 0f))
+            updateSize(400f, 250f)
+        })
+
+        editor.addChild(CalculationBlockView().apply {
+            setEditorParent(editor)
+            updatePosition(PointF(0f, 300f))
+            updateSize(400f, 250f)
         })
 
         editor.addChild(ConditionBlockView().apply {
             setEditorParent(editor)
-            updatePosition(PointF(500f, 900f))
-            updateSize(500f, 300f)
+            updatePosition(PointF(0f, 600f))
+            updateSize(400f, 250f)
         })
 
         editor.addChild(ConditionBlockView().apply {
             setEditorParent(editor)
-            updatePosition(PointF(500f, 900f))
-            updateSize(500f, 300f)
+            updatePosition(PointF(0f, 900f))
+            updateSize(400f, 250f)
         })
-        val startBlockParser = StartBlockParser()
-        val text1 = "int   x  ,  float   y, int Jopa"
-        val text2 = ","
-        val text3 = "int roma, "
-        val text4 = "ivan vanya, int x"
-        val text5 = "    int     4sd"
-        val text6 = "      float    FSF_323  "
-        val text7 = "int fdg asdf, int x, int y"
-        try {
-            Log.d("MyTag", startBlockParser.parseOrThrow(text1).toString())
-        } catch (e: java.lang.Exception) {}
-        try {
-            Log.d("MyTag", startBlockParser.parseOrThrow(text2).toString())
-        } catch (e: java.lang.Exception) {}
-        try {
-            Log.d("MyTag", startBlockParser.parseOrThrow(text3).toString())
-        } catch (e: java.lang.Exception) {}
-        try {
-            Log.d("MyTag", startBlockParser.parseOrThrow(text4).toString())
-        } catch (e: java.lang.Exception) {}
-        try {
-            Log.d("MyTag", startBlockParser.parseOrThrow(text5).toString())
-        } catch (e: java.lang.Exception) {}
-        try {
-            Log.d("MyTag", startBlockParser.parseOrThrow(text6).toString())
-        } catch (e: java.lang.Exception) {}
-        try {
-            Log.d("MyTag", startBlockParser.parseOrThrow(text7).toString())
-        } catch (e: java.lang.Exception) {}
+
+        editor.addChild(WhileDoBlockView().apply {
+            setEditorParent(editor)
+            updatePosition(PointF(0f, 1200f))
+            updateSize(400f, 250f)
+        })
+
+        editor.addChild(StartBlockView().apply {
+            setEditorParent(editor)
+            updatePosition(PointF(500f, 0f))
+            updateSize(400f, 250f)
+        })
+
+        editor.addChild(CalculationBlockView().apply {
+            setEditorParent(editor)
+            updatePosition(PointF(500f, 300f))
+            updateSize(400f, 250f)
+        })
+
+        editor.addChild(CalculationBlockView().apply {
+            setEditorParent(editor)
+            updatePosition(PointF(500f, 600f))
+            updateSize(400f, 250f)
+        })
+
+        editor.addChild(CalculationBlockView().apply {
+            setEditorParent(editor)
+            updatePosition(PointF(500f, 900f))
+            updateSize(400f, 250f)
+        })
+
+        editor.addChild(EndBlockView().apply {
+            setEditorParent(editor)
+            updatePosition(PointF(500f, 1200f))
+            updateSize(400f, 250f)
+        })
+
+        editor.addChild(CalculationBlockView().apply {
+            setEditorParent(editor)
+            updatePosition(PointF(1000f, 0f))
+            updateSize(400f, 250f)
+        })
+
+        editor.addChild(CalculationBlockView().apply {
+            setEditorParent(editor)
+            updatePosition(PointF(1000f, 300f))
+            updateSize(400f, 250f)
+        })
+
+        editor.addChild(ConditionBlockView().apply {
+            setEditorParent(editor)
+            updatePosition(PointF(1000f, 600f))
+            updateSize(400f, 250f)
+        })
+
+        editor.addChild(WhileDoBlockView().apply {
+            setEditorParent(editor)
+            updatePosition(PointF(1000f, 900f))
+            updateSize(400f, 250f)
+        })
+
+        editor.addChild(CalculationBlockView().apply {
+            setEditorParent(editor)
+            updatePosition(PointF(1000f, 1200f))
+            updateSize(400f, 250f)
+        })
 
     }
 }

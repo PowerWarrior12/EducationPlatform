@@ -69,9 +69,5 @@ class MathF {
         fun modII(x: Int, y: Int) : Int {
             return x.mod(y)
         }
-
-        fun check(x: Int, y: Int): Boolean {
-            return x > y
-        }
     }
 }

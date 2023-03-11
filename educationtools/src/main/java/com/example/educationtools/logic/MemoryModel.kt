@@ -364,7 +364,7 @@ class MemoryModel {
         if (!blocksMap.contains(blockId)) {
             throw java.lang.Exception("Данного блока не существует")
         }
-        val parent = blocksMap.getValue(blockId).parent
+        var parent = blocksMap.getValue(blockId).parent
 
         while(parent != null) {
             if (parent.value is Block.VariableBlock) {
@@ -372,6 +372,7 @@ class MemoryModel {
                     result.add(it)
                 }
             }
+            parent = parent.parent
         }
 
         return result
