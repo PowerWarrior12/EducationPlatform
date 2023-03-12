@@ -49,7 +49,7 @@ class NotifyBlock(): EditableBlockBase() {
         var text: String = ""
     ) : EditableBlockFactory<NotifyBlock> {
         override fun create(): EditableBlock {
-            TODO("Not yet implemented")
+            return NotifyBlock()
         }
     }
 

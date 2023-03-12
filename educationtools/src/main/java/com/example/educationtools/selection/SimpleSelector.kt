@@ -160,6 +160,7 @@ open class SimpleSelector(
                     editableBlock.updatePosition(PointF(editableBlock.getCenter().x, newCenterY))
                     editableBlock.updateSize(editableBlock.getWidth(), newHeight)
                 }
+                else -> {}
             }
         }
     }

@@ -84,5 +84,13 @@ class ConditionsF {
         fun notEqualFF(x: Float, y: Float): Boolean {
             return x != y
         }
+        //And
+        fun andF(x: Boolean, y: Boolean): Boolean {
+            return x && y
+        }
+        //Or
+        fun orF(x: Boolean, y: Boolean): Boolean {
+            return x || y
+        }
     }
 }

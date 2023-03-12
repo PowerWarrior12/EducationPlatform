@@ -8,7 +8,8 @@ import java.lang.Float.min
 import kotlin.math.max
 
 private const val blockOffset = 80f
-
+private const val arrowHeight = 40f
+private const val arrowWidth = 60f
 open class ConnectionLineBase {
 
     private val pointStart = PointF()
@@ -20,6 +21,8 @@ open class ConnectionLineBase {
     private val pointSeven = PointF()
     private val pointEnd = PointF()
     protected val path = Path()
+
+    private var lineSide : Knot.Side = Knot.Side.TOP
 
     protected fun updatePath(startPoint: PointF, endPoint: PointF, startKnot: Knot, endKnot: Knot?) {
 
@@ -267,6 +270,7 @@ open class ConnectionLineBase {
 
             lineTo(pointEnd.x, pointEnd.y)
         }
+        updateArrow(startPoint, endPoint, startKnot, endKnot)
     }
 
     private fun updatePathWithEndKnot(startPoint: PointF, endPoint: PointF, startKnot: Knot, endKnot: Knot) {
@@ -1028,6 +1032,67 @@ open class ConnectionLineBase {
                         }
                     }
                 }
+            }
+            else -> {}
+        }
+    }
+    private fun updateArrow(startPoint: PointF, endPoint: PointF, startKnot: Knot, endKnot: Knot?) {
+        val block = startKnot.logicBlockView
+        var startBlockRect = RectF().apply {
+            left = block.getCenter().x - block.getWidth() / 2
+            right = block.getCenter().x + block.getWidth() / 2
+            top = block.getCenter().y - block.getHeight() / 2
+            bottom = block.getCenter().y + block.getHeight() / 2
+        }
+
+        fun addRightArrow() {
+            path.apply {
+                moveTo(endPoint.x - arrowWidth, endPoint.y - arrowHeight/2)
+                lineTo(endPoint.x, endPoint.y)
+                lineTo(endPoint.x - arrowWidth, endPoint.y + arrowHeight/2)
+            }
+        }
+
+        fun addLeftArrow() {
+            path.apply {
+                moveTo(endPoint.x + arrowWidth, endPoint.y - arrowHeight/2)
+                lineTo(endPoint.x, endPoint.y)
+                lineTo(endPoint.x + arrowWidth, endPoint.y + arrowHeight/2)
+            }
+        }
+
+        fun addTopArrow() {
+            path.apply {
+                moveTo(endPoint.x - arrowHeight/2, endPoint.y + arrowWidth)
+                lineTo(endPoint.x, endPoint.y)
+                lineTo(endPoint.x + arrowHeight/2, endPoint.y + arrowWidth)
+            }
+        }
+
+        fun addBottomArrow() {
+            path.apply {
+                moveTo(endPoint.x - arrowHeight/2, endPoint.y - arrowWidth)
+                lineTo(endPoint.x, endPoint.y)
+                lineTo(endPoint.x + arrowHeight/2, endPoint.y - arrowWidth)
+            }
+        }
+
+        if (endKnot != null) {
+            when(endKnot.side) {
+                Knot.Side.RIGHT -> addLeftArrow()
+                Knot.Side.LEFT -> addRightArrow()
+                Knot.Side.TOP -> addBottomArrow()
+                Knot.Side.BOTTOM -> addTopArrow()
+            }
+        } else {
+            if (endPoint.y < startBlockRect.top) {
+                addTopArrow()
+            } else if (endPoint.y > startBlockRect.bottom) {
+                addBottomArrow()
+            } else if (endPoint.x > startBlockRect.right) {
+                addRightArrow()
+            } else {
+                addLeftArrow()
             }
         }
     }

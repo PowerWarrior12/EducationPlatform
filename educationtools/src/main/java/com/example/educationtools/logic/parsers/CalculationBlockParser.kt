@@ -8,9 +8,9 @@ import com.example.educationtools.logic.functions.TypeFunction
 import com.example.educationtools.logic.functions.VariableFunction
 import com.example.educationtools.utils.extensions.split
 
-class CalculationBlockParser(private val memoryModel: MemoryModel, private val blockId: String) {
+class CalculationBlockParser(private val blockId: String) {
 
-    fun parseOrThrow(text: String): Pair<Variable, Function> {
+    fun parseOrThrow(text: String, memoryModel: MemoryModel): Pair<Variable, Function> {
         val operands = text.split('=')
         if (operands.count() != CALCULATION_OPERANDS_COUNT) throw Exception(SYNTAX_ERROR_TEXT)
 

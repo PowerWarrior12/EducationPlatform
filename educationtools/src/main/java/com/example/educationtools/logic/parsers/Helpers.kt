@@ -71,26 +71,41 @@ val conditionMethodsMap = mapOf (
         listOf(Float::class, Float::class) to ConditionsF.Companion::lessFF,
     ),
 
-    "<" to mapOf(
-        listOf(Int::class, Int::class) to ConditionsF.Companion::lessII,
-        listOf(Int::class, Float::class) to ConditionsF.Companion::lessIF,
-        listOf(Float::class, Int::class) to ConditionsF.Companion::lessFI,
-        listOf(Float::class, Float::class) to ConditionsF.Companion::lessFF,
+    ">=" to mapOf(
+        listOf(Int::class, Int::class) to ConditionsF.Companion::moreOrEqualII,
+        listOf(Int::class, Float::class) to ConditionsF.Companion::moreOrEqualIF,
+        listOf(Float::class, Int::class) to ConditionsF.Companion::moreOrEqualFI,
+        listOf(Float::class, Float::class) to ConditionsF.Companion::moreOrEqualFF,
     ),
 
-    "<" to mapOf(
-        listOf(Int::class, Int::class) to ConditionsF.Companion::lessII,
-        listOf(Int::class, Float::class) to ConditionsF.Companion::lessIF,
-        listOf(Float::class, Int::class) to ConditionsF.Companion::lessFI,
-        listOf(Float::class, Float::class) to ConditionsF.Companion::lessFF,
+    "<=" to mapOf(
+        listOf(Int::class, Int::class) to ConditionsF.Companion::lessOrEqualII,
+        listOf(Int::class, Float::class) to ConditionsF.Companion::lessOrEqualIF,
+        listOf(Float::class, Int::class) to ConditionsF.Companion::lessOrEqualFI,
+        listOf(Float::class, Float::class) to ConditionsF.Companion::lessOrEqualFF,
     ),
 
-    "<" to mapOf(
-        listOf(Int::class, Int::class) to ConditionsF.Companion::lessII,
-        listOf(Int::class, Float::class) to ConditionsF.Companion::lessIF,
-        listOf(Float::class, Int::class) to ConditionsF.Companion::lessFI,
-        listOf(Float::class, Float::class) to ConditionsF.Companion::lessFF,
+    "==" to mapOf(
+        listOf(Int::class, Int::class) to ConditionsF.Companion::equalII,
+        listOf(Int::class, Float::class) to ConditionsF.Companion::equalIF,
+        listOf(Float::class, Int::class) to ConditionsF.Companion::equalFI,
+        listOf(Float::class, Float::class) to ConditionsF.Companion::equalFF,
     ),
+
+    "!=" to mapOf(
+        listOf(Int::class, Int::class) to ConditionsF.Companion::notEqualII,
+        listOf(Int::class, Float::class) to ConditionsF.Companion::notEqualIF,
+        listOf(Float::class, Int::class) to ConditionsF.Companion::notEqualFI,
+        listOf(Float::class, Float::class) to ConditionsF.Companion::notEqualFF,
+    ),
+
+    "&&" to mapOf(
+        listOf(Boolean::class, Boolean::class) to ConditionsF.Companion::andF,
+    ),
+
+    "||" to mapOf(
+        listOf(Boolean::class, Boolean::class) to ConditionsF.Companion::orF,
+    )
 )
 
 fun getComaSeparatorIndexes(text: String): List<Int> {

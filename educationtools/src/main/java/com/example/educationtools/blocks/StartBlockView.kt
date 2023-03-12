@@ -5,10 +5,12 @@ import androidx.core.graphics.toRegion
 import com.example.educationtools.connection.Knot
 import com.example.educationtools.logic.LogicBlock
 import com.example.educationtools.logic.StartBlock
+import com.example.educationtools.logic.parsers.StartBlockParser
 
 class StartBlockView: LogicBlockView() {
 
     private val startBlock = StartBlock()
+    private val parser = StartBlockParser()
     private val outputKnot = Knot(this, Knot.Side.BOTTOM, true, 20f, onKnotConnected = ::connect)
 
     override val logicBlock: LogicBlock
@@ -26,6 +28,12 @@ class StartBlockView: LogicBlockView() {
         style = Paint.Style.STROKE
     }
 
+    private val fillPaint = Paint().apply {
+        isAntiAlias = true
+        color = Color.WHITE
+        style = Paint.Style.FILL
+    }
+
     private val mainPath = Path().apply {
         addOval(mainRect, Path.Direction.CCW)
     }
@@ -36,6 +44,7 @@ class StartBlockView: LogicBlockView() {
 
     override fun drawBorder(canvas: Canvas) {
         canvas.apply {
+            drawPath(mainPath, fillPaint)
             drawPath(mainPath, mainPaint)
         }
     }
@@ -59,6 +68,21 @@ class StartBlockView: LogicBlockView() {
     override fun updateSize(newWidth: Float, newHeight: Float) {
         super.updateSize(newWidth, newHeight)
         updateParams()
+    }
+
+    override fun setText(newText: String) {
+        super.setText(newText)
+        if (newText != "") {
+            try {
+                val variables = parser.parseOrThrow(newText)
+                startBlock.updateVariables(variables)
+                isError = false
+            } catch (e: java.lang.Exception) {
+                startBlock.updateVariables(emptyList())
+                isError = true
+            }
+        }
+        invalidate()
     }
 
     private fun updateParams() {

@@ -5,9 +5,11 @@ import androidx.core.graphics.toRegion
 import com.example.educationtools.connection.Knot
 import com.example.educationtools.logic.LogicBlock
 import com.example.educationtools.logic.WhileDoBlock
+import com.example.educationtools.logic.parsers.ConditionBlockParser
 
 class WhileDoBlockView: LogicBlockView() {
     private val conditionBlock = WhileDoBlock()
+    private val parser = ConditionBlockParser(conditionBlock.id)
     private val falseKnot = Knot(this, Knot.Side.RIGHT, true, 20f, false, ::falseConnect)
     private val trueKnot = Knot(this, Knot.Side.BOTTOM, true, 20f, true, ::trueConnect)
     private val leftKnot = Knot(this, Knot.Side.LEFT, false, 20f)
@@ -28,6 +30,12 @@ class WhileDoBlockView: LogicBlockView() {
         style = Paint.Style.STROKE
     }
 
+    private val fillPaint = Paint().apply {
+        isAntiAlias = true
+        color = Color.WHITE
+        style = Paint.Style.FILL
+    }
+
     private val mainPath = Path().apply {
         moveTo(mainRect.left + mainRect.width()/4, mainRect.top)
         lineTo(mainRect.right - mainRect.width()/4, mainRect.top)
@@ -44,6 +52,7 @@ class WhileDoBlockView: LogicBlockView() {
 
     override fun drawBorder(canvas: Canvas) {
         canvas.apply {
+            drawPath(mainPath, fillPaint)
             drawPath(mainPath, mainPaint)
         }
     }
@@ -67,6 +76,21 @@ class WhileDoBlockView: LogicBlockView() {
     override fun updateSize(newWidth: Float, newHeight: Float) {
         super.updateSize(newWidth, newHeight)
         updateProperties()
+    }
+
+    override fun setText(newText: String) {
+        super.setText(newText)
+        if (newText != "") {
+            try {
+                val function = parser.parseOrThrow(newText, memoryModel)
+                conditionBlock.setFunction(function)
+                isError = false
+            } catch (e: java.lang.Exception) {
+                conditionBlock.deleteFunction()
+                isError = true
+            }
+        }
+        invalidate()
     }
 
     private fun trueConnect(knot: Knot) {

@@ -2,7 +2,7 @@ package com.example.educationtools.logic
 
 import java.util.UUID
 
-abstract class LogicBlock() {
+abstract class LogicBlock {
     private var _memoryModel: MemoryModel? = null
     val memoryModel
         get() = checkNotNull(_memoryModel)

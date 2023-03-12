@@ -32,17 +32,14 @@ class DragAndDropManager(private val touchManager: TouchManager, private val tra
     private fun dragProcess(touchInfo: TouchManager.TouchInfo) {
         draggedBlock?.let { block ->
             val center = block.getCenter()
-            Log.d(DragAndDropManager::class.simpleName, "center: $center")
             val newPosition = PointF().apply {
                 x = center.x - (lastMovePoint.x - touchInfo.xPos)
                 y = center.y - (lastMovePoint.y - touchInfo.yPos)
             }
-            Log.d(DragAndDropManager::class.simpleName, "newPosition: $newPosition, lastMoveP: $lastMovePoint, touchInfo: $touchInfo")
             lastMovePoint.apply {
                 x = touchInfo.xPos
                 y = touchInfo.yPos
             }
-            Log.d(DragAndDropManager::class.simpleName, "center")
             block.updatePosition(newPosition)
         }
     }

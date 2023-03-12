@@ -9,7 +9,7 @@ class ConditionBlock(): LogicBlock() {
 
     private var trueBlock: LogicBlock? = null
     private var falseBlock: LogicBlock? = null
-    private var function: ConditionFunction? = null
+    private var function: Function? = null
     override fun work() {
         if (function != null) {
             val result = function!!.run() as Boolean
@@ -25,7 +25,7 @@ class ConditionBlock(): LogicBlock() {
         memoryModel.declareConditionBlock(id)
     }
 
-    fun setFunction(newFunction: ConditionFunction) {
+    fun setFunction(newFunction: Function) {
         function = newFunction
     }
 

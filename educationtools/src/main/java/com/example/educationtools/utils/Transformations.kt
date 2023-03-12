@@ -17,8 +17,8 @@ class Transformations(
     }
 
     fun addTranslation(dx: Float, dy: Float) {
-        translation.x = translation.x - dx
-        translation.y = translation.y - dy
+        translation.x = translation.x - dx / scale
+        translation.y = translation.y - dy / scale
     }
 
     fun addScale(scale: Float) {

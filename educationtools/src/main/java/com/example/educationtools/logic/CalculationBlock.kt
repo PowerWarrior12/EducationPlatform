@@ -21,15 +21,7 @@ class CalculationBlock(): LogicBlock() {
     }
 
     fun setFunctionAndVar(function: Function, variable: String): Boolean {
-        //Смотрим, содержалась ли в данном блоке переменная, и если да, была ли она объявлена в этом блоке
-        //Если так, то удаляем её
-        changeableVar?.let { currentVar ->
-            memoryModel.getBlockVariable(id)?.let {
-                if (currentVar.name == it) {
-                    memoryModel.deleteVariable(id, currentVar)
-                }
-            }
-        }
+        deleteVarInMemory()
 
         //Получаем все доступные для данного блока переменные
         val declaredVars = memoryModel.getAvailableVariablesOrThrow(id)
@@ -43,6 +35,24 @@ class CalculationBlock(): LogicBlock() {
         this.changeableVar = Variable(variable, function.type)
         this.function = function
         return true
+    }
+
+    fun deleteFunctionAndVar() {
+        deleteVarInMemory()
+        changeableVar = null
+        function = null
+    }
+
+    private fun deleteVarInMemory() {
+        //Смотрим, содержалась ли в данном блоке переменная, и если да, была ли она объявлена в этом блоке
+        //Если так, то удаляем её
+        changeableVar?.let { currentVar ->
+            memoryModel.getBlockVariable(id)?.let {
+                if (currentVar.name == it) {
+                    memoryModel.deleteVariable(id, currentVar)
+                }
+            }
+        }
     }
 
     fun setNextBlock(newNextBlock: LogicBlock) {

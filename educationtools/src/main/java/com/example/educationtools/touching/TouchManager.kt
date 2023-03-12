@@ -1,5 +1,6 @@
 package com.example.educationtools.touching
 
+import android.util.Log
 import com.example.educationtools.utils.Transformations
 
 class TouchManager(
@@ -13,9 +14,11 @@ class TouchManager(
     private val onLongTouchListeners = mutableListOf<(TouchInfo) -> Unit>()
     private val onMoveListeners = mutableListOf<(TouchInfo) -> Unit>()
     private val onTouchReleaseListeners = mutableListOf<(TouchInfo) -> Unit>()
+    private val onDoubleTouchListeners = mutableListOf<(TouchInfo) -> Unit>()
 
     private var longProcess: Boolean = false
     private var moveProcess: Boolean = false
+    private var isReleased: Boolean = false
 
     fun addTouchListener(listener: (TouchInfo) -> Unit) {
         onTouchListeners.add(listener)
@@ -37,6 +40,10 @@ class TouchManager(
         onTouchReleaseListeners.add(listener)
     }
 
+    fun addDoubleTouchListener(listener: (TouchInfo) -> Unit) {
+        onDoubleTouchListeners.add(listener)
+    }
+
     fun deleteSingleTouchListener(listener: (TouchInfo) -> Unit) {
         onSingleTouchListeners.remove(listener)
     }
@@ -53,7 +60,13 @@ class TouchManager(
         onTouchReleaseListeners.remove(listener)
     }
 
+    fun deleteDoubleTouchListener(listener: (TouchInfo) -> Unit) {
+        onDoubleTouchListeners.remove(listener)
+    }
+
     fun touchDown(x: Float, y: Float) {
+        isReleased = false
+        Log.d("TOUCH-MANAGER", "touch down")
         val transformPoint = transformations.convertPointToTransform(x, y)
         touchableSet.firstOrNull { touchable ->
             touchable.checkPointAvailability(transformPoint)
@@ -71,6 +84,8 @@ class TouchManager(
     }
 
     fun singleTouch(x: Float, y: Float) {
+
+        Log.d("TOUCH-MANAGER", "single touch")
         val transformPoint = transformations.convertPointToTransform(x, y)
         touchableInFocus?.let { touchable ->
             onSingleTouchListeners.forEach { listener ->
@@ -86,6 +101,8 @@ class TouchManager(
     }
 
     fun longTouch(x: Float, y: Float) {
+
+        Log.d("TOUCH-MANAGER", "long touch")
         val transformPoint = transformations.convertPointToTransform(x, y)
         longProcess = true
         touchableInFocus?.let { touchable ->
@@ -100,6 +117,8 @@ class TouchManager(
     }
 
     fun move(x: Float, y: Float) {
+
+        Log.d("TOUCH-MANAGER", "move touch")
         val transformPoint = transformations.convertPointToTransform(x, y)
         moveProcess = true
         touchableSet.firstOrNull { touchable ->
@@ -118,6 +137,7 @@ class TouchManager(
     }
 
     fun releaseTouch(x: Float, y: Float) {
+        Log.d("TOUCH-MANAGER", "release touch")
         val transformPoint = transformations.convertPointToTransform(x, y)
         touchableInFocus?.let { touchable ->
             onTouchReleaseListeners.forEach { listener ->
@@ -136,6 +156,22 @@ class TouchManager(
             return
         }
         onTouchReleaseListeners.forEach { listener ->
+            listener(TouchInfo.EmptyInfo(transformPoint.x, transformPoint.y, startTouchableInFocus))
+        }
+    }
+
+    fun doubleTouch(x: Float, y: Float) {
+        Log.d("TOUCH-MANAGER", "double touch")
+        val transformPoint = transformations.convertPointToTransform(x, y)
+        touchableSet.firstOrNull { touchable ->
+            touchable.checkPointAvailability(transformPoint)
+        }?.let { touchable ->
+            onDoubleTouchListeners.forEach { listener ->
+                listener(TouchInfo.FilledInfo(transformPoint.x, transformPoint.y, startTouchableInFocus, touchable))
+            }
+            return
+        }
+        onDoubleTouchListeners.forEach { listener ->
             listener(TouchInfo.EmptyInfo(transformPoint.x, transformPoint.y, startTouchableInFocus))
         }
     }
@@ -163,6 +199,13 @@ class TouchManager(
             return startTouchableInFocus!!.blockScroll
         }
         return false
+    }
+
+    fun onTwoPointTap(x: Float, y: Float) {
+        if (!isReleased) {
+            releaseTouch(x, y)
+            isReleased = true
+        }
     }
 
     sealed class TouchInfo(

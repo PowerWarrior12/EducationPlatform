@@ -4,13 +4,16 @@ import com.example.educationtools.logic.MemoryModel
 import com.example.educationtools.logic.functions.ConditionFunction
 import com.example.educationtools.logic.functions.VariableFunction
 import com.example.educationtools.logic.functions.Function
+import com.example.educationtools.logic.functions.ReflectFunction
 import java.util.*
+import kotlin.reflect.KFunction
 
-class ConditionBlockParser(private val memoryModel: MemoryModel, private val blockId: String) {
+class ConditionBlockParser(private val blockId: String) {
 
     private val postfixParser = PostfixExpressionParser()
 
-    /*fun parseOrThrow(text: String): ConditionFunction {
+    fun parseOrThrow(textInput: String, memoryModel: MemoryModel): Function {
+        val text = textInput.replace(" ", "")
         val stack = Stack<Function>()
         val availableVars = memoryModel.getAvailableVariablesOrThrow(blockId)
         val elements = postfixParser.parseOrThrow(text)
@@ -33,9 +36,38 @@ class ConditionBlockParser(private val memoryModel: MemoryModel, private val blo
                 continue
             }
 
+            if (conditionMethodsMap.containsKey(element)) {
+                val fOverloads = conditionMethodsMap.getValue(element)
+                if (stack.count() >= 2) {
+                    val secondParam = stack.pop()
+                    val firstParam = stack.pop()
 
+                    val types = listOf(firstParam.type, secondParam.type)
+
+                    if (fOverloads.containsKey(types)) {
+                        function = ReflectFunction(fOverloads[types]!!)
+                        function.setVariableOrThrow(firstParam)
+                        function.setVariableOrThrow(secondParam)
+                        stack.push(function)
+                        continue
+                    }
+                } else {
+                    throw Exception(SYNTAX_ERROR_TEXT)
+                }
+            }
+            throw Exception(SYNTAX_ERROR_TEXT)
 
         }
-    }*/
+
+        if (stack.count() > 1 || stack.isEmpty()) {
+            throw Exception(SYNTAX_ERROR_TEXT)
+        }
+        val resultFunction = stack.pop()
+
+        if (resultFunction.type != Boolean::class) {
+            throw Exception(SYNTAX_ERROR_TEXT)
+        }
+        return resultFunction
+    }
 
 }

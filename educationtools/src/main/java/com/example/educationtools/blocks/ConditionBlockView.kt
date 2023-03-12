@@ -6,9 +6,11 @@ import com.example.educationtools.connection.Knot
 import com.example.educationtools.logic.CalculationBlock
 import com.example.educationtools.logic.ConditionBlock
 import com.example.educationtools.logic.LogicBlock
+import com.example.educationtools.logic.parsers.ConditionBlockParser
 
 class ConditionBlockView: LogicBlockView() {
     private val conditionBlock = ConditionBlock()
+    private val parser = ConditionBlockParser(conditionBlock.id)
     private val falseKnot = Knot(this, Knot.Side.LEFT, true, 20f, false, ::falseConnect)
     private val trueKnot = Knot(this, Knot.Side.RIGHT, true, 20f, true, ::trueConnect)
     private val topKnot = Knot(this, Knot.Side.TOP, false, 20f)
@@ -29,6 +31,12 @@ class ConditionBlockView: LogicBlockView() {
         style = Paint.Style.STROKE
     }
 
+    private val fillPaint = Paint().apply {
+        isAntiAlias = true
+        color = Color.WHITE
+        style = Paint.Style.FILL
+    }
+
     private val mainPath = Path().apply {
         moveTo(mainRect.centerX(), mainRect.top)
         lineTo(mainRect.right, mainRect.centerY())
@@ -43,6 +51,7 @@ class ConditionBlockView: LogicBlockView() {
 
     override fun drawBorder(canvas: Canvas) {
         canvas.apply {
+            drawPath(mainPath, fillPaint)
             drawPath(mainPath, mainPaint)
         }
     }
@@ -66,6 +75,21 @@ class ConditionBlockView: LogicBlockView() {
     override fun updateSize(newWidth: Float, newHeight: Float) {
         super.updateSize(newWidth, newHeight)
         updateProperties()
+    }
+
+    override fun setText(newText: String) {
+        super.setText(newText)
+        if (newText != "") {
+            isError = try {
+                val function = parser.parseOrThrow(newText, memoryModel)
+                conditionBlock.setFunction(function)
+                false
+            } catch (e: java.lang.Exception) {
+                conditionBlock.deleteFunction()
+                true
+            }
+        }
+        invalidate()
     }
 
     private fun trueConnect(knot: Knot) {

@@ -48,9 +48,12 @@ class EditorViewBase @JvmOverloads constructor(
     private val dragAndDropManager = DragAndDropManager(touchManager, transformations)
     private val connectionManager = ConnectionManager(memoryModel, touchManager, this, selectManager)
 
+    private val onBlockDoubleTouchListeners = mutableListOf<(EditableBlockBase) -> Unit>()
+
     init {
         selectManager.start()
         dragAndDropManager.start()
+        touchManager.addDoubleTouchListener(::onDoubleTouch)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -93,6 +96,18 @@ class EditorViewBase @JvmOverloads constructor(
         return processTouch(event)
     }
 
+    private fun onDoubleTouch(touchInfo: TouchManager.TouchInfo) {
+        if (touchInfo is TouchManager.TouchInfo.FilledInfo && touchInfo.touchable is EditableBlockBase) {
+            onBlockDoubleTouchListeners.forEach {
+                it(touchInfo.touchable)
+            }
+        }
+    }
+
+    fun addOnBlockDoubleTouchListener(listener: (block: EditableBlockBase) -> Unit) {
+        onBlockDoubleTouchListeners.add(listener)
+    }
+
     fun addChild(child: EditableBlock) {
         children.add(child)
         child.setEditorParent(this)
@@ -111,6 +126,7 @@ class EditorViewBase @JvmOverloads constructor(
      */
     private fun processTouch(event: MotionEvent): Boolean {
         return if (event.pointerCount > 1) {
+            touchManager.onTwoPointTap(event.getX(0), event.getY(0))
             scaleGestureDetector.onTouchEvent(event)
         } else {
             if (event.action == MotionEvent.ACTION_MOVE) {
@@ -144,8 +160,16 @@ class EditorViewBase @JvmOverloads constructor(
 
         override fun onSingleTapUp(e: MotionEvent): Boolean {
             touchManager.singleTouch(e.x, e.y)
-            invalidate()
             return true
+        }
+
+        override fun onDoubleTap(e: MotionEvent): Boolean {
+            touchManager.doubleTouch(e.x, e.y)
+            return true
+        }
+
+        override fun onShowPress(e: MotionEvent) {
+            super.onShowPress(e)
         }
 
         override fun onFling(

@@ -26,8 +26,7 @@ abstract class EditableBlockBase protected constructor() : EditableBlock, Select
     private var height = 0f
 
     //Text
-    private var text: String =
-        "Какой то текст"
+    private var text: String = ""
 
     private var selector = SimpleSelector(this)
 
@@ -35,7 +34,7 @@ abstract class EditableBlockBase protected constructor() : EditableBlock, Select
 
     //Rects
     protected val mainRect: RectF
-    private val textRect: RectF
+    protected val textRect: RectF
 
     //Paints
 
@@ -162,6 +161,6 @@ abstract class EditableBlockBase protected constructor() : EditableBlock, Select
         get() = false
 }
 
-interface EditableBlockFactory<V : EditableBlock> {
+interface EditableBlockFactory<out V : EditableBlock> {
     fun create(): EditableBlock
 }

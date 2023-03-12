@@ -1,11 +1,12 @@
 package com.example.educationtools.logic
 
 import com.example.educationtools.logic.functions.ConditionFunction
+import com.example.educationtools.logic.functions.Function
 
 class WhileDoBlock: LogicBlock() {
     private var trueBlock: LogicBlock? = null
     private var falseBlock: LogicBlock? = null
-    private var function: ConditionFunction? = null
+    private var function: Function? = null
 
     override fun work() {
         if (function != null) {
@@ -22,7 +23,7 @@ class WhileDoBlock: LogicBlock() {
         memoryModel.declareWhileDoBlock(id)
     }
 
-    fun setFunction(newFunction: ConditionFunction) {
+    fun setFunction(newFunction: Function) {
         function = newFunction
     }
 

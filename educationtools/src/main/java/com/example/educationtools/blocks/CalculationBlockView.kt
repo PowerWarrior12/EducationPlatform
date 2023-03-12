@@ -4,13 +4,17 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PointF
+import android.util.Log
 import com.example.educationtools.connection.Knot
 import com.example.educationtools.logic.CalculationBlock
 import com.example.educationtools.logic.LogicBlock
+import com.example.educationtools.logic.parsers.CalculationBlockParser
+import kotlin.system.measureTimeMillis
 
 class CalculationBlockView: LogicBlockView() {
 
     private val calculationBlock = CalculationBlock()
+    private val parser = CalculationBlockParser(calculationBlock.id)
     private val leftKnot = Knot(this, Knot.Side.LEFT, false, 20f)
     private val rightKnot = Knot(this, Knot.Side.RIGHT, false, 20f)
     private val topKnot = Knot(this, Knot.Side.TOP, false, 20f)
@@ -18,11 +22,17 @@ class CalculationBlockView: LogicBlockView() {
 
 
     //Paints
-    val mainPaint = Paint().apply {
+    private val mainPaint = Paint().apply {
         isAntiAlias = true
         color = Color.BLACK
         strokeWidth = 10f
         style = Paint.Style.STROKE
+    }
+
+    private val fillPaint = Paint().apply {
+        isAntiAlias = true
+        color = Color.WHITE
+        style = Paint.Style.FILL
     }
 
     override val logicBlock: LogicBlock
@@ -34,6 +44,7 @@ class CalculationBlockView: LogicBlockView() {
 
     override fun drawBorder(canvas: Canvas) {
         canvas.apply {
+            drawRect(mainRect, fillPaint)
             drawRect(mainRect, mainPaint)
         }
     }
@@ -68,5 +79,20 @@ class CalculationBlockView: LogicBlockView() {
         rightKnot.updatePosition(mainRect.right, mainRect.centerY())
         topKnot.updatePosition(mainRect.centerX(), mainRect.top)
         bottomKnot.updatePosition(mainRect.centerX(), mainRect.bottom)
+    }
+
+    override fun setText(newText: String) {
+        super.setText(newText)
+        if (newText != "") {
+            isError = try {
+                val (variable, function) = parser.parseOrThrow(newText, memoryModel)
+                calculationBlock.setFunctionAndVar(function, variable.name)
+                false
+            } catch (e: java.lang.Exception) {
+                calculationBlock.deleteFunctionAndVar()
+                true
+            }
+        }
+        invalidate()
     }
 }
