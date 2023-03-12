@@ -1,6 +1,8 @@
 package com.example.educationtools.base
 
 import android.graphics.*
+import android.os.Parcel
+import android.os.Parcelable
 import android.text.Layout
 import android.text.TextPaint
 import android.util.Log
@@ -161,6 +163,6 @@ abstract class EditableBlockBase protected constructor() : EditableBlock, Select
         get() = false
 }
 
-interface EditableBlockFactory<out V : EditableBlock> {
+interface EditableBlockFactory<out V : EditableBlock>{
     fun create(): EditableBlock
 }

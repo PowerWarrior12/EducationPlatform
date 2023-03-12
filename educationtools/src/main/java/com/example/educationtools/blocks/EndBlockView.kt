@@ -6,6 +6,7 @@ import com.example.educationtools.connection.Knot
 import com.example.educationtools.logic.EndBlock
 import com.example.educationtools.logic.LogicBlock
 import com.example.educationtools.logic.StartBlock
+import com.example.educationtools.logic.Variable
 import com.example.educationtools.logic.parsers.EndBlockParser
 
 class EndBlockView: LogicBlockView() {
@@ -49,6 +50,10 @@ class EndBlockView: LogicBlockView() {
         }
     }
 
+    override fun checkError() {
+        checkTextError()
+    }
+
     override fun checkPointAvailability(x: Float, y: Float): Boolean {
         return mainRegion.contains(x.toInt(), y.toInt())
     }
@@ -72,9 +77,18 @@ class EndBlockView: LogicBlockView() {
 
     override fun setText(newText: String) {
         super.setText(newText)
-        if (newText != "") {
+        checkTextError()
+        invalidate()
+    }
+
+    fun addOnSuccessListener(listener: (List<Variable>) -> Unit) {
+        endBlock.addOnEndListener(listener)
+    }
+
+    private fun checkTextError() {
+        if (getText() != "") {
             try {
-                val variables = parser.parseOrThrow(newText, memoryModel)
+                val variables = parser.parseOrThrow(getText(), memoryModel)
                 endBlock.setVariables(variables)
                 isError = false
             } catch (e: java.lang.Exception) {
@@ -82,7 +96,6 @@ class EndBlockView: LogicBlockView() {
                 isError = true
             }
         }
-        invalidate()
     }
 
     private fun updateParams() {

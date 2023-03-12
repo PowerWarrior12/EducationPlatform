@@ -5,12 +5,14 @@ import androidx.core.graphics.toRegion
 import com.example.educationtools.connection.Knot
 import com.example.educationtools.logic.LogicBlock
 import com.example.educationtools.logic.StartBlock
+import com.example.educationtools.logic.parsers.InputVariablesParser
 import com.example.educationtools.logic.parsers.StartBlockParser
 
 class StartBlockView: LogicBlockView() {
 
     private val startBlock = StartBlock()
-    private val parser = StartBlockParser()
+    private val parametersParser = StartBlockParser()
+    private val inputVariableParser = InputVariablesParser()
     private val outputKnot = Knot(this, Knot.Side.BOTTOM, true, 20f, onKnotConnected = ::connect)
 
     override val logicBlock: LogicBlock
@@ -49,6 +51,10 @@ class StartBlockView: LogicBlockView() {
         }
     }
 
+    override fun checkError() {
+
+    }
+
     override fun checkPointAvailability(x: Float, y: Float): Boolean {
         return mainRegion.contains(x.toInt(), y.toInt())
     }
@@ -74,7 +80,7 @@ class StartBlockView: LogicBlockView() {
         super.setText(newText)
         if (newText != "") {
             try {
-                val variables = parser.parseOrThrow(newText)
+                val variables = parametersParser.parseOrThrow(newText)
                 startBlock.updateVariables(variables)
                 isError = false
             } catch (e: java.lang.Exception) {
@@ -82,7 +88,18 @@ class StartBlockView: LogicBlockView() {
                 isError = true
             }
         }
+        onTextChangeListeners?.invoke(logicBlock.id)
         invalidate()
+    }
+
+    fun start(text: String) {
+        try {
+            val variables = inputVariableParser.parseOrThrow(text)
+            startBlock.startOrThrow(variables)
+        } catch (e: java.lang.Exception) {
+
+        }
+
     }
 
     private fun updateParams() {

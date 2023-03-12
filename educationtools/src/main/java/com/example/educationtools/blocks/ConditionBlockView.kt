@@ -56,6 +56,10 @@ class ConditionBlockView: LogicBlockView() {
         }
     }
 
+    override fun checkError() {
+        checkTextError()
+    }
+
     override fun checkPointAvailability(x: Float, y: Float): Boolean {
         return mainRegion.contains(x.toInt(), y.toInt())
     }
@@ -79,9 +83,15 @@ class ConditionBlockView: LogicBlockView() {
 
     override fun setText(newText: String) {
         super.setText(newText)
-        if (newText != "") {
+        checkTextError()
+        onTextChangeListeners?.invoke(logicBlock.id)
+        invalidate()
+    }
+
+    private fun checkTextError() {
+        if (getText() != "") {
             isError = try {
-                val function = parser.parseOrThrow(newText, memoryModel)
+                val function = parser.parseOrThrow(getText(), memoryModel)
                 conditionBlock.setFunction(function)
                 false
             } catch (e: java.lang.Exception) {
@@ -89,7 +99,6 @@ class ConditionBlockView: LogicBlockView() {
                 true
             }
         }
-        invalidate()
     }
 
     private fun trueConnect(knot: Knot) {

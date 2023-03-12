@@ -2,22 +2,30 @@ package com.example.educationtools.base
 
 import android.animation.PointFEvaluator
 import android.animation.ValueAnimator
+import android.content.ClipDescription
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.PointF
+import android.os.Build
 import android.util.AttributeSet
-import android.view.GestureDetector
-import android.view.MotionEvent
-import android.view.ScaleGestureDetector
-import android.view.View
+import android.view.*
 import android.view.animation.AccelerateInterpolator
+import androidx.annotation.RequiresApi
 import androidx.core.graphics.withScale
 import androidx.core.graphics.withTranslation
-import com.example.educationtools.blocks.LogicBlockView
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.educationtools.R
+import com.example.educationtools.blocks.*
 import com.example.educationtools.connection.ConnectionManager
 import com.example.educationtools.dragging.DragAndDropManager
 import com.example.educationtools.logic.LogicBlock
 import com.example.educationtools.logic.MemoryModel
+import com.example.educationtools.logic.Variable
+import com.example.educationtools.logic.WhileDoBlock
+import com.example.educationtools.menu.BlockMenuItem
+import com.example.educationtools.menu.BlocksAdapter
 import com.example.educationtools.selection.SelectManager
 import com.example.educationtools.touching.TouchManager
 import com.example.educationtools.touching.Touchable
@@ -49,11 +57,85 @@ class EditorViewBase @JvmOverloads constructor(
     private val connectionManager = ConnectionManager(memoryModel, touchManager, this, selectManager)
 
     private val onBlockDoubleTouchListeners = mutableListOf<(EditableBlockBase) -> Unit>()
+    private var onErrorListener: ((errorMessage: String) -> Unit)? = null
+    private var onSuccessListener: ((variables: List<Variable>) -> Unit)? = null
+    private var startBlock: StartBlockView? = null
+    private var endBlock: EndBlockView? = null
 
+    private val onDragListener = OnDragListener { view, dragEvent ->
+        when(dragEvent.action) {
+            DragEvent.ACTION_DRAG_STARTED -> {
+                true
+            }
+            DragEvent.ACTION_DRAG_ENTERED -> {
+                view.invalidate()
+                true
+            }
+            DragEvent.ACTION_DRAG_LOCATION -> {
+                true
+            }
+            DragEvent.ACTION_DRAG_EXITED -> {
+                true
+            }
+            DragEvent.ACTION_DRAG_ENDED -> {
+                true
+            }
+            DragEvent.ACTION_DROP -> {
+                val position = transformations.convertPointToTransform(dragEvent.x, dragEvent.y)
+                when(dragEvent.clipData.getItemAt(0).text) {
+                    CalculationBlockView::class.simpleName -> {
+                        addChild(CalculationBlockView().apply {
+                            setEditorParent(this@EditorViewBase)
+                            updatePosition(position)
+                            updateSize(400f, 250f)
+                        })
+                    }
+                    ConditionBlockView::class.simpleName -> {
+                        addChild(ConditionBlockView().apply {
+                            setEditorParent(this@EditorViewBase)
+                            updatePosition(position)
+                            updateSize(400f, 250f)
+                        })
+                    }
+                    StartBlockView::class.simpleName -> {
+                        addChild(StartBlockView().apply {
+                            setEditorParent(this@EditorViewBase)
+                            updatePosition(position)
+                            updateSize(400f, 250f)
+                        })
+                    }
+                    WhileDoBlockView::class.simpleName -> {
+                        addChild(WhileDoBlockView().apply {
+                            setEditorParent(this@EditorViewBase)
+                            updatePosition(position)
+                            updateSize(400f, 250f)
+                        })
+                    }
+                    EndBlockView::class.simpleName -> {
+                        addChild(EndBlockView().apply {
+                            setEditorParent(this@EditorViewBase)
+                            updatePosition(position)
+                            updateSize(400f, 250f)
+                        })
+                    }
+                }
+                true
+            }
+            else -> {
+                false
+            }
+        }
+
+    }
     init {
         selectManager.start()
         dragAndDropManager.start()
         touchManager.addDoubleTouchListener(::onDoubleTouch)
+
+        this.setOnDragListener(onDragListener)
+        connectionManager.addOnConnectedListener { start, end ->
+            updateLogicBlocks(start)
+        }
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -92,7 +174,6 @@ class EditorViewBase @JvmOverloads constructor(
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         event ?: return false
-
         return processTouch(event)
     }
 
@@ -100,6 +181,15 @@ class EditorViewBase @JvmOverloads constructor(
         if (touchInfo is TouchManager.TouchInfo.FilledInfo && touchInfo.touchable is EditableBlockBase) {
             onBlockDoubleTouchListeners.forEach {
                 it(touchInfo.touchable)
+            }
+        }
+    }
+
+    private fun updateLogicBlocks(startId: String) {
+        val dependenciesBlocks = memoryModel.getDependentBlocks(startId)
+        children.forEach { block ->
+            if (block is LogicBlockView && block.logicBlock.id in dependenciesBlocks) {
+                block.checkError()
             }
         }
     }
@@ -116,9 +206,46 @@ class EditorViewBase @JvmOverloads constructor(
         }
         if (child is LogicBlockView) {
             child.setMemoryModel(memoryModel)
+            child.setTextChangeListener(::updateLogicBlocks)
             connectionManager.addLogicBlockView(child)
+            if (child is StartBlockView) {
+                startBlock = child
+            }
+            if (child is EndBlockView) {
+                endBlock = child
+                onSuccessListener?.let {
+                    endBlock!!.addOnSuccessListener(it)
+                }
+            }
         }
         invalidate()
+    }
+
+    fun generateMenuAdapter(): BlocksAdapter {
+        val blockAdapter = BlocksAdapter()
+
+        blockAdapter.submitList(listOf(
+            BlockMenuItem(CalculationBlockView::class.simpleName!!, R.drawable.calculation_icon, "CALCULATION BLOCK"),
+            BlockMenuItem(ConditionBlockView::class.simpleName!!, R.drawable.condition_icon, "CONDITION BLOCK"),
+            BlockMenuItem(StartBlockView::class.simpleName!!, R.drawable.start_icon, "START BLOCK"),
+            BlockMenuItem(WhileDoBlockView::class.simpleName!!, R.drawable.while_do_icon, "WHILE DO BLOCK"),
+            BlockMenuItem(EndBlockView::class.simpleName!!, R.drawable.start_icon, "END BLOCK"),
+        ))
+        return blockAdapter
+    }
+
+    fun start(text: String): Boolean {
+        startBlock?.start(text) ?: return false
+        return true
+    }
+
+    fun addOnErrorListener(listener: (errorMessage: String) -> Unit) {
+        onErrorListener = listener
+    }
+
+    fun addOnSuccessListener(listener: (variables: List<Variable>) -> Unit) {
+        onSuccessListener = listener
+        endBlock?.addOnSuccessListener(listener)
     }
 
     /**
@@ -137,6 +264,8 @@ class EditorViewBase @JvmOverloads constructor(
             gestureDetector.onTouchEvent(event)
         }
     }
+
+
 
     private inner class ScaleListener : ScaleGestureDetector.SimpleOnScaleGestureListener() {
         override fun onScale(detector: ScaleGestureDetector): Boolean {

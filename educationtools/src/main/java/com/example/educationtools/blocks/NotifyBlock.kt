@@ -4,6 +4,8 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PointF
+import android.os.Parcel
+import android.os.Parcelable
 import com.example.educationtools.base.EditableBlock
 import com.example.educationtools.base.EditableBlockBase
 import com.example.educationtools.base.EditableBlockFactory
@@ -42,10 +44,10 @@ class NotifyBlock(): EditableBlockBase() {
 
 
     data class EditableConfigurations(
-        var centerX: Float,
-        var centerY: Float,
-        var width: Float = 0f,
-        var height: Float = 0f,
+        var centerX: Float = 0f,
+        var centerY: Float = 0f,
+        var width: Float = 400f,
+        var height: Float = 250f,
         var text: String = ""
     ) : EditableBlockFactory<NotifyBlock> {
         override fun create(): EditableBlock {

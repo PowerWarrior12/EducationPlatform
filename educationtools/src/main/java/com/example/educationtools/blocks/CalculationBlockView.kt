@@ -49,6 +49,10 @@ class CalculationBlockView: LogicBlockView() {
         }
     }
 
+    override fun checkError() {
+        checkTextError()
+    }
+
     override fun updatePosition(newPosition: PointF) {
         super.updatePosition(newPosition)
         updateKnotsPosition()
@@ -81,11 +85,10 @@ class CalculationBlockView: LogicBlockView() {
         bottomKnot.updatePosition(mainRect.centerX(), mainRect.bottom)
     }
 
-    override fun setText(newText: String) {
-        super.setText(newText)
-        if (newText != "") {
+    private fun checkTextError() {
+        if (getText() != "") {
             isError = try {
-                val (variable, function) = parser.parseOrThrow(newText, memoryModel)
+                val (variable, function) = parser.parseOrThrow(getText(), memoryModel)
                 calculationBlock.setFunctionAndVar(function, variable.name)
                 false
             } catch (e: java.lang.Exception) {
@@ -93,6 +96,12 @@ class CalculationBlockView: LogicBlockView() {
                 true
             }
         }
+    }
+
+    override fun setText(newText: String) {
+        super.setText(newText)
+        checkTextError()
+        onTextChangeListeners?.invoke(logicBlock.id)
         invalidate()
     }
 }

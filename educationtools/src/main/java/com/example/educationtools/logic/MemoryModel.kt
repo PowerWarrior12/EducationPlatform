@@ -121,11 +121,13 @@ class MemoryModel {
                     result.add(it)
                 }
                 if (block.children.isEmpty() || falseBlock?.children?.isEmpty() != null) {
-                    result.addAll(if (falseBlock != null) {
-                        getEndIfElseBlocks(falseBlock.parent!!) as MutableList<TreeNode<Block>>
-                    } else {
-                        getEndIfElseBlocks(block) as MutableList<TreeNode<Block>>
-                    })
+                    result.addAll(
+                        if (falseBlock != null) {
+                            getEndIfElseBlocks(falseBlock.parent!!) as MutableList<TreeNode<Block>>
+                        } else {
+                            getEndIfElseBlocks(block) as MutableList<TreeNode<Block>>
+                        }
+                    )
                 }
             }
         }
@@ -138,9 +140,9 @@ class MemoryModel {
         }
         var parentNode = blocksMap.getValue(parentId)
         var childNode = blocksMap.getValue(childId)
-        Log.d("Block-Shames","Связь блока $parentId с блоком $childId")
+        Log.d("Block-Shames", "Связь блока $parentId с блоком $childId")
         freeBlocks.forEach {
-            Log.d("Block-Shames",it.prettyString())
+            Log.d("Block-Shames", it.prettyString())
         }
 
         var variants = mutableListOf<TreeNode<Block>>()
@@ -242,7 +244,8 @@ class MemoryModel {
                 throw java.lang.Exception("Невозможно связать блоки $parentId и $childId")
             } else {
                 if (childNode == endWhileDoBlocks(parentNode)) {
-                    parentNode.children.first { it.value is Block.FalseBlock }.addChild(TreeNode(Block.EndWhileBlock()))
+                    parentNode.children.first { it.value is Block.FalseBlock }
+                        .addChild(TreeNode(Block.EndWhileBlock()))
                     return
                 }
                 if (parentNode.children.first { it.value is Block.FalseBlock }.children.isEmpty()) {
@@ -366,7 +369,7 @@ class MemoryModel {
         }
         var parent = blocksMap.getValue(blockId).parent
 
-        while(parent != null) {
+        while (parent != null) {
             if (parent.value is Block.VariableBlock) {
                 (parent.value as Block.VariableBlock).variableName?.let {
                     result.add(it)
@@ -378,8 +381,27 @@ class MemoryModel {
         return result
     }
 
+    fun getDependentBlocks(blockId: String): List<String> {
+        val result = mutableListOf<String>()
+        if (!blocksMap.contains(blockId)) {
+            throw java.lang.Exception("Данного блока не существует")
+        }
+        fun recursiveSearch(block: TreeNode<Block>) {
+            if (block.value is Block.MainBlock) {
+                result.add((block.value as Block.MainBlock).id)
+            }
+            block.children.forEach {
+                recursiveSearch(it)
+            }
+        }
+        blocksMap.getValue(blockId).children.forEach {
+            recursiveSearch(it)
+        }
+        return result
+    }
+
     private fun getFalseBlockOfDoWhile(parentNode: TreeNode<Block>): TreeNode<Block>? {
-        return if (parentNode.children.firstOrNull { it.value is Block.EndDoBlock } != null ) {
+        return if (parentNode.children.firstOrNull { it.value is Block.EndDoBlock } != null) {
             var parent = parentNode.parent
             while (parent != null) {
                 if (parent.value is Block.TrueBlock && parent.parent!!.value is Block.DoBlock) {
@@ -416,7 +438,7 @@ class MemoryModel {
      * @param parentBlock блок от которого ищется переход
      */
     private fun endWhileDoBlocks(parentBlock: TreeNode<Block>): TreeNode<Block>? {
-        if (parentBlock.children.firstOrNull{ it.value is Block.EndWhileBlock } != null) {
+        if (parentBlock.children.firstOrNull { it.value is Block.EndWhileBlock } != null) {
             return null
         }
         var parent = parentBlock.parent
@@ -460,16 +482,26 @@ class MemoryModel {
         val resultList = mutableListOf<TreeNode<Block>>()
 
         fun findBlocks(conditionNode: Pair<TreeNode<Block>, TreeNode<Block>>) {
-            var child = conditionNode.first.children.first { it != conditionNode.second }.firstOrNull()
+            var child =
+                conditionNode.first.children.first { it != conditionNode.second }.firstOrNull()
             while (child != null) {
                 if (child.value is Block.ConditionBlock) {
                     if (child.children.count() > 2) {
                         resultList.add(child)
-                        child = child.children.firstOrNull { it.value !is Block.TrueBlock && it.value !is Block.FalseBlock }
+                        child =
+                            child.children.firstOrNull { it.value !is Block.TrueBlock && it.value !is Block.FalseBlock }
                         continue
                     } else {
-                        findBlocks(Pair(child, child.children.first { it.value is Block.TrueBlock }))
-                        findBlocks(Pair(child, child.children.first { it.value is Block.FalseBlock }))
+                        findBlocks(
+                            Pair(
+                                child,
+                                child.children.first { it.value is Block.TrueBlock })
+                        )
+                        findBlocks(
+                            Pair(
+                                child,
+                                child.children.first { it.value is Block.FalseBlock })
+                        )
                         break
                     }
                 }
@@ -533,48 +565,56 @@ class MemoryModel {
     }
 
     private sealed class Block {
-        class VariableBlock(val id: String, var variableName: String?) : Block() {
+        open class MainBlock(val id: String): Block()
+        class VariableBlock(id: String, var variableName: String?) : MainBlock(id) {
             override fun toString(): String {
                 return id
             }
         }
-        class ConditionBlock(val id: String) : Block() {
+
+        class ConditionBlock(id: String) : MainBlock(id) {
             override fun toString(): String {
                 return id
             }
         }
-        class WhileDoBlock(val id: String) : Block() {
+
+        class WhileDoBlock(id: String) : MainBlock(id) {
             override fun toString(): String {
                 return id
             }
         }
-        class DoWhileBlock(val id: String) : Block(){
+
+        class DoWhileBlock(id: String) : MainBlock(id) {
             override fun toString(): String {
                 return id
             }
         }
-        class TrueBlock: Block(){
+
+        class TrueBlock : Block() {
             override fun toString(): String {
                 return "TRUE"
             }
         }
-        class FalseBlock: Block(){
+
+        class FalseBlock : Block() {
             override fun toString(): String {
                 return "FALSE"
             }
         }
-        class DoBlock: Block(){
+
+        class DoBlock : Block() {
             override fun toString(): String {
                 return "DO"
             }
         }
-        class EndWhileBlock: Block(){
+
+        class EndWhileBlock : Block() {
             override fun toString(): String {
                 return "END WHILE"
             }
         }
 
-        class EndDoBlock: Block(){
+        class EndDoBlock : Block() {
             override fun toString(): String {
                 return "END DO"
             }

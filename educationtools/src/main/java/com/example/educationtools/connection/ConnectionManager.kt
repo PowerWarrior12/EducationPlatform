@@ -18,6 +18,8 @@ class ConnectionManager(
     private var connectableList = mutableListOf<String>()
     private val connectionLines = mutableListOf<ConnectionLine>()
 
+    private var onConnectionListener: ((start: String, end: String) -> Unit)? = null
+
     init {
         touchManager.addTouchListener(::onTouch)
         touchManager.addMoveListener(::onMove)
@@ -45,6 +47,10 @@ class ConnectionManager(
                 touchManager.deleteTouchable(knot)
             }
         }
+    }
+
+    fun addOnConnectedListener(listener: (start: String, end: String) -> Unit) {
+        onConnectionListener = listener
     }
 
     private fun onTouch(touchInfo: TouchManager.TouchInfo) {
@@ -109,6 +115,7 @@ class ConnectionManager(
                     val endKnot = touchInfo.touchable
                     startKnot.connectedWithKnot(endKnot)
                     connectionLines.add(ConnectionLine(startKnot, endKnot))
+                    onConnectionListener?.invoke(startKnot.logicBlockView.logicBlock.id, endKnot.logicBlockView.logicBlock.id)
                 }
             }
 

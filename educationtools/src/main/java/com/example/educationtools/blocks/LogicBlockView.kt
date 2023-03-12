@@ -16,6 +16,7 @@ abstract class LogicBlockView : EditableBlockBase() {
     private var _memoryModel: MemoryModel? = null
     private var isOutputProcess = false
     private var isInputProcess = false
+    protected var onTextChangeListeners : ((String) -> Unit)? = null
 
     private val errorPaintText = TextPaint().apply {
         isAntiAlias = true
@@ -29,6 +30,7 @@ abstract class LogicBlockView : EditableBlockBase() {
     abstract val outputKnots: List<Knot>
 
     abstract fun drawBorder(canvas: Canvas)
+    abstract fun checkError()
 
     override fun drawFigure(canvas: Canvas) {
         drawBorder(canvas)
@@ -81,5 +83,9 @@ abstract class LogicBlockView : EditableBlockBase() {
 
     fun changeInputStatus() {
         isInputProcess = !isInputProcess
+    }
+
+    fun setTextChangeListener(listener: (String) -> Unit) {
+        onTextChangeListeners = listener
     }
 }
