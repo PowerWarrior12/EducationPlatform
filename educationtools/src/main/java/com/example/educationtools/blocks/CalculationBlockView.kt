@@ -5,20 +5,25 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PointF
 import android.util.Log
+import com.example.educationtools.base.EditableBlock
+import com.example.educationtools.base.EditableBlockBase
+import com.example.educationtools.base.EditableBlockFactory
+import com.example.educationtools.base.EditorViewBase
 import com.example.educationtools.connection.Knot
 import com.example.educationtools.logic.CalculationBlock
 import com.example.educationtools.logic.LogicBlock
 import com.example.educationtools.logic.parsers.CalculationBlockParser
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 import kotlin.system.measureTimeMillis
 
-class CalculationBlockView: LogicBlockView() {
+class CalculationBlockView(private val calculationBlock: CalculationBlock = CalculationBlock()) : LogicBlockView() {
 
-    private val calculationBlock = CalculationBlock()
     private val parser = CalculationBlockParser(calculationBlock.id)
-    private val leftKnot = Knot(this, Knot.Side.LEFT, false, 20f)
-    private val rightKnot = Knot(this, Knot.Side.RIGHT, false, 20f)
-    private val topKnot = Knot(this, Knot.Side.TOP, false, 20f)
-    private val bottomKnot = Knot(this, Knot.Side.BOTTOM, true, 20f, onKnotConnected = ::connect)
+    private var leftKnot = Knot(this, Knot.Side.LEFT, false, 20f)
+    private var rightKnot = Knot(this, Knot.Side.RIGHT, false, 20f)
+    private var topKnot = Knot(this, Knot.Side.TOP, false, 20f)
+    private var bottomKnot = Knot(this, Knot.Side.BOTTOM, true, 20f, onKnotConnected = ::connect)
 
 
     //Paints
@@ -103,5 +108,62 @@ class CalculationBlockView: LogicBlockView() {
         checkTextError()
         onTextChangeListeners?.invoke(logicBlock.id)
         invalidate()
+    }
+
+    override val configuration: EditableBlockFactory<EditableBlockBase>
+        get() = Configurations(
+            getCenter().x,
+            getCenter().y,
+            getWidth(),
+            getHeight(),
+            getText(),
+            leftKnot.getConfig(),
+            rightKnot.getConfig(),
+            topKnot.getConfig(),
+            bottomKnot.getConfig(),
+            logicBlock.id
+        )
+
+    @JsonClass(generateAdapter = true)
+    data class Configurations(
+        @Json(name = "center_x")
+        var centerX: Float = 0f,
+        @Json(name = "center_y")
+        var centerY: Float = 0f,
+        @Json(name = "width")
+        var width: Float = 400f,
+        @Json(name = "height")
+        var height: Float = 250f,
+        @Json(name = "text")
+        var text: String = "",
+        @Json(name = "left_knot")
+        val leftKnot: Knot.Confugurations,
+        @Json(name = "right_knot")
+        val rightKnot: Knot.Confugurations,
+        @Json(name = "top_knot")
+        val topKnot: Knot.Confugurations,
+        @Json(name = "bottom_knot")
+        val bottomKnot: Knot.Confugurations,
+        @Json(name = "id")
+        val id: String
+    ) : EditableBlockFactory<CalculationBlockView> {
+        override fun create(editor: EditorViewBase): CalculationBlockView {
+            return CalculationBlockView(CalculationBlock(id)).apply {
+                setEditorParent(editor)
+                updatePosition(PointF(centerX, centerY))
+                updateSize(width, height)
+                setText(text)
+                this.leftKnot = this@Configurations.leftKnot.generate(this, Knot.Side.LEFT, false, 20f)
+                this.rightKnot = this@Configurations.rightKnot.generate(this, Knot.Side.RIGHT, false, 20f)
+                this.topKnot = this@Configurations.topKnot.generate(this, Knot.Side.TOP, false, 20f)
+                this.bottomKnot = this@Configurations.bottomKnot.generate(
+                    this,
+                    Knot.Side.BOTTOM,
+                    true,
+                    20f,
+                    onKnotConnected = ::connect
+                )
+            }
+        }
     }
 }

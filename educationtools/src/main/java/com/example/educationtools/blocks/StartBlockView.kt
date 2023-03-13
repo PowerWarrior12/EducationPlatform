@@ -2,11 +2,16 @@ package com.example.educationtools.blocks
 
 import android.graphics.*
 import androidx.core.graphics.toRegion
+import com.example.educationtools.base.EditableBlockBase
+import com.example.educationtools.base.EditableBlockFactory
+import com.example.educationtools.base.EditorViewBase
 import com.example.educationtools.connection.Knot
 import com.example.educationtools.logic.LogicBlock
 import com.example.educationtools.logic.StartBlock
 import com.example.educationtools.logic.parsers.InputVariablesParser
 import com.example.educationtools.logic.parsers.StartBlockParser
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
 class StartBlockView: LogicBlockView() {
 
@@ -51,6 +56,9 @@ class StartBlockView: LogicBlockView() {
         }
     }
 
+    override val configuration: EditableBlockFactory<EditableBlockBase>
+        get() = WhileDoBlockView.Configurations(getCenter().x, getCenter().y, getWidth(), getHeight(), getText())
+
     override fun checkError() {
 
     }
@@ -93,13 +101,8 @@ class StartBlockView: LogicBlockView() {
     }
 
     fun start(text: String) {
-        try {
-            val variables = inputVariableParser.parseOrThrow(text)
-            startBlock.startOrThrow(variables)
-        } catch (e: java.lang.Exception) {
-
-        }
-
+        val variables = inputVariableParser.parseOrThrow(text)
+        startBlock.startOrThrow(variables)
     }
 
     private fun updateParams() {
@@ -119,5 +122,28 @@ class StartBlockView: LogicBlockView() {
 
     private fun updateKnotsPosition() {
         outputKnot.updatePosition(mainRect.centerX(), mainRect.bottom)
+    }
+
+    @JsonClass(generateAdapter = true)
+    data class Configurations(
+        @Json(name = "center_x")
+        var centerX: Float = 0f,
+        @Json(name = "center_y")
+        var centerY: Float = 0f,
+        @Json(name = "width")
+        var width: Float = 400f,
+        @Json(name = "height")
+        var height: Float = 250f,
+        @Json(name = "text")
+        var text: String = ""
+    ) : EditableBlockFactory<NotifyBlock> {
+        override fun create(editor: EditorViewBase): NotifyBlock {
+            return NotifyBlock().apply {
+                setEditorParent(editor)
+                updatePosition(PointF(centerX, centerY))
+                updateSize(width, height)
+                setText(text)
+            }
+        }
     }
 }

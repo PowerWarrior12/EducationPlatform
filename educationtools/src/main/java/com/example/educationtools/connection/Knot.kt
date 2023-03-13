@@ -4,6 +4,9 @@ import android.graphics.*
 import androidx.core.graphics.toRegion
 import com.example.educationtools.blocks.LogicBlockView
 import com.example.educationtools.touching.Touchable
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
+import java.util.UUID
 
 class Knot(
     val logicBlockView: LogicBlockView,
@@ -11,7 +14,8 @@ class Knot(
     private val isOutput: Boolean,
     private val radius: Float,
     val direction: Boolean? = null,
-    val onKnotConnected: ((Knot) -> Unit)? = null
+    val onKnotConnected: ((Knot) -> Unit)? = null,
+    val id: String = UUID.randomUUID().toString()
 ) : Touchable {
 
     private var xPos: Float = 0f
@@ -32,7 +36,7 @@ class Knot(
     }
 
     private val pathCore = Path().apply {
-        addCircle(xPos, yPos, radius/2f, Path.Direction.CCW)
+        addCircle(xPos, yPos, radius / 2f, Path.Direction.CCW)
     }
 
     private val pathTouch = Path().apply {
@@ -112,7 +116,7 @@ class Knot(
 
         pathCore.apply {
             reset()
-            addCircle(xPos, yPos, radius/2f, Path.Direction.CCW)
+            addCircle(xPos, yPos, radius / 2f, Path.Direction.CCW)
         }
 
         mainRegion = Region().apply {
@@ -162,7 +166,29 @@ class Knot(
         isFocus = false
     }
 
+    fun getConfig(): Confugurations {
+        return Confugurations(id)
+    }
+
+    @JsonClass(generateAdapter = false)
     enum class Side {
         LEFT, RIGHT, TOP, BOTTOM
+    }
+
+    @JsonClass(generateAdapter = true)
+    class Confugurations(
+        @Json(name = "id")
+        val id: String
+    ) {
+        fun generate(
+            logicBlockView: LogicBlockView,
+            side: Side,
+            isOutput: Boolean,
+            radius: Float,
+            direction: Boolean? = null,
+            onKnotConnected: ((Knot) -> Unit)? = null
+        ): Knot {
+            return Knot(logicBlockView, side, isOutput, radius, direction, onKnotConnected, id)
+        }
     }
 }

@@ -9,7 +9,10 @@ import android.os.Parcelable
 import com.example.educationtools.base.EditableBlock
 import com.example.educationtools.base.EditableBlockBase
 import com.example.educationtools.base.EditableBlockFactory
+import com.example.educationtools.base.EditorViewBase
 import com.example.educationtools.selection.SimpleSelector
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
 class NotifyBlock(): EditableBlockBase() {
 
@@ -42,16 +45,29 @@ class NotifyBlock(): EditableBlockBase() {
         return 2
     }
 
+    override val configuration: EditableBlockFactory<EditableBlockBase>
+        get() = WhileDoBlockView.Configurations(getCenter().x, getCenter().y, getWidth(), getHeight(), getText())
 
-    data class EditableConfigurations(
+    @JsonClass(generateAdapter = true)
+    data class Configurations(
+        @Json(name = "center_x")
         var centerX: Float = 0f,
+        @Json(name = "center_y")
         var centerY: Float = 0f,
+        @Json(name = "width")
         var width: Float = 400f,
+        @Json(name = "height")
         var height: Float = 250f,
+        @Json(name = "text")
         var text: String = ""
     ) : EditableBlockFactory<NotifyBlock> {
-        override fun create(): EditableBlock {
-            return NotifyBlock()
+        override fun create(editor: EditorViewBase): NotifyBlock {
+            return NotifyBlock().apply {
+                setEditorParent(editor)
+                updatePosition(PointF(centerX, centerY))
+                updateSize(width, height)
+                setText(text)
+            }
         }
     }
 

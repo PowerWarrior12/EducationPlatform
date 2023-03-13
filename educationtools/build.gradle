@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -54,4 +55,7 @@ dependencies {
 
     // reflection-free flavor
     implementation 'com.github.kirich1409:viewbindingpropertydelegate-noreflection:1.5.8'
+
+    implementation "com.squareup.moshi:moshi-kotlin:1.14.0"
+    kapt "com.squareup.moshi:moshi-kotlin-codegen:1.14.0"
 }

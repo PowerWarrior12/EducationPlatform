@@ -2,12 +2,17 @@ package com.example.educationtools.blocks
 
 import android.graphics.*
 import androidx.core.graphics.toRegion
+import com.example.educationtools.base.EditableBlockBase
+import com.example.educationtools.base.EditableBlockFactory
+import com.example.educationtools.base.EditorViewBase
 import com.example.educationtools.connection.Knot
 import com.example.educationtools.logic.EndBlock
 import com.example.educationtools.logic.LogicBlock
 import com.example.educationtools.logic.StartBlock
 import com.example.educationtools.logic.Variable
 import com.example.educationtools.logic.parsers.EndBlockParser
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
 class EndBlockView: LogicBlockView() {
     private val endBlock = EndBlock()
@@ -111,5 +116,30 @@ class EndBlockView: LogicBlockView() {
 
     private fun updateKnotsPosition() {
         inputKnot.updatePosition(mainRect.centerX(), mainRect.top)
+    }
+
+    override val configuration: EditableBlockFactory<EditableBlockBase>
+        get() = WhileDoBlockView.Configurations(getCenter().x, getCenter().y, getWidth(), getHeight(), getText())
+    @JsonClass(generateAdapter = true)
+    data class Configurations(
+        @Json(name = "center_x")
+        var centerX: Float = 0f,
+        @Json(name = "center_y")
+        var centerY: Float = 0f,
+        @Json(name = "width")
+        var width: Float = 400f,
+        @Json(name = "height")
+        var height: Float = 250f,
+        @Json(name = "text")
+        var text: String = ""
+    ) : EditableBlockFactory<EndBlockView> {
+        override fun create(editor: EditorViewBase): EndBlockView {
+            return EndBlockView().apply {
+                setEditorParent(editor)
+                updatePosition(PointF(centerX, centerY))
+                updateSize(width, height)
+                setText(text)
+            }
+        }
     }
 }

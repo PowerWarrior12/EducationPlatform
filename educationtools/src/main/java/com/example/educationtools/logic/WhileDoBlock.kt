@@ -2,8 +2,9 @@ package com.example.educationtools.logic
 
 import com.example.educationtools.logic.functions.ConditionFunction
 import com.example.educationtools.logic.functions.Function
+import java.util.*
 
-class WhileDoBlock: LogicBlock() {
+class WhileDoBlock(id: String = UUID.randomUUID().toString()): LogicBlock(id) {
     private var trueBlock: LogicBlock? = null
     private var falseBlock: LogicBlock? = null
     private var function: Function? = null

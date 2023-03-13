@@ -1,8 +1,9 @@
 package com.example.educationtools.logic
 
 import com.example.educationtools.logic.functions.Function
+import java.util.*
 
-class DoWhileBlock: LogicBlock() {
+class DoWhileBlock(id: String = UUID.randomUUID().toString()): LogicBlock(id) {
     private var trueBlock: LogicBlock? = null
     private var falseBlock: LogicBlock? = null
     private var function: Function? = null

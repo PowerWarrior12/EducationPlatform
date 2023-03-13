@@ -3,9 +3,10 @@ package com.example.educationtools.logic
 import android.util.Log
 import com.example.educationtools.logic.functions.ConditionFunction
 import com.example.educationtools.logic.functions.Function
+import java.util.*
 import kotlin.reflect.KFunction
 
-class ConditionBlock(): LogicBlock() {
+class ConditionBlock(id: String = UUID.randomUUID().toString()): LogicBlock(id) {
 
     private var trueBlock: LogicBlock? = null
     private var falseBlock: LogicBlock? = null

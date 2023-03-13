@@ -30,6 +30,7 @@ import com.example.educationtools.selection.SelectManager
 import com.example.educationtools.touching.TouchManager
 import com.example.educationtools.touching.Touchable
 import com.example.educationtools.utils.Transformations
+import com.squareup.moshi.Moshi
 
 const val SCROLL_VELOCITY_FACTOR = 0.005f
 const val FLING_DURATION = 100L
@@ -55,6 +56,7 @@ class EditorViewBase @JvmOverloads constructor(
     private val selectManager = SelectManager(touchManager)
     private val dragAndDropManager = DragAndDropManager(touchManager, transformations)
     private val connectionManager = ConnectionManager(memoryModel, touchManager, this, selectManager)
+    private val jsonFactory = JsonFactory()
 
     private val onBlockDoubleTouchListeners = mutableListOf<(EditableBlockBase) -> Unit>()
     private var onErrorListener: ((errorMessage: String) -> Unit)? = null
@@ -177,6 +179,10 @@ class EditorViewBase @JvmOverloads constructor(
         return processTouch(event)
     }
 
+    fun saveConfigurations(): String {
+        return jsonFactory.saveConfigurations()
+    }
+
     private fun onDoubleTouch(touchInfo: TouchManager.TouchInfo) {
         if (touchInfo is TouchManager.TouchInfo.FilledInfo && touchInfo.touchable is EditableBlockBase) {
             onBlockDoubleTouchListeners.forEach {
@@ -187,9 +193,16 @@ class EditorViewBase @JvmOverloads constructor(
 
     private fun updateLogicBlocks(startId: String) {
         val dependenciesBlocks = memoryModel.getDependentBlocks(startId)
-        children.forEach { block ->
-            if (block is LogicBlockView && block.logicBlock.id in dependenciesBlocks) {
-                block.checkError()
+        for (id in dependenciesBlocks) {
+            val block = children.firstOrNull {
+                if (it is LogicBlockView && it.logicBlock.id == id) {
+                    return@firstOrNull true
+                }
+                false
+            }
+            if (block != null) {
+                (block as LogicBlockView).checkError()
+                continue
             }
         }
     }
@@ -235,7 +248,11 @@ class EditorViewBase @JvmOverloads constructor(
     }
 
     fun start(text: String): Boolean {
-        startBlock?.start(text) ?: return false
+        try {
+            startBlock?.start(text) ?: return false
+        } catch (e: Exception) {
+            onErrorListener?.invoke(e.message.toString())
+        }
         return true
     }
 
@@ -339,6 +356,30 @@ class EditorViewBase @JvmOverloads constructor(
                     update(animator.animatedValue as PointF)
                 }
             }.start()
+        }
+    }
+
+    inner class JsonFactory {
+
+        private val moshi = Moshi.Builder()
+            .add(EditableBlockFactory::class.java, conver)
+            .build()
+
+        private val jsonAdapter = moshi.adapter(SaveEditorConfiguration::class.java)
+
+        fun saveConfigurations(): String {
+            val blocksConfigs = children.map {
+                it.configuration
+            }
+            return toJsonText(SaveEditorConfiguration(blocksConfigs))
+        }
+
+        private fun toJsonText(calculationConfig: SaveEditorConfiguration): String {
+            return jsonAdapter.toJson(calculationConfig)
+        }
+
+        fun fromJsonText(json: String): SaveEditorConfiguration {
+            return jsonAdapter.fromJson(json)!!
         }
     }
 }

@@ -1,8 +1,9 @@
 package com.example.educationtools.logic
 
 import com.example.educationtools.logic.functions.Function
+import java.util.*
 
-class CalculationBlock(): LogicBlock() {
+class CalculationBlock(id: String = UUID.randomUUID().toString()): LogicBlock(id) {
     private var nextBlock: LogicBlock? = null
     private var function: Function? = null
     private var changeableVar: Variable? = null

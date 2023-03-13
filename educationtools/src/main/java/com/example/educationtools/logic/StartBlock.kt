@@ -1,6 +1,8 @@
 package com.example.educationtools.logic
 
-class StartBlock() : LogicBlock() {
+import java.util.*
+
+class StartBlock(id: String = UUID.randomUUID().toString()) : LogicBlock(id) {
 
     private var nextBlock: LogicBlock? = null
     private val startVariables = mutableListOf<Variable>()

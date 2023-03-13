@@ -3,6 +3,7 @@ package com.example.educationtools.examples
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -27,9 +28,16 @@ class MainActivity : AppCompatActivity() {
 
         binding.button2.setOnClickListener {
             editor.start(text)
+            Log.d("SAVEEEEE", editor.saveConfigurations())
         }
         editor.addOnSuccessListener {
-            Toast.makeText(this, it.toString(), Toast.LENGTH_LONG).show()
+            Toast.makeText(this, it.fold("") { acc, s ->
+                "$acc, ${s.name} = ${s.value}"
+            }, Toast.LENGTH_LONG).show()
+        }
+
+        editor.addOnErrorListener {
+            Toast.makeText(this, it, Toast.LENGTH_LONG).show()
         }
 
         binding.editText.addTextChangedListener(object: TextWatcher{

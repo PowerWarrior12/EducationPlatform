@@ -1,8 +1,9 @@
 package com.example.educationtools.logic
 
 import android.util.Log
+import java.util.*
 
-class EndBlock(): LogicBlock() {
+class EndBlock(id: String = UUID.randomUUID().toString()): LogicBlock(id) {
 
     private var variables = mutableListOf<String>()
     private val onWorkEndListeners = mutableListOf<(List<Variable>) -> Unit>()
@@ -24,6 +25,6 @@ class EndBlock(): LogicBlock() {
     }
 
     fun setVariables(variable: List<String>) {
-        variables = variable as MutableList<String>
+        variables = variable.toMutableList()
     }
 }

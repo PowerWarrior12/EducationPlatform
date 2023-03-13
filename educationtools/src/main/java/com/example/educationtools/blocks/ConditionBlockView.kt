@@ -2,11 +2,16 @@ package com.example.educationtools.blocks
 
 import android.graphics.*
 import androidx.core.graphics.toRegion
+import com.example.educationtools.base.EditableBlockBase
+import com.example.educationtools.base.EditableBlockFactory
+import com.example.educationtools.base.EditorViewBase
 import com.example.educationtools.connection.Knot
 import com.example.educationtools.logic.CalculationBlock
 import com.example.educationtools.logic.ConditionBlock
 import com.example.educationtools.logic.LogicBlock
 import com.example.educationtools.logic.parsers.ConditionBlockParser
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
 class ConditionBlockView: LogicBlockView() {
     private val conditionBlock = ConditionBlock()
@@ -127,5 +132,31 @@ class ConditionBlockView: LogicBlockView() {
         trueKnot.updatePosition(mainRect.right, mainRect.centerY())
         topKnot.updatePosition(mainRect.centerX(), mainRect.top)
         bottomKnot.updatePosition(mainRect.centerX(), mainRect.bottom)
+    }
+
+    override val configuration: EditableBlockFactory<EditableBlockBase>
+        get() = WhileDoBlockView.Configurations(getCenter().x, getCenter().y, getWidth(), getHeight(), getText())
+
+    @JsonClass(generateAdapter = true)
+    data class Configurations(
+        @Json(name = "center_x")
+        var centerX: Float = 0f,
+        @Json(name = "center_y")
+        var centerY: Float = 0f,
+        @Json(name = "width")
+        var width: Float = 400f,
+        @Json(name = "height")
+        var height: Float = 250f,
+        @Json(name = "text")
+        var text: String = ""
+    ) : EditableBlockFactory<ConditionBlockView> {
+        override fun create(editor: EditorViewBase): ConditionBlockView {
+            return ConditionBlockView().apply {
+                setEditorParent(editor)
+                updatePosition(PointF(centerX, centerY))
+                updateSize(width, height)
+                setText(text)
+            }
+        }
     }
 }

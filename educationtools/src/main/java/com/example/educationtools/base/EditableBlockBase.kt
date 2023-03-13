@@ -10,6 +10,7 @@ import com.example.educationtools.selection.Selectable
 import com.example.educationtools.selection.Selector
 import com.example.educationtools.selection.SimpleSelector
 import com.example.educationtools.utils.drawBlockText
+import com.squareup.moshi.JsonClass
 
 const val defaultCenterX = 0f
 const val defaultCenterY = 0f
@@ -164,5 +165,5 @@ abstract class EditableBlockBase protected constructor() : EditableBlock, Select
 }
 
 interface EditableBlockFactory<out V : EditableBlock>{
-    fun create(): EditableBlock
+    fun create(editor: EditorViewBase): V
 }
