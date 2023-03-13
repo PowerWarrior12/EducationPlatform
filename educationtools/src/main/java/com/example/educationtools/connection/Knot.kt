@@ -166,8 +166,8 @@ class Knot(
         isFocus = false
     }
 
-    fun getConfig(): Confugurations {
-        return Confugurations(id)
+    fun getConfig(): Configurations {
+        return Configurations(id)
     }
 
     @JsonClass(generateAdapter = false)
@@ -176,7 +176,7 @@ class Knot(
     }
 
     @JsonClass(generateAdapter = true)
-    class Confugurations(
+    class Configurations(
         @Json(name = "id")
         val id: String
     ) {

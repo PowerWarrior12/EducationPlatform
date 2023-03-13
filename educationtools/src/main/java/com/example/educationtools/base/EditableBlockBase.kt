@@ -1,16 +1,14 @@
 package com.example.educationtools.base
 
 import android.graphics.*
-import android.os.Parcel
-import android.os.Parcelable
 import android.text.Layout
 import android.text.TextPaint
 import android.util.Log
+import com.example.educationtools.blocks.BlockType
 import com.example.educationtools.selection.Selectable
 import com.example.educationtools.selection.Selector
 import com.example.educationtools.selection.SimpleSelector
 import com.example.educationtools.utils.drawBlockText
-import com.squareup.moshi.JsonClass
 
 const val defaultCenterX = 0f
 const val defaultCenterY = 0f
@@ -164,6 +162,7 @@ abstract class EditableBlockBase protected constructor() : EditableBlock, Select
         get() = false
 }
 
-interface EditableBlockFactory<out V : EditableBlock>{
-    fun create(editor: EditorViewBase): V
+interface EditableBlockFactory{
+    val type: BlockType
+    fun create(editor: EditorViewBase): EditableBlockBase
 }

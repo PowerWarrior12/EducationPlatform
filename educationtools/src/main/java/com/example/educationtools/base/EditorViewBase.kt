@@ -6,6 +6,7 @@ import android.content.ClipDescription
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.PointF
+import android.icu.util.IslamicCalendar.CalculationType
 import android.os.Build
 import android.util.AttributeSet
 import android.view.*
@@ -31,6 +32,8 @@ import com.example.educationtools.touching.TouchManager
 import com.example.educationtools.touching.Touchable
 import com.example.educationtools.utils.Transformations
 import com.squareup.moshi.Moshi
+import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 
 const val SCROLL_VELOCITY_FACTOR = 0.005f
 const val FLING_DURATION = 100L
@@ -183,6 +186,10 @@ class EditorViewBase @JvmOverloads constructor(
         return jsonFactory.saveConfigurations()
     }
 
+    fun loadConfigurations(jsonConfiguration: String) {
+        jsonFactory.loadData(jsonConfiguration)
+    }
+
     private fun onDoubleTouch(touchInfo: TouchManager.TouchInfo) {
         if (touchInfo is TouchManager.TouchInfo.FilledInfo && touchInfo.touchable is EditableBlockBase) {
             onBlockDoubleTouchListeners.forEach {
@@ -218,7 +225,6 @@ class EditorViewBase @JvmOverloads constructor(
             touchManager.addTouchable(child)
         }
         if (child is LogicBlockView) {
-            child.setMemoryModel(memoryModel)
             child.setTextChangeListener(::updateLogicBlocks)
             connectionManager.addLogicBlockView(child)
             if (child is StartBlockView) {
@@ -362,7 +368,17 @@ class EditorViewBase @JvmOverloads constructor(
     inner class JsonFactory {
 
         private val moshi = Moshi.Builder()
-            .add(EditableBlockFactory::class.java, conver)
+            .add(PolymorphicJsonAdapterFactory.of(
+                EditableBlockFactory::class.java, "type")
+                .withSubtype(CalculationBlockView.Configurations::class.java, BlockType.CalculationType.name)
+                .withSubtype(ConditionBlockView.Configurations::class.java, BlockType.ConditionType.name)
+                .withSubtype(EndBlockView.Configurations::class.java, BlockType.EndType.name)
+                .withSubtype(StartBlockView.Configurations::class.java, BlockType.StartType.name)
+                .withSubtype(NotifyBlock.Configurations::class.java, BlockType.NotificationType.name)
+                .withSubtype(WhileDoBlockView.Configurations::class.java, BlockType.WhileDoType.name)
+            )
+
+            .add(KotlinJsonAdapterFactory())
             .build()
 
         private val jsonAdapter = moshi.adapter(SaveEditorConfiguration::class.java)
@@ -371,15 +387,28 @@ class EditorViewBase @JvmOverloads constructor(
             val blocksConfigs = children.map {
                 it.configuration
             }
-            return toJsonText(SaveEditorConfiguration(blocksConfigs))
+            val connections = connectionManager.saveConnections()
+            return toJsonText(SaveEditorConfiguration(blocksConfigs, connections))
+        }
+
+        fun loadData(json: String) {
+            val blocksConfig = fromJsonText(json)
+            blocksConfig.blocks.forEach {
+                addChild(it.create(this@EditorViewBase))
+            }
+            connectionManager.loadConnections(blocksConfig.connectionLines)
         }
 
         private fun toJsonText(calculationConfig: SaveEditorConfiguration): String {
             return jsonAdapter.toJson(calculationConfig)
         }
 
-        fun fromJsonText(json: String): SaveEditorConfiguration {
+        private fun fromJsonText(json: String): SaveEditorConfiguration {
             return jsonAdapter.fromJson(json)!!
         }
+    }
+
+    override fun getMemoryModel(): MemoryModel {
+        return memoryModel
     }
 }

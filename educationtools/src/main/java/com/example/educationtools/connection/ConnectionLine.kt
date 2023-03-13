@@ -1,6 +1,8 @@
 package com.example.educationtools.connection
 
 import android.graphics.*
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
 class ConnectionLine(val startKnot: Knot, val endKnot: Knot): ConnectionLineBase() {
 
@@ -27,4 +29,21 @@ class ConnectionLine(val startKnot: Knot, val endKnot: Knot): ConnectionLineBase
             drawPath(path, linePaint)
         }
     }
+
+
+    fun getConfigurations(): Configurations {
+        return Configurations(startKnot.id, startKnot.logicBlockView.logicBlock.id, endKnot.id, endKnot.logicBlockView.logicBlock.id)
+    }
+
+    @JsonClass(generateAdapter = true)
+    class Configurations(
+        @Json(name = "start_knot_id")
+        val startKnotId: String,
+        @Json(name = "start_block_id")
+        val startBlockId: String,
+        @Json(name = "end_knot_id")
+        val endKnotId: String,
+        @Json(name = "end_block_id")
+        val endBlockId: String
+    )
 }

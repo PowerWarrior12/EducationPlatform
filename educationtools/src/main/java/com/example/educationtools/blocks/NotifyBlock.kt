@@ -45,8 +45,8 @@ class NotifyBlock(): EditableBlockBase() {
         return 2
     }
 
-    override val configuration: EditableBlockFactory<EditableBlockBase>
-        get() = WhileDoBlockView.Configurations(getCenter().x, getCenter().y, getWidth(), getHeight(), getText())
+    override val configuration: EditableBlockFactory
+        get() = Configurations(getCenter().x, getCenter().y, getWidth(), getHeight(), getText())
 
     @JsonClass(generateAdapter = true)
     data class Configurations(
@@ -60,7 +60,10 @@ class NotifyBlock(): EditableBlockBase() {
         var height: Float = 250f,
         @Json(name = "text")
         var text: String = ""
-    ) : EditableBlockFactory<NotifyBlock> {
+    ) : EditableBlockFactory {
+        override val type: BlockType
+            get() = BlockType.NotificationType
+
         override fun create(editor: EditorViewBase): NotifyBlock {
             return NotifyBlock().apply {
                 setEditorParent(editor)

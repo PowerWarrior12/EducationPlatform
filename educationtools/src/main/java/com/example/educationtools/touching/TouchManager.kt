@@ -158,6 +158,16 @@ class TouchManager(
         onTouchReleaseListeners.forEach { listener ->
             listener(TouchInfo.EmptyInfo(transformPoint.x, transformPoint.y, startTouchableInFocus))
         }
+        startTouchableInFocus?.let {
+            if (longProcess) {
+                startTouchableInFocus = null
+                longProcess = false
+            }
+            if (moveProcess) {
+                startTouchableInFocus = null
+                moveProcess = false
+            }
+        }
     }
 
     fun doubleTouch(x: Float, y: Float) {

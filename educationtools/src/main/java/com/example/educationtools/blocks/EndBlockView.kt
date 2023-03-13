@@ -14,10 +14,10 @@ import com.example.educationtools.logic.parsers.EndBlockParser
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
-class EndBlockView: LogicBlockView() {
-    private val endBlock = EndBlock()
+class EndBlockView(private val endBlock: EndBlock = EndBlock()): LogicBlockView() {
+
     private val parser = EndBlockParser(endBlock.id)
-    private val inputKnot = Knot(this, Knot.Side.TOP, false, 20f)
+    private var inputKnot = Knot(this, Knot.Side.TOP, false, 20f)
 
     override val logicBlock: LogicBlock
         get() = endBlock
@@ -118,8 +118,8 @@ class EndBlockView: LogicBlockView() {
         inputKnot.updatePosition(mainRect.centerX(), mainRect.top)
     }
 
-    override val configuration: EditableBlockFactory<EditableBlockBase>
-        get() = WhileDoBlockView.Configurations(getCenter().x, getCenter().y, getWidth(), getHeight(), getText())
+    override val configuration: EditableBlockFactory
+        get() = Configurations(getCenter().x, getCenter().y, getWidth(), getHeight(), getText(), inputKnot.getConfig(), logicBlock.id)
     @JsonClass(generateAdapter = true)
     data class Configurations(
         @Json(name = "center_x")
@@ -131,11 +131,19 @@ class EndBlockView: LogicBlockView() {
         @Json(name = "height")
         var height: Float = 250f,
         @Json(name = "text")
-        var text: String = ""
-    ) : EditableBlockFactory<EndBlockView> {
+        var text: String = "",
+        @Json(name = "input_knot")
+        val inputKnot: Knot.Configurations,
+        @Json(name = "id")
+        val id: String
+    ) : EditableBlockFactory {
+        override val type: BlockType
+            get() = BlockType.EndType
+
         override fun create(editor: EditorViewBase): EndBlockView {
-            return EndBlockView().apply {
+            return EndBlockView(EndBlock(id)).apply {
                 setEditorParent(editor)
+                this.inputKnot = this@Configurations.inputKnot.generate(this, Knot.Side.TOP, false, 20f)
                 updatePosition(PointF(centerX, centerY))
                 updateSize(width, height)
                 setText(text)

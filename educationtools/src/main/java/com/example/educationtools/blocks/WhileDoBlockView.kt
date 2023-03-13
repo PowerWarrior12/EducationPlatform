@@ -95,7 +95,7 @@ class WhileDoBlockView: LogicBlockView() {
         invalidate()
     }
 
-    override val configuration: EditableBlockFactory<EditableBlockBase>
+    override val configuration: EditableBlockFactory
         get() = Configurations(getCenter().x, getCenter().y, getWidth(), getHeight(), getText())
 
     private fun checkTextError() {
@@ -153,7 +153,10 @@ class WhileDoBlockView: LogicBlockView() {
         var height: Float = 250f,
         @Json(name = "text")
         var text: String = ""
-    ) : EditableBlockFactory<WhileDoBlockView> {
+    ) : EditableBlockFactory {
+        override val type: BlockType
+            get() = BlockType.WhileDoType
+
         override fun create(editor: EditorViewBase): WhileDoBlockView {
             return WhileDoBlockView().apply {
                 setEditorParent(editor)

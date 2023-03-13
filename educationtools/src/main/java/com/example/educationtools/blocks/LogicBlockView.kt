@@ -6,6 +6,7 @@ import android.graphics.Paint
 import android.text.Layout
 import android.text.TextPaint
 import com.example.educationtools.base.EditableBlockBase
+import com.example.educationtools.base.ParentEditor
 import com.example.educationtools.connection.Knot
 import com.example.educationtools.logic.LogicBlock
 import com.example.educationtools.logic.MemoryModel
@@ -31,6 +32,21 @@ abstract class LogicBlockView : EditableBlockBase() {
 
     abstract fun drawBorder(canvas: Canvas)
     abstract fun checkError()
+
+    fun getKnotById(knotId: String): Knot? {
+        inputKnots.forEach {
+            if (it.id == knotId) return it
+        }
+        outputKnots.forEach {
+            if (it.id == knotId) return it
+        }
+        return null
+    }
+
+    override fun setEditorParent(parentEditor: ParentEditor) {
+        super.setEditorParent(parentEditor)
+        setMemoryModel(parentEditor.getMemoryModel())
+    }
 
     override fun drawFigure(canvas: Canvas) {
         drawBorder(canvas)

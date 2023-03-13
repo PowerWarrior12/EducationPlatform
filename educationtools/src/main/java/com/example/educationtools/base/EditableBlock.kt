@@ -14,5 +14,5 @@ interface EditableBlock {
     fun getHeight(): Float
     fun getText(): String
     fun invalidate()
-    val configuration: EditableBlockFactory<EditableBlockBase>
+    val configuration: EditableBlockFactory
 }

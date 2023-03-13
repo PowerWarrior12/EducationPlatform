@@ -53,6 +53,31 @@ class ConnectionManager(
         onConnectionListener = listener
     }
 
+    fun saveConnections(): List<ConnectionLine.Configurations> {
+        return connectionLines.map {
+            it.getConfigurations()
+        }
+    }
+
+    fun loadConnections(list: List<ConnectionLine.Configurations>) {
+        list.forEach { config ->
+            val startBlock = logicBlocksView.firstOrNull {
+                it.logicBlock.id == config.startBlockId
+            } ?: return@forEach
+            val endBlock = logicBlocksView.firstOrNull {
+                it.logicBlock.id == config.endBlockId
+            } ?: return@forEach
+
+            val startKnot = startBlock.getKnotById(config.startKnotId) ?: return@forEach
+            val endKnot = endBlock.getKnotById(config.endKnotId) ?: return@forEach
+
+            connectionLines.add(ConnectionLine(startKnot, endKnot))
+            onConnectionListener?.invoke(startKnot.logicBlockView.logicBlock.id, endKnot.logicBlockView.logicBlock.id)
+            startKnot.connectedWithKnot(endKnot)
+        }
+        parentEditor.invalidate()
+    }
+
     private fun onTouch(touchInfo: TouchManager.TouchInfo) {
         if (touchInfo is TouchManager.TouchInfo.FilledInfo) {
             if (touchInfo.touchable is Knot) {

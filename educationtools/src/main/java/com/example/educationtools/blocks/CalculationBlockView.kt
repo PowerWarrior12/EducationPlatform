@@ -4,9 +4,6 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PointF
-import android.util.Log
-import com.example.educationtools.base.EditableBlock
-import com.example.educationtools.base.EditableBlockBase
 import com.example.educationtools.base.EditableBlockFactory
 import com.example.educationtools.base.EditorViewBase
 import com.example.educationtools.connection.Knot
@@ -15,7 +12,6 @@ import com.example.educationtools.logic.LogicBlock
 import com.example.educationtools.logic.parsers.CalculationBlockParser
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import kotlin.system.measureTimeMillis
 
 class CalculationBlockView(private val calculationBlock: CalculationBlock = CalculationBlock()) : LogicBlockView() {
 
@@ -110,7 +106,7 @@ class CalculationBlockView(private val calculationBlock: CalculationBlock = Calc
         invalidate()
     }
 
-    override val configuration: EditableBlockFactory<EditableBlockBase>
+    override val configuration: EditableBlockFactory
         get() = Configurations(
             getCenter().x,
             getCenter().y,
@@ -137,22 +133,22 @@ class CalculationBlockView(private val calculationBlock: CalculationBlock = Calc
         @Json(name = "text")
         var text: String = "",
         @Json(name = "left_knot")
-        val leftKnot: Knot.Confugurations,
+        val leftKnot: Knot.Configurations,
         @Json(name = "right_knot")
-        val rightKnot: Knot.Confugurations,
+        val rightKnot: Knot.Configurations,
         @Json(name = "top_knot")
-        val topKnot: Knot.Confugurations,
+        val topKnot: Knot.Configurations,
         @Json(name = "bottom_knot")
-        val bottomKnot: Knot.Confugurations,
+        val bottomKnot: Knot.Configurations,
         @Json(name = "id")
         val id: String
-    ) : EditableBlockFactory<CalculationBlockView> {
+    ) : EditableBlockFactory {
+        override val type: BlockType
+            get() = BlockType.CalculationType
+
         override fun create(editor: EditorViewBase): CalculationBlockView {
             return CalculationBlockView(CalculationBlock(id)).apply {
                 setEditorParent(editor)
-                updatePosition(PointF(centerX, centerY))
-                updateSize(width, height)
-                setText(text)
                 this.leftKnot = this@Configurations.leftKnot.generate(this, Knot.Side.LEFT, false, 20f)
                 this.rightKnot = this@Configurations.rightKnot.generate(this, Knot.Side.RIGHT, false, 20f)
                 this.topKnot = this@Configurations.topKnot.generate(this, Knot.Side.TOP, false, 20f)
@@ -163,6 +159,9 @@ class CalculationBlockView(private val calculationBlock: CalculationBlock = Calc
                     20f,
                     onKnotConnected = ::connect
                 )
+                updatePosition(PointF(centerX, centerY))
+                updateSize(width, height)
+                setText(text)
             }
         }
     }

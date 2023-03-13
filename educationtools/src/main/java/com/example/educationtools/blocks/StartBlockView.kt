@@ -12,13 +12,13 @@ import com.example.educationtools.logic.parsers.InputVariablesParser
 import com.example.educationtools.logic.parsers.StartBlockParser
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import kotlin.math.log
 
-class StartBlockView: LogicBlockView() {
+class StartBlockView(private val startBlock: StartBlock = StartBlock()) : LogicBlockView() {
 
-    private val startBlock = StartBlock()
     private val parametersParser = StartBlockParser()
     private val inputVariableParser = InputVariablesParser()
-    private val outputKnot = Knot(this, Knot.Side.BOTTOM, true, 20f, onKnotConnected = ::connect)
+    private var outputKnot = Knot(this, Knot.Side.BOTTOM, true, 20f, onKnotConnected = ::connect)
 
     override val logicBlock: LogicBlock
         get() = startBlock
@@ -56,8 +56,8 @@ class StartBlockView: LogicBlockView() {
         }
     }
 
-    override val configuration: EditableBlockFactory<EditableBlockBase>
-        get() = WhileDoBlockView.Configurations(getCenter().x, getCenter().y, getWidth(), getHeight(), getText())
+    override val configuration: EditableBlockFactory
+        get() = Configurations(getCenter().x, getCenter().y, getWidth(), getHeight(), getText(), outputKnot.getConfig(), startBlock.id)
 
     override fun checkError() {
 
@@ -135,11 +135,19 @@ class StartBlockView: LogicBlockView() {
         @Json(name = "height")
         var height: Float = 250f,
         @Json(name = "text")
-        var text: String = ""
-    ) : EditableBlockFactory<NotifyBlock> {
-        override fun create(editor: EditorViewBase): NotifyBlock {
-            return NotifyBlock().apply {
+        var text: String = "",
+        @Json(name = "output_knot")
+        val outputKnot: Knot.Configurations,
+        @Json(name = "id")
+        val id: String
+    ) : EditableBlockFactory {
+        override val type: BlockType
+            get() = BlockType.StartType
+
+        override fun create(editor: EditorViewBase): StartBlockView {
+            return StartBlockView(StartBlock(id)).apply {
                 setEditorParent(editor)
+                this.outputKnot = this@Configurations.outputKnot.generate(this, Knot.Side.BOTTOM, true, 20f, onKnotConnected = ::connect)
                 updatePosition(PointF(centerX, centerY))
                 updateSize(width, height)
                 setText(text)

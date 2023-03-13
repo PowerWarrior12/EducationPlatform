@@ -134,8 +134,8 @@ class ConditionBlockView: LogicBlockView() {
         bottomKnot.updatePosition(mainRect.centerX(), mainRect.bottom)
     }
 
-    override val configuration: EditableBlockFactory<EditableBlockBase>
-        get() = WhileDoBlockView.Configurations(getCenter().x, getCenter().y, getWidth(), getHeight(), getText())
+    override val configuration: EditableBlockFactory
+        get() = Configurations(getCenter().x, getCenter().y, getWidth(), getHeight(), getText())
 
     @JsonClass(generateAdapter = true)
     data class Configurations(
@@ -149,7 +149,10 @@ class ConditionBlockView: LogicBlockView() {
         var height: Float = 250f,
         @Json(name = "text")
         var text: String = ""
-    ) : EditableBlockFactory<ConditionBlockView> {
+    ) : EditableBlockFactory {
+        override val type: BlockType
+            get() = BlockType.ConditionType
+
         override fun create(editor: EditorViewBase): ConditionBlockView {
             return ConditionBlockView().apply {
                 setEditorParent(editor)
