@@ -11,8 +11,8 @@ import com.example.educationtools.logic.parsers.ConditionBlockParser
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
-class ConditionBlockView : LogicBlockView() {
-    private val conditionBlock = ConditionBlock()
+class ConditionBlockView(private val conditionBlock: ConditionBlock = ConditionBlock()) : LogicBlockView() {
+
     private val parser = ConditionBlockParser(conditionBlock.id)
     private var falseKnot = Knot(this, Knot.Side.LEFT, true, 20f, false, ::falseConnect)
     private var trueKnot = Knot(this, Knot.Side.RIGHT, true, 20f, true, ::trueConnect)
@@ -173,7 +173,7 @@ class ConditionBlockView : LogicBlockView() {
             get() = BlockType.ConditionType
 
         override fun create(editor: EditorViewBase): ConditionBlockView {
-            return ConditionBlockView().apply {
+            return ConditionBlockView(ConditionBlock(id)).apply {
                 setEditorParent(editor)
                 this.falseKnot =
                     this@Configurations.falseKnot.generate(this, Knot.Side.LEFT, true, 20f, false, ::falseConnect)

@@ -3,6 +3,9 @@ package com.example.educationtools.logic
 import android.util.Log
 import com.github.adriankuta.datastructure.tree.TreeNode
 
+/**
+ * Класс для управления видимостью объявленных переменных и связями между блоками
+ */
 class MemoryModel {
     //Коллекция блоков для анализа видимости переменных
     private val blocksMap = mutableMapOf<String, TreeNode<Block>>()
@@ -10,13 +13,21 @@ class MemoryModel {
     //Коллекция всех переменных
     private val variables = mutableMapOf<String, Variable>()
 
+    //Блоки, свободные для связывания
     private val freeBlocks = mutableListOf<TreeNode<Block>>()
 
+    /**
+     * Объявление блока с переменной
+     * @param blockId id объявляемого блока
+     */
     fun declareVarBlock(blockId: String) {
         blocksMap[blockId] = TreeNode(Block.VariableBlock(blockId, null))
         freeBlocks.add(blocksMap.getValue(blockId))
     }
-
+    /**
+     * Объявление блока if-else
+     * @param blockId id объявляемого блока
+     */
     fun declareConditionBlock(blockId: String) {
         val conditionBlock: TreeNode<Block> = TreeNode(Block.ConditionBlock(blockId))
         conditionBlock.addChild(TreeNode(Block.FalseBlock()))
@@ -24,7 +35,10 @@ class MemoryModel {
         blocksMap[blockId] = conditionBlock
         freeBlocks.add(blocksMap.getValue(blockId))
     }
-
+    /**
+     * Объявление блока цикла while-do
+     * @param blockId id объявляемого блока
+     */
     fun declareWhileDoBlock(blockId: String) {
         val whileDoBlock: TreeNode<Block> = TreeNode(Block.WhileDoBlock(blockId))
         whileDoBlock.addChild(TreeNode(Block.FalseBlock()))
@@ -32,16 +46,26 @@ class MemoryModel {
         blocksMap[blockId] = whileDoBlock
         freeBlocks.add(blocksMap.getValue(blockId))
     }
-
+    /**
+     * Объявление блока цикла do-while
+     * @param blockId id объявляемого блока
+     */
     fun declareDoWhileBlock(blockId: String) {
         blocksMap[blockId] = TreeNode(Block.DoWhileBlock(blockId))
         freeBlocks.add(blocksMap.getValue(blockId))
     }
-
+    /**
+     * Получение переменной по имени из общего словаря
+     * @param variableName имя переменной
+     */
     fun getVariable(variableName: String): Variable {
         return variables.getValue(variableName)
     }
 
+    /**
+     * Получение имени переменной по id блока, если в блоке не содержится переменной, то возвращается null
+     * @param blockId id блока
+     */
     fun getBlockVariable(blockId: String): String? {
         val block = blocksMap.getValue(blockId)
         return if (block.value is Block.VariableBlock) {
@@ -51,6 +75,11 @@ class MemoryModel {
         }
     }
 
+    /**
+     * Объявление переменной
+     * @param blockId id блока, в которой объявляется переменная
+     * @param variable переменная, которая объявляется в указанном блоке
+     */
     fun declareVariable(blockId: String, variable: Variable) {
         val block = blocksMap.getValue(blockId).value
         if (block is Block.VariableBlock) {
@@ -59,6 +88,9 @@ class MemoryModel {
         }
     }
 
+    /**
+     * Обновление переменной
+     */
     fun updateVariable(variable: Variable) {
         variables.getValue(variable.name).value = variable.value
     }

@@ -71,9 +71,9 @@ class ConnectionManager(
             val startKnot = startBlock.getKnotById(config.startKnotId) ?: return@forEach
             val endKnot = endBlock.getKnotById(config.endKnotId) ?: return@forEach
 
+            startKnot.connectedWithKnot(endKnot)
             connectionLines.add(ConnectionLine(startKnot, endKnot))
             onConnectionListener?.invoke(startKnot.logicBlockView.logicBlock.id, endKnot.logicBlockView.logicBlock.id)
-            startKnot.connectedWithKnot(endKnot)
         }
         parentEditor.invalidate()
     }

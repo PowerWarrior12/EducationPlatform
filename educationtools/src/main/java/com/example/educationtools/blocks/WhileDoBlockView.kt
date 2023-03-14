@@ -11,8 +11,8 @@ import com.example.educationtools.logic.parsers.ConditionBlockParser
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
-class WhileDoBlockView : LogicBlockView() {
-    private val conditionBlock = WhileDoBlock()
+class WhileDoBlockView(private val conditionBlock: WhileDoBlock = WhileDoBlock()) : LogicBlockView() {
+
     private val parser = ConditionBlockParser(conditionBlock.id)
     private var falseKnot = Knot(this, Knot.Side.RIGHT, true, 20f, false, ::falseConnect)
     private var trueKnot = Knot(this, Knot.Side.BOTTOM, true, 20f, true, ::trueConnect)
@@ -178,7 +178,7 @@ class WhileDoBlockView : LogicBlockView() {
             get() = BlockType.WhileDoType
 
         override fun create(editor: EditorViewBase): WhileDoBlockView {
-            return WhileDoBlockView().apply {
+            return WhileDoBlockView(WhileDoBlock(id)).apply {
                 setEditorParent(editor)
                 this.falseKnot =
                     this@Configurations.falseKnot.generate(this, Knot.Side.LEFT, true, 20f, false, ::falseConnect)
