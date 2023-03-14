@@ -3,7 +3,6 @@ package com.example.educationtools.menu
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.example.educationtools.R
 
 class BlocksAdapter: ListAdapter<BlockMenuItem, BlockViewHolder>(BlockItemDiffCallback) {

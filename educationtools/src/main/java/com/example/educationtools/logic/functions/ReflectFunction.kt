@@ -1,6 +1,7 @@
 package com.example.educationtools.logic.functions
 
-import kotlin.reflect.*
+import kotlin.reflect.KClass
+import kotlin.reflect.KFunction
 
 open class ReflectFunction(private val func: KFunction<*>): Function() {
 

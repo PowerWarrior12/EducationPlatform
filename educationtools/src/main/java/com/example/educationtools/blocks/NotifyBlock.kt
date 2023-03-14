@@ -4,13 +4,9 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PointF
-import android.os.Parcel
-import android.os.Parcelable
-import com.example.educationtools.base.EditableBlock
 import com.example.educationtools.base.EditableBlockBase
 import com.example.educationtools.base.EditableBlockFactory
 import com.example.educationtools.base.EditorViewBase
-import com.example.educationtools.selection.SimpleSelector
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 

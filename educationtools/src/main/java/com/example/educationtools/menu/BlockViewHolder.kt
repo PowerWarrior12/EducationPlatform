@@ -2,10 +2,6 @@ package com.example.educationtools.menu
 
 import android.content.ClipData
 import android.content.ClipDescription
-import android.content.Intent
-import android.os.Bundle
-import android.os.Parcel
-import android.os.Parcelable
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding

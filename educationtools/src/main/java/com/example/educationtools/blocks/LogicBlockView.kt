@@ -2,7 +2,6 @@ package com.example.educationtools.blocks
 
 import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.Paint
 import android.text.Layout
 import android.text.TextPaint
 import com.example.educationtools.base.EditableBlockBase

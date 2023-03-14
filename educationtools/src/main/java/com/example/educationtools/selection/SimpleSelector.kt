@@ -1,7 +1,6 @@
 package com.example.educationtools.selection
 
 import android.graphics.*
-import android.util.Log
 import com.example.educationtools.base.EditableBlock
 import com.example.educationtools.touching.TouchManager
 

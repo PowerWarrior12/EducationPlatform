@@ -2,24 +2,22 @@ package com.example.educationtools.blocks
 
 import android.graphics.*
 import androidx.core.graphics.toRegion
-import com.example.educationtools.base.EditableBlockBase
 import com.example.educationtools.base.EditableBlockFactory
 import com.example.educationtools.base.EditorViewBase
 import com.example.educationtools.connection.Knot
-import com.example.educationtools.logic.CalculationBlock
 import com.example.educationtools.logic.ConditionBlock
 import com.example.educationtools.logic.LogicBlock
 import com.example.educationtools.logic.parsers.ConditionBlockParser
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
-class ConditionBlockView: LogicBlockView() {
+class ConditionBlockView : LogicBlockView() {
     private val conditionBlock = ConditionBlock()
     private val parser = ConditionBlockParser(conditionBlock.id)
-    private val falseKnot = Knot(this, Knot.Side.LEFT, true, 20f, false, ::falseConnect)
-    private val trueKnot = Knot(this, Knot.Side.RIGHT, true, 20f, true, ::trueConnect)
-    private val topKnot = Knot(this, Knot.Side.TOP, false, 20f)
-    private val bottomKnot = Knot(this, Knot.Side.BOTTOM, false, 20f)
+    private var falseKnot = Knot(this, Knot.Side.LEFT, true, 20f, false, ::falseConnect)
+    private var trueKnot = Knot(this, Knot.Side.RIGHT, true, 20f, true, ::trueConnect)
+    private var topKnot = Knot(this, Knot.Side.TOP, false, 20f)
+    private var bottomKnot = Knot(this, Knot.Side.BOTTOM, false, 20f)
 
     override val logicBlock: LogicBlock
         get() = conditionBlock
@@ -135,7 +133,18 @@ class ConditionBlockView: LogicBlockView() {
     }
 
     override val configuration: EditableBlockFactory
-        get() = Configurations(getCenter().x, getCenter().y, getWidth(), getHeight(), getText())
+        get() = Configurations(
+            getCenter().x,
+            getCenter().y,
+            getWidth(),
+            getHeight(),
+            getText(),
+            falseKnot.getConfig(),
+            trueKnot.getConfig(),
+            topKnot.getConfig(),
+            bottomKnot.getConfig(),
+            logicBlock.id
+        )
 
     @JsonClass(generateAdapter = true)
     data class Configurations(
@@ -148,7 +157,17 @@ class ConditionBlockView: LogicBlockView() {
         @Json(name = "height")
         var height: Float = 250f,
         @Json(name = "text")
-        var text: String = ""
+        var text: String = "",
+        @Json(name = "false_knot")
+        val falseKnot: Knot.Configurations,
+        @Json(name = "true_knot")
+        val trueKnot: Knot.Configurations,
+        @Json(name = "top_knot")
+        val topKnot: Knot.Configurations,
+        @Json(name = "bottom_knot")
+        val bottomKnot: Knot.Configurations,
+        @Json(name = "id")
+        val id: String
     ) : EditableBlockFactory {
         override val type: BlockType
             get() = BlockType.ConditionType
@@ -156,6 +175,12 @@ class ConditionBlockView: LogicBlockView() {
         override fun create(editor: EditorViewBase): ConditionBlockView {
             return ConditionBlockView().apply {
                 setEditorParent(editor)
+                this.falseKnot =
+                    this@Configurations.falseKnot.generate(this, Knot.Side.LEFT, true, 20f, false, ::falseConnect)
+                this.trueKnot =
+                    this@Configurations.trueKnot.generate(this, Knot.Side.RIGHT, true, 20f, true, ::trueConnect)
+                this.topKnot = this@Configurations.topKnot.generate(this, Knot.Side.TOP, false, 20f)
+                this.bottomKnot = this@Configurations.bottomKnot.generate(this, Knot.Side.BOTTOM, false, 20f)
                 updatePosition(PointF(centerX, centerY))
                 updateSize(width, height)
                 setText(text)

@@ -5,7 +5,8 @@ import com.example.educationtools.logic.Variable
 import com.example.educationtools.logic.functions.Function
 import com.example.educationtools.logic.functions.ReflectFunction
 import com.example.educationtools.logic.functions.TypeFunction
-import com.example.educationtools.logic.functions.VariableFunction
+import com.example.educationtools.utils.SYNTAX_ERROR_TEXT
+import com.example.educationtools.utils.TYPE_ERROR_TEXT
 import com.example.educationtools.utils.extensions.split
 
 class CalculationBlockParser(private val blockId: String) {

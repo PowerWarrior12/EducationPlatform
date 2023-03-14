@@ -2,6 +2,8 @@ package com.example.educationtools.logic
 
 import java.util.*
 
+const val TYPE_ERROR_MESSAGE = "Типы параметра и введённого данного не совпадают: %s and %s"
+const val CONNECTION_ERROR_MESSAGE = "Связи между блоками содержат ошибку"
 class StartBlock(id: String = UUID.randomUUID().toString()) : LogicBlock(id) {
 
     private var nextBlock: LogicBlock? = null
@@ -11,14 +13,14 @@ class StartBlock(id: String = UUID.randomUUID().toString()) : LogicBlock(id) {
         if (startVariables.count() != inputVariables.count()) return
         startVariables.zip(inputVariables).forEach { pair ->
             if (pair.first.type != pair.second.type)
-                throw java.lang.Exception("Типы параметра и введённого данного не совпадают: ${pair.first.name} and ${pair.second.value.toString()}")
+                throw java.lang.Exception(TYPE_ERROR_MESSAGE.format(pair.first.name, pair.second.value.toString()))
             memoryModel.updateVariable(Variable(pair.first.name, pair.first.type, pair.second.value))
         }
-        work()
+        workOrThrow()
     }
 
-    override fun work() {
-        nextBlock?.work()
+    override fun workOrThrow() {
+        nextBlock?.workOrThrow() ?: throw Exception(CONNECTION_ERROR_MESSAGE)
     }
 
     override fun init() {

@@ -2,34 +2,28 @@ package com.example.educationtools.base
 
 import android.animation.PointFEvaluator
 import android.animation.ValueAnimator
-import android.content.ClipDescription
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.PointF
-import android.icu.util.IslamicCalendar.CalculationType
-import android.os.Build
 import android.util.AttributeSet
 import android.view.*
+import android.view.View.OnDragListener
 import android.view.animation.AccelerateInterpolator
-import androidx.annotation.RequiresApi
 import androidx.core.graphics.withScale
 import androidx.core.graphics.withTranslation
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.educationtools.R
 import com.example.educationtools.blocks.*
 import com.example.educationtools.connection.ConnectionManager
 import com.example.educationtools.dragging.DragAndDropManager
-import com.example.educationtools.logic.LogicBlock
 import com.example.educationtools.logic.MemoryModel
 import com.example.educationtools.logic.Variable
-import com.example.educationtools.logic.WhileDoBlock
 import com.example.educationtools.menu.BlockMenuItem
 import com.example.educationtools.menu.BlocksAdapter
 import com.example.educationtools.selection.SelectManager
 import com.example.educationtools.touching.TouchManager
 import com.example.educationtools.touching.Touchable
+import com.example.educationtools.utils.NO_START_BLOCK_MESSAGE
+import com.example.educationtools.utils.SYNTAX_ERROR_TEXT
 import com.example.educationtools.utils.Transformations
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory
@@ -220,7 +214,6 @@ class EditorViewBase @JvmOverloads constructor(
 
     fun addChild(child: EditableBlock) {
         children.add(child)
-        child.setEditorParent(this)
         if (child is Touchable) {
             touchManager.addTouchable(child)
         }
@@ -253,13 +246,25 @@ class EditorViewBase @JvmOverloads constructor(
         return blockAdapter
     }
 
-    fun start(text: String): Boolean {
-        try {
-            startBlock?.start(text) ?: return false
-        } catch (e: Exception) {
-            onErrorListener?.invoke(e.message.toString())
+    fun start(text: String) {
+        if (checkErrorsInBlocks()) {
+            onErrorListener?.invoke(SYNTAX_ERROR_TEXT)
+        } else {
+            try {
+                startBlock?.start(text) ?: onErrorListener?.invoke(NO_START_BLOCK_MESSAGE)
+            } catch (e: Exception) {
+                onErrorListener?.invoke(e.message.toString())
+            }
         }
-        return true
+    }
+
+    private fun checkErrorsInBlocks(): Boolean {
+        children.forEach { block ->
+            if (block is LogicBlockView && block.isError) {
+                return true
+            }
+        }
+        return false
     }
 
     fun addOnErrorListener(listener: (errorMessage: String) -> Unit) {
@@ -318,10 +323,6 @@ class EditorViewBase @JvmOverloads constructor(
         override fun onDoubleTap(e: MotionEvent): Boolean {
             touchManager.doubleTouch(e.x, e.y)
             return true
-        }
-
-        override fun onShowPress(e: MotionEvent) {
-            super.onShowPress(e)
         }
 
         override fun onFling(

@@ -6,7 +6,7 @@ import com.example.educationtools.blocks.LogicBlockView
 import com.example.educationtools.touching.Touchable
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import java.util.UUID
+import java.util.*
 
 class Knot(
     val logicBlockView: LogicBlockView,

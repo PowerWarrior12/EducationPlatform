@@ -2,7 +2,6 @@ package com.example.educationtools.blocks
 
 import android.graphics.*
 import androidx.core.graphics.toRegion
-import com.example.educationtools.base.EditableBlockBase
 import com.example.educationtools.base.EditableBlockFactory
 import com.example.educationtools.base.EditorViewBase
 import com.example.educationtools.connection.Knot
@@ -12,13 +11,13 @@ import com.example.educationtools.logic.parsers.ConditionBlockParser
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
-class WhileDoBlockView: LogicBlockView() {
+class WhileDoBlockView : LogicBlockView() {
     private val conditionBlock = WhileDoBlock()
     private val parser = ConditionBlockParser(conditionBlock.id)
-    private val falseKnot = Knot(this, Knot.Side.RIGHT, true, 20f, false, ::falseConnect)
-    private val trueKnot = Knot(this, Knot.Side.BOTTOM, true, 20f, true, ::trueConnect)
-    private val leftKnot = Knot(this, Knot.Side.LEFT, false, 20f)
-    private val topKnot = Knot(this, Knot.Side.TOP, false, 20f)
+    private var falseKnot = Knot(this, Knot.Side.RIGHT, true, 20f, false, ::falseConnect)
+    private var trueKnot = Knot(this, Knot.Side.BOTTOM, true, 20f, true, ::trueConnect)
+    private var leftKnot = Knot(this, Knot.Side.LEFT, false, 20f)
+    private var topKnot = Knot(this, Knot.Side.TOP, false, 20f)
 
     override val logicBlock: LogicBlock
         get() = conditionBlock
@@ -42,12 +41,12 @@ class WhileDoBlockView: LogicBlockView() {
     }
 
     private val mainPath = Path().apply {
-        moveTo(mainRect.left + mainRect.width()/4, mainRect.top)
-        lineTo(mainRect.right - mainRect.width()/4, mainRect.top)
-        lineTo(mainRect.right,mainRect.centerY())
-        lineTo(mainRect.right - mainRect.width()/4, mainRect.bottom)
-        lineTo(mainRect.left + mainRect.width()/4, mainRect.bottom)
-        lineTo(mainRect.left,mainRect.centerY())
+        moveTo(mainRect.left + mainRect.width() / 4, mainRect.top)
+        lineTo(mainRect.right - mainRect.width() / 4, mainRect.top)
+        lineTo(mainRect.right, mainRect.centerY())
+        lineTo(mainRect.right - mainRect.width() / 4, mainRect.bottom)
+        lineTo(mainRect.left + mainRect.width() / 4, mainRect.bottom)
+        lineTo(mainRect.left, mainRect.centerY())
         close()
     }
 
@@ -96,7 +95,18 @@ class WhileDoBlockView: LogicBlockView() {
     }
 
     override val configuration: EditableBlockFactory
-        get() = Configurations(getCenter().x, getCenter().y, getWidth(), getHeight(), getText())
+        get() = Configurations(
+            getCenter().x,
+            getCenter().y,
+            getWidth(),
+            getHeight(),
+            getText(),
+            falseKnot.getConfig(),
+            trueKnot.getConfig(),
+            topKnot.getConfig(),
+            leftKnot.getConfig(),
+            logicBlock.id
+        )
 
     private fun checkTextError() {
         if (getText() != "") {
@@ -122,12 +132,12 @@ class WhileDoBlockView: LogicBlockView() {
     private fun updateProperties() {
         mainPath.apply {
             reset()
-            moveTo(mainRect.left + mainRect.width()/4, mainRect.top)
-            lineTo(mainRect.right - mainRect.width()/4, mainRect.top)
-            lineTo(mainRect.right,mainRect.centerY())
-            lineTo(mainRect.right - mainRect.width()/4, mainRect.bottom)
-            lineTo(mainRect.left + mainRect.width()/4, mainRect.bottom)
-            lineTo(mainRect.left,mainRect.centerY())
+            moveTo(mainRect.left + mainRect.width() / 4, mainRect.top)
+            lineTo(mainRect.right - mainRect.width() / 4, mainRect.top)
+            lineTo(mainRect.right, mainRect.centerY())
+            lineTo(mainRect.right - mainRect.width() / 4, mainRect.bottom)
+            lineTo(mainRect.left + mainRect.width() / 4, mainRect.bottom)
+            lineTo(mainRect.left, mainRect.centerY())
             close()
         }
 
@@ -152,7 +162,17 @@ class WhileDoBlockView: LogicBlockView() {
         @Json(name = "height")
         var height: Float = 250f,
         @Json(name = "text")
-        var text: String = ""
+        var text: String = "",
+        @Json(name = "false_knot")
+        val falseKnot: Knot.Configurations,
+        @Json(name = "true_knot")
+        val trueKnot: Knot.Configurations,
+        @Json(name = "top_knot")
+        val topKnot: Knot.Configurations,
+        @Json(name = "bottom_knot")
+        val leftKnot: Knot.Configurations,
+        @Json(name = "id")
+        val id: String
     ) : EditableBlockFactory {
         override val type: BlockType
             get() = BlockType.WhileDoType
@@ -160,6 +180,12 @@ class WhileDoBlockView: LogicBlockView() {
         override fun create(editor: EditorViewBase): WhileDoBlockView {
             return WhileDoBlockView().apply {
                 setEditorParent(editor)
+                this.falseKnot =
+                    this@Configurations.falseKnot.generate(this, Knot.Side.LEFT, true, 20f, false, ::falseConnect)
+                this.trueKnot =
+                    this@Configurations.trueKnot.generate(this, Knot.Side.RIGHT, true, 20f, true, ::trueConnect)
+                this.topKnot = this@Configurations.topKnot.generate(this, Knot.Side.TOP, false, 20f)
+                this.leftKnot = this@Configurations.leftKnot.generate(this, Knot.Side.LEFT, false, 20f)
                 updatePosition(PointF(centerX, centerY))
                 updateSize(width, height)
                 setText(text)

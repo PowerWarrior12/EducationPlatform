@@ -1,7 +1,5 @@
 package com.example.educationtools.logic
 
-import java.util.UUID
-
 abstract class LogicBlock(val id: String) {
     private var _memoryModel: MemoryModel? = null
     val memoryModel
@@ -15,6 +13,6 @@ abstract class LogicBlock(val id: String) {
     /**
      * Выполнение работы блока и возвращение id следующего блока по списку
      */
-    abstract fun work()
+    abstract fun workOrThrow()
     abstract fun init()
 }

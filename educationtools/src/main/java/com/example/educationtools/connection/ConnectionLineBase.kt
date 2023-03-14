@@ -4,8 +4,6 @@ import android.graphics.Path
 import android.graphics.PointF
 import android.graphics.RectF
 import com.example.educationtools.utils.extensions.coerceOut
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
 import java.lang.Float.min
 import kotlin.math.max
 

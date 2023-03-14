@@ -1,7 +1,6 @@
 package com.example.educationtools.connection
 
 import android.graphics.*
-import com.example.educationtools.utils.extensions.coerceOut
 
 private const val blockOffset = 80f
 

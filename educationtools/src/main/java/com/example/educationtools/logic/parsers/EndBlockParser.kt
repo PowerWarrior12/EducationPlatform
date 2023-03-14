@@ -1,6 +1,7 @@
 package com.example.educationtools.logic.parsers
 
 import com.example.educationtools.logic.MemoryModel
+import com.example.educationtools.utils.SYNTAX_ERROR_TEXT
 
 class EndBlockParser(private val blockId: String) {
     fun parseOrThrow(text: String, memoryModel: MemoryModel): List<String> {

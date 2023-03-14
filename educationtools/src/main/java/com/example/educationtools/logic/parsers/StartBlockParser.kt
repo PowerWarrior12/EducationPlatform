@@ -1,6 +1,7 @@
 package com.example.educationtools.logic.parsers
 
 import com.example.educationtools.logic.Variable
+import com.example.educationtools.utils.SYNTAX_ERROR_TEXT
 
 class StartBlockParser {
 

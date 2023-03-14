@@ -1,6 +1,7 @@
 package com.example.educationtools.logic
 
 import com.example.educationtools.logic.functions.Function
+import com.example.educationtools.utils.SYNTAX_ERROR_TEXT
 import java.util.*
 
 class CalculationBlock(id: String = UUID.randomUUID().toString()): LogicBlock(id) {
@@ -8,13 +9,15 @@ class CalculationBlock(id: String = UUID.randomUUID().toString()): LogicBlock(id
     private var function: Function? = null
     private var changeableVar: Variable? = null
 
-    override fun work() {
+    override fun workOrThrow() {
         if (changeableVar != null && function != null) {
             val funcResult = function!!.run()
             changeableVar!!.value = funcResult
             memoryModel.updateVariable(changeableVar!!)
+        } else {
+            throw Exception(SYNTAX_ERROR_TEXT)
         }
-        nextBlock?.work()
+        nextBlock?.workOrThrow() ?: throw Exception(CONNECTION_ERROR_MESSAGE)
     }
 
     override fun init() {

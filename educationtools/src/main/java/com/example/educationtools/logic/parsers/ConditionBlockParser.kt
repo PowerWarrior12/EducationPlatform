@@ -1,12 +1,10 @@
 package com.example.educationtools.logic.parsers
 
 import com.example.educationtools.logic.MemoryModel
-import com.example.educationtools.logic.functions.ConditionFunction
-import com.example.educationtools.logic.functions.VariableFunction
 import com.example.educationtools.logic.functions.Function
 import com.example.educationtools.logic.functions.ReflectFunction
+import com.example.educationtools.utils.SYNTAX_ERROR_TEXT
 import java.util.*
-import kotlin.reflect.KFunction
 
 class ConditionBlockParser(private val blockId: String) {
 

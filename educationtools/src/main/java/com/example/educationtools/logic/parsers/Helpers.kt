@@ -6,6 +6,7 @@ import com.example.educationtools.logic.functions.TypeFunction
 import com.example.educationtools.logic.functions.VariableFunction
 import com.example.educationtools.logic.methods.ConditionsF
 import com.example.educationtools.logic.methods.MathF
+import com.example.educationtools.utils.UNDECLARED_VARIABLE_TEXT
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 
@@ -19,9 +20,7 @@ val METHOD_TEMPLATE = """^[a-zA-Z]\w*\(.*\)""".toRegex()
 const val VARIABLE_ATTRIBUTES_COUNT = 2
 const val CALCULATION_OPERANDS_COUNT = 2
 
-const val SYNTAX_ERROR_TEXT = "Syntax error"
-const val TYPE_ERROR_TEXT = "The types are specified incorrectly"
-const val UNDECLARED_VARIABLE_TEXT = "The specified variable is not declared"
+
 
 val types = mapOf<String, KClass<*>>("int" to Int::class, "float" to Float::class)
 

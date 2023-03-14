@@ -2,13 +2,11 @@ package com.example.educationtools.blocks
 
 import android.graphics.*
 import androidx.core.graphics.toRegion
-import com.example.educationtools.base.EditableBlockBase
 import com.example.educationtools.base.EditableBlockFactory
 import com.example.educationtools.base.EditorViewBase
 import com.example.educationtools.connection.Knot
 import com.example.educationtools.logic.EndBlock
 import com.example.educationtools.logic.LogicBlock
-import com.example.educationtools.logic.StartBlock
 import com.example.educationtools.logic.Variable
 import com.example.educationtools.logic.parsers.EndBlockParser
 import com.squareup.moshi.Json

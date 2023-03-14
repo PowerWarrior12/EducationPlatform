@@ -1,6 +1,9 @@
 package com.example.educationtools.connection
 
-import android.graphics.*
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.PointF
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 

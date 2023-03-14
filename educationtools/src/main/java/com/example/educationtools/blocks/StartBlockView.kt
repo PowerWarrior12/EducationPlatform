@@ -2,7 +2,6 @@ package com.example.educationtools.blocks
 
 import android.graphics.*
 import androidx.core.graphics.toRegion
-import com.example.educationtools.base.EditableBlockBase
 import com.example.educationtools.base.EditableBlockFactory
 import com.example.educationtools.base.EditorViewBase
 import com.example.educationtools.connection.Knot
@@ -12,7 +11,6 @@ import com.example.educationtools.logic.parsers.InputVariablesParser
 import com.example.educationtools.logic.parsers.StartBlockParser
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import kotlin.math.log
 
 class StartBlockView(private val startBlock: StartBlock = StartBlock()) : LogicBlockView() {
 

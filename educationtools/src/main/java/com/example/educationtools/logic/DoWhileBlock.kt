@@ -1,6 +1,7 @@
 package com.example.educationtools.logic
 
 import com.example.educationtools.logic.functions.Function
+import com.example.educationtools.utils.SYNTAX_ERROR_TEXT
 import java.util.*
 
 class DoWhileBlock(id: String = UUID.randomUUID().toString()): LogicBlock(id) {
@@ -8,14 +9,16 @@ class DoWhileBlock(id: String = UUID.randomUUID().toString()): LogicBlock(id) {
     private var falseBlock: LogicBlock? = null
     private var function: Function? = null
 
-    override fun work() {
+    override fun workOrThrow() {
         if (function != null) {
             val result = function!!.run() as Boolean
             if (result) {
-                trueBlock?.work()
+                trueBlock?.workOrThrow() ?: throw Exception(CONNECTION_ERROR_MESSAGE)
             } else {
-                falseBlock?.work()
+                falseBlock?.workOrThrow() ?: throw Exception(CONNECTION_ERROR_MESSAGE)
             }
+        } else {
+            throw Exception(SYNTAX_ERROR_TEXT)
         }
     }
 

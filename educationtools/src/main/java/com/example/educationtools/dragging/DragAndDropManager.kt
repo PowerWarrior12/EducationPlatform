@@ -1,7 +1,6 @@
 package com.example.educationtools.dragging
 
 import android.graphics.PointF
-import android.util.Log
 import com.example.educationtools.base.EditableBlock
 import com.example.educationtools.touching.TouchManager
 import com.example.educationtools.utils.Transformations
