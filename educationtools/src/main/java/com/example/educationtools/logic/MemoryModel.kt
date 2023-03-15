@@ -24,6 +24,7 @@ class MemoryModel {
         blocksMap[blockId] = TreeNode(Block.VariableBlock(blockId, null))
         freeBlocks.add(blocksMap.getValue(blockId))
     }
+
     /**
      * Объявление блока if-else
      * @param blockId id объявляемого блока
@@ -35,6 +36,7 @@ class MemoryModel {
         blocksMap[blockId] = conditionBlock
         freeBlocks.add(blocksMap.getValue(blockId))
     }
+
     /**
      * Объявление блока цикла while-do
      * @param blockId id объявляемого блока
@@ -46,6 +48,7 @@ class MemoryModel {
         blocksMap[blockId] = whileDoBlock
         freeBlocks.add(blocksMap.getValue(blockId))
     }
+
     /**
      * Объявление блока цикла do-while
      * @param blockId id объявляемого блока
@@ -54,6 +57,7 @@ class MemoryModel {
         blocksMap[blockId] = TreeNode(Block.DoWhileBlock(blockId))
         freeBlocks.add(blocksMap.getValue(blockId))
     }
+
     /**
      * Получение переменной по имени из общего словаря
      * @param variableName имя переменной
@@ -76,9 +80,9 @@ class MemoryModel {
     }
 
     /**
-     * Объявление переменной
-     * @param blockId id блока, в которой объявляется переменная
-     * @param variable переменная, которая объявляется в указанном блоке
+     * Объявление переменной. Нужно объявлять для объявленного блока
+     * @param blockId блок, в котором объявляется переменная, блок должен быть объявлен
+     * @param variable переменная, которую необходимо объявить
      */
     fun declareVariable(blockId: String, variable: Variable) {
         val block = blocksMap.getValue(blockId).value
@@ -89,12 +93,18 @@ class MemoryModel {
     }
 
     /**
-     * Обновление переменной
+     * Обновление переменной. Обновить можно только заранее объявленную переменную
+     * @param variable переменная для обновления. Должно содержать имя, которое уже объявлено
      */
     fun updateVariable(variable: Variable) {
         variables.getValue(variable.name).value = variable.value
     }
 
+    /**
+     * Удаление переменной, переменная и блок, в котором это переменная находится должны быть объявлены
+     * @param blockId блок, в котором удаляется переменная, блок должен быть объявлен
+     * @param variable переменная, которую необходимо удалить, должна быть объявлена
+     */
     fun deleteVariable(blockId: String, variable: Variable) {
         val block = blocksMap.getValue(blockId).value
         if (block is Block.VariableBlock) {
@@ -103,12 +113,20 @@ class MemoryModel {
         }
     }
 
+    /**
+     * Получение списка id доступных для связи из указанного блока блоков. Исходный блок должен быть объявлен, иначе вызывается ошибка
+     * @param id идентификатор блока, для которого ищутся доступные для связи блоки. Должен быть объявлен
+     * @param direction направление связи, указывается для соответствующих блоков: ConditionBlock, WhileDoBlock,
+     * DoWhileBlock. По умолчанию равен null. Если не direction не указан для описанных блоков то вызываеися ошибка
+     */
     fun getAvailableBlocksOrThrow(id: String, direction: Boolean? = null): List<String> {
         if (!blocksMap.contains(id)) {
             throw java.lang.Exception("Данного блока не существует")
         }
         var block = blocksMap.getValue(id)
         val result = mutableListOf<TreeNode<Block>>()
+        //В случае с Variable block добавляем свободные блоки, while do block в который можно вернуться завершая цикл
+        // и выход из конструкции if else
         if (block.value is Block.VariableBlock) {
             result.addAll(getFreeBlocks(block))
             endWhileDoBlocks(block)?.let {
@@ -118,6 +136,8 @@ class MemoryModel {
                 result.addAll(getEndIfElseBlocks(block))
             }
         }
+        //В случае с Condition Block необходимо искать доступные блоки от ветвей true или false (указывается в direction).
+        //Добавляем свободные блоки и выход из конструкции if-else (выход может быть как из текущего if-else, так и из внешнего)
         if (block.value is Block.ConditionBlock) {
             if (direction == null) throw java.lang.Exception("Для условного блока необходимо указывать направление")
             block = if (direction) {
@@ -130,6 +150,8 @@ class MemoryModel {
                 result.addAll(getEndIfElseBlocks(block))
             }
         }
+        //В случае с While-Do Block если рассматриваем true наравление (начало цикла), то добавляем только свободные блоки.
+        //Направление false (выход из цикла) включает в себя свободные блоки, окончание while-do цикла (внешнего) и выход из конструкции if-else
         if (block.value is Block.WhileDoBlock) {
             if (direction == null) throw java.lang.Exception("Для условного блока необходимо указывать направление")
             result.addAll(getFreeBlocks(block))
@@ -142,6 +164,9 @@ class MemoryModel {
                 }
             }
         }
+        //В случае с Do-While Block в направление true (переход в цикл) ищем специфичные блоки, предшевствующие
+        // данному блоку для возможности зацикливания. Направление false (выход из цикла) включает свободные блоки, окончание
+        //цикла while-do, выход из конструкции if-else
         if (block.value is Block.DoWhileBlock) {
             if (direction == null) throw java.lang.Exception("Для блока While-Do необходимо указывать направление")
             if (direction) {
@@ -163,6 +188,7 @@ class MemoryModel {
                 }
             }
         }
+        //Возвращаем список id найденных блоков
         return result.map { it.value.toString() }
     }
 
@@ -597,7 +623,7 @@ class MemoryModel {
     }
 
     private sealed class Block {
-        open class MainBlock(val id: String): Block()
+        open class MainBlock(val id: String) : Block()
         class VariableBlock(id: String, var variableName: String?) : MainBlock(id) {
             override fun toString(): String {
                 return id
