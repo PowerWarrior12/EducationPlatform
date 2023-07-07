@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    //Text size
+    <dimen name="header_first">40sp</dimen>
+    <dimen name="header_second">36sp</dimen>
+    <dimen name="header_third">24sp</dimen>
+
+    <dimen name="body_first">16sp</dimen>
+    <dimen name="body_second">12sp</dimen>
+    <dimen name="body_third">10sp</dimen>
+
+    <dimen name="button">18sp</dimen>
+    //Margins
+    <dimen name="edit_text_margin">32dp</dimen>
+    <dimen name="button_padding_horizontal">24dp</dimen>
+    <dimen name="icon_padding">16dp</dimen>
+    //Borders
+    <dimen name="primary_button_border">4dp</dimen>
+    //Elevation
+    <dimen name="primary_elevation">10dp</dimen>
+    //Sizes
+    <dimen name="toolbar_height">64dp</dimen>
+    <dimen name="icon_size">26dp</dimen>
+</resources>

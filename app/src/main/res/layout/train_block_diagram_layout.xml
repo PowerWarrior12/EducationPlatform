@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/train_title"
+            android:textAppearance="@style/TextAppearance.EducationPlatform.HeaderThird" />
+
+        <TextView
+            android:textAppearance="@style/TextAppearance.EducationPlatform.BodyFirst"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:text="@string/train_block_first"/>
+
+        <ImageView
+            android:layout_width="300dp"
+            android:layout_height="450dp"
+            android:layout_margin="16dp"
+            android:layout_gravity="center_horizontal"
+            android:foreground="@drawable/border_shape"
+            android:src="@drawable/train_1"
+            android:scaleType="fitCenter"/>
+
+        <TextView
+            android:textAppearance="@style/TextAppearance.EducationPlatform.BodyFirst"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:text="@string/train_block_second"/>
+
+        <ImageView
+            android:layout_width="300dp"
+            android:layout_height="450dp"
+            android:layout_margin="16dp"
+            android:foreground="@drawable/border_shape"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/train_2"
+            android:scaleType="fitCenter"/>
+
+        <TextView
+            android:textAppearance="@style/TextAppearance.EducationPlatform.BodyFirst"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:text="@string/train_block_third"/>
+
+        <ImageView
+            android:layout_width="300dp"
+            android:layout_height="450dp"
+            android:layout_margin="16dp"
+            android:foreground="@drawable/border_shape"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/train_3"
+            android:scaleType="fitCenter"/>
+
+        <TextView
+            android:textAppearance="@style/TextAppearance.EducationPlatform.BodyFirst"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:text="@string/train_block_fourth"/>
+
+        <ImageView
+            android:layout_width="300dp"
+            android:layout_height="450dp"
+            android:layout_margin="16dp"
+            android:foreground="@drawable/border_shape"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/train_4"/>
+
+        <TextView
+            android:textAppearance="@style/TextAppearance.EducationPlatform.BodyFirst"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:text="@string/train_block_fifth"/>
+
+        <ImageView
+            android:layout_width="300dp"
+            android:layout_height="450dp"
+            android:layout_margin="16dp"
+            android:foreground="@drawable/border_shape"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/train_5"/>
+
+        <TextView
+            android:textAppearance="@style/TextAppearance.EducationPlatform.BodyFirst"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:text="@string/train_block_sixth"/>
+
+        <ImageView
+            android:layout_width="300dp"
+            android:layout_height="450dp"
+            android:layout_margin="16dp"
+            android:foreground="@drawable/border_shape"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/train_6"/>
+
+        <TextView
+            android:textAppearance="@style/TextAppearance.EducationPlatform.BodyFirst"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:text="@string/train_block_seventh"/>
+
+        <ImageView
+            android:layout_width="300dp"
+            android:layout_height="450dp"
+            android:layout_margin="16dp"
+            android:foreground="@drawable/border_shape"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/train_7"/>
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

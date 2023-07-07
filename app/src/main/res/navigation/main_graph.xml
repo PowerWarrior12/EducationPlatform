@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_graph"
+    app:startDestination="@id/authorizationFragment">
+    <fragment
+        android:id="@+id/authorizationFragment"
+        android:name="com.example.educationplatform.presentation.authorization.AuthorizationFragment"
+        android:label="AuthorizationFragment" >
+        <action
+            android:id="@+id/action_authorizationFragment_to_registrationFragment"
+            app:destination="@id/registrationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/registrationFragment"
+        android:name="com.example.educationplatform.presentation.registration.RegistrationFragment"
+        android:label="RegistrationFragment" />
+    <fragment
+        android:id="@+id/bottomMenuFragment"
+        android:name="com.example.educationplatform.presentation.bottomMenu.BottomMenuFragment"
+        android:label="BottomMenuFragment" />
+    <action
+        android:id="@+id/action_global_bottomMenuFragment"
+        app:destination="@id/bottomMenuFragment"
+        app:popUpTo="@id/main_graph"
+        app:popUpToInclusive="true" />
+    <action
+        android:id="@+id/action_global_courseFragment"
+        app:destination="@id/course_graph">
+        <argument
+            android:name="courseId"
+            app:argType="integer" />
+    </action>
+    <fragment
+        android:id="@+id/courseCreateFragment"
+        android:name="com.example.educationplatform.presentation.createCourse.CourseCreateFragment"
+        android:label="CourseCreateFragment" >
+        <action
+            android:id="@+id/action_courseCreateFragment_to_courseEditFragment"
+            app:destination="@id/edit_course_graph"
+            app:popUpTo="@id/courseCreateFragment"
+            app:popUpToInclusive="true">
+            <argument
+                android:name="courseId"
+                app:argType="integer" />
+
+        </action>
+    </fragment>
+    <action
+        android:id="@+id/action_global_courseCreateFragment"
+        app:destination="@id/courseCreateFragment" />
+    <action
+        android:id="@+id/action_global_courseEditFragment"
+        app:destination="@id/edit_course_graph">
+        <argument
+            android:name="courseId"
+            app:argType="integer" />
+    </action>
+    <navigation android:id="@+id/edit_course_graph"
+        app:startDestination="@id/courseEditFragment">
+        <fragment
+            android:id="@+id/courseEditFragment"
+            android:name="com.example.educationplatform.presentation.courseEdit.CourseEditFragment"
+            android:label="CourseEditFragment">
+            <argument
+                android:name="courseId"
+                app:argType="integer" />
+            <action
+                android:id="@+id/action_courseEditFragment_to_selectStageTypeDialog"
+                app:destination="@id/selectStageTypeDialog" />
+            <action
+                android:id="@+id/action_courseEditFragment_to_lectureStageCreateFragment"
+                app:destination="@id/lectureStageCreateFragment" />
+            <action
+                android:id="@+id/action_courseEditFragment_to_moduleCreateDialogFragment"
+                app:destination="@id/moduleCreateDialogFragment" />
+            <action
+                android:id="@+id/action_courseEditFragment_to_codeStageCreateFragment"
+                app:destination="@id/codeStageCreateFragment" />
+            <action
+                android:id="@+id/action_courseEditFragment_to_blockStageCreateFragment"
+                app:destination="@id/blockStageCreateFragment" />
+            <action
+                android:id="@+id/action_courseEditFragment_to_updateMainInformation"
+                app:destination="@id/updateMainInformation" />
+        </fragment>
+
+        <fragment
+            android:id="@+id/updateMainInformation"
+            android:name="com.example.educationplatform.presentation.courseEdit.information.UpdateMainInformation"
+            android:label="UpdateMainInformation" />
+        <dialog
+            android:id="@+id/selectStageTypeDialog"
+            android:name="com.example.educationplatform.presentation.courseEdit.structure.SelectStageTypeDialog"
+            android:label="SelectStageTypeDialog" >
+            <action
+                android:id="@+id/action_selectStageTypeDialog_to_lectureStageCreateFragment"
+                app:destination="@id/lectureStageCreateFragment"
+                app:popUpTo="@id/courseEditFragment" />
+            <argument
+                android:name="moduleId"
+                app:argType="integer" />
+            <action
+                android:id="@+id/action_selectStageTypeDialog_to_codeStageCreateFragment"
+                app:destination="@id/codeStageCreateFragment" />
+            <action
+                android:id="@+id/action_selectStageTypeDialog_to_blockStageCreateFragment"
+                app:destination="@id/blockStageCreateFragment" />
+        </dialog>
+        <fragment
+            android:id="@+id/lectureStageCreateFragment"
+            android:name="com.example.educationplatform.presentation.courseEdit.structure.lectureStageCreate.LectureStageCreateFragment"
+            android:label="LectureStageCreateFragment" >
+            <argument
+                android:name="moduleId"
+                app:argType="integer" />
+            <argument
+                android:name="stageId"
+                app:argType="integer"
+                android:defaultValue="-1" />
+        </fragment>
+        <dialog
+            android:id="@+id/moduleCreateDialogFragment"
+            android:name="com.example.educationplatform.presentation.courseEdit.structure.moduleCreate.ModuleCreateDialogFragment"
+            android:label="ModuleCreateDialogFragment" >
+            <argument
+                android:name="courseId"
+                app:argType="integer" />
+            <argument
+                android:name="moduleId"
+                app:argType="integer"
+                android:defaultValue="-1" />
+        </dialog>
+
+        <fragment
+            android:id="@+id/codeStageCreateFragment"
+            android:name="com.example.educationplatform.presentation.courseEdit.structure.codeStageCreate.CodeStageCreateFragment"
+            android:label="CodeStageCreateFragment" >
+            <argument
+                android:name="moduleId"
+                app:argType="integer" />
+            <argument
+                android:name="stageId"
+                app:argType="integer"
+                android:defaultValue="-1" />
+        </fragment>
+
+
+        <fragment
+            android:id="@+id/blockStageCreateFragment"
+            android:name="com.example.educationplatform.presentation.courseEdit.structure.blockStageCreate.BlockStageCreateFragment"
+            android:label="BlockStageCreateFragment">
+
+            <argument
+                android:name="moduleId"
+                app:argType="integer" />
+            <argument
+                android:name="stageId"
+                app:argType="integer"
+                android:defaultValue="-1" />
+
+        </fragment>
+
+    </navigation>
+    <navigation android:id="@+id/course_graph"
+        app:startDestination="@id/courseFragment">
+        <fragment
+            android:id="@+id/courseFragment"
+            android:name="com.example.educationplatform.presentation.cource.CourseFragment"
+            android:label="CourseFragment">
+            <argument
+                android:name="courseId"
+                app:argType="integer" />
+            <action
+                android:id="@+id/action_courseFragment_to_moduleFragment"
+                app:destination="@id/moduleFragment" />
+        </fragment>
+
+        <fragment
+            android:id="@+id/moduleFragment"
+            android:name="com.example.educationplatform.presentation.cource.module.ModuleFragment"
+            android:label="ModuleFragment" >
+            <argument
+                android:name="moduleId"
+                app:argType="integer" />
+            <action
+                android:id="@+id/action_moduleFragment_to_blockDiagramEditFragment"
+                app:destination="@id/blockDiagramEditFragment" />
+        </fragment>
+        <action
+            android:id="@+id/action_global_moduleFragment"
+            app:destination="@id/moduleFragment"
+            app:popUpTo="@id/courseFragment" />
+        <fragment
+            android:id="@+id/blockDiagramEditFragment"
+            android:name="com.example.educationplatform.presentation.cource.module.blockDiagram.BlockDiagramEditFragment"
+            android:label="BlockDiagramEditFragment" >
+            <argument
+                android:name="diagram_data"
+                app:argType="string" />
+            <argument
+                android:name="parent_fragment_key"
+                app:argType="string" />
+            <action
+                android:id="@+id/action_blockDiagramEditFragment_to_blockDiagramTrainDialog"
+                app:destination="@id/blockDiagramTrainDialog" />
+        </fragment>
+        <dialog
+            android:id="@+id/blockDiagramTrainDialog"
+            android:name="com.example.educationplatform.presentation.BlockDiagramTrainDialog"
+            android:label="BlockDiagramTrainDialog" />
+    </navigation>
+    <action
+        android:id="@+id/action_global_authorizationFragment"
+        app:destination="@id/authorizationFragment"
+        app:popUpTo="@id/main_graph"
+        app:popUpToInclusive="true" />
+    <fragment
+        android:id="@+id/messengerFragment"
+        android:name="com.example.educationplatform.presentation.chat.messenger.MessengerFragment"
+        android:label="MessengerFragment" >
+        <argument
+            android:name="chatId"
+            app:argType="integer" />
+        <argument
+            android:name="chatTitle"
+            app:argType="string" />
+    </fragment>
+    <action
+        android:id="@+id/action_global_messengerFragment"
+        app:destination="@id/messengerFragment" />
+
+</navigation>

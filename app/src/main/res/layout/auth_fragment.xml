@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        style="@style/Widget.EducationPlatform.HeaderFirstTextView"
+        android:id="@+id/textView"
+        android:layout_marginTop="32dp"
+        android:text="@string/login_label"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.4" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.EducationPlatform.EditTextView"
+        android:id="@+id/login_text"
+        android:hint="@string/email_label"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_login_text"
+            android:inputType="textEmailAddress"
+            android:maxLines="1"
+            android:imeOptions="actionDone"
+            android:textAppearance="@style/TextAppearance.EducationPlatform.BodyFirst"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.EducationPlatform.EditTextView"
+        android:id="@+id/password_label"
+        android:layout_marginTop="32dp"
+        android:hint="@string/password_label"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_text">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_password_text"
+            android:inputType="textPassword"
+            android:maxLines="1"
+            android:imeOptions="actionDone"
+            android:textAppearance="@style/TextAppearance.EducationPlatform.BodyFirst"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        style="@style/Widget.EducationPlatform.PrimaryButton"
+        android:id="@+id/login_button"
+        android:layout_marginTop="32dp"
+        android:text="@string/login_label"
+        app:layout_constraintStart_toStartOf="@+id/password_label"
+        app:layout_constraintTop_toBottomOf="@+id/password_label"
+        tools:ignore="TextViewEdits" />
+
+    <Button
+        style="@style/Widget.EducationPlatform.SecondaryButton"
+        android:id="@+id/registration_button"
+        android:layout_marginTop="32dp"
+        android:text="@string/registration_label"
+        app:layout_constraintEnd_toEndOf="@+id/password_label"
+        app:layout_constraintTop_toBottomOf="@+id/password_label" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/title_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center_horizontal"
+            android:textAppearance="@style/TextAppearance.EducationPlatform.HeaderThird"
+            tools:text="Title" />
+
+        <TextView
+            android:id="@+id/info_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:textAppearance="@style/TextAppearance.EducationPlatform.BodyFirst"
+            tools:text="Здесь описание этапа, которое может быть вообще любым, маленьким, большим, полезным или не очень, короче..." />
+
+        <jp.wasabeef.richeditor.RichEditor
+            android:id="@+id/editor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp">
+
+        </jp.wasabeef.richeditor.RichEditor>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/next_button"
+                style="@style/Widget.EducationPlatform.PrimaryButton"
+                android:layout_width="wrap_content"
+                android:layout_gravity="center_horizontal|bottom"
+                android:text="@string/next_button_label" />
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+</ScrollView>
+

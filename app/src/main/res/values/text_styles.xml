@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="TextAppearance.EducationPlatform.V24.Header" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="android:textSize">@dimen/header_first</item>
+        <item name="fontFamily">@font/mariupol_bold</item>
+    </style>
+
+    <style name="TextAppearance.EducationPlatform.V24.HeaderSecond" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="android:textSize">@dimen/header_second</item>
+        <item name="fontFamily">@font/mariupol_regular</item>
+    </style>
+
+    <style name="TextAppearance.EducationPlatform.V24.HeaderThird" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="android:textSize">@dimen/header_third</item>
+        <item name="fontFamily">@font/mariupol_regular</item>
+    </style>
+
+    <style name="TextAppearance.EducationPlatform.V24.BodyFirst" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="android:textSize">@dimen/body_first</item>
+        <item name="fontFamily">@font/mariupol_regular</item>
+    </style>
+
+    <style name="TextAppearance.EducationPlatform.V24.BodyFirstBold" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="android:textSize">@dimen/body_first</item>
+        <item name="fontFamily">@font/mariupol_bold</item>
+    </style>
+
+    <style name="TextAppearance.EducationPlatform.V24.UserNameText" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="android:textSize">@dimen/body_first</item>
+        <item name="fontFamily">@font/mariupol_regular</item>
+        <item name="android:textColor">@color/blue_700</item>
+    </style>
+
+    <style name="TextAppearance.EducationPlatform.V24.ButtonText" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="android:textSize">@dimen/button</item>
+        <item name="fontFamily">@font/mariupol_bold</item>
+    </style>
+
+    <style name="TextAppearance.EducationPlatform.Header" parent="TextAppearance.EducationPlatform.V24.Header"/>
+    <style name="TextAppearance.EducationPlatform.HeaderSecond" parent="TextAppearance.EducationPlatform.V24.HeaderSecond"/>
+    <style name="TextAppearance.EducationPlatform.HeaderThird" parent="TextAppearance.EducationPlatform.V24.HeaderThird"/>
+    <style name="TextAppearance.EducationPlatform.BodyFirst" parent="TextAppearance.EducationPlatform.V24.BodyFirst"/>
+    <style name="TextAppearance.EducationPlatform.BodyFirstBold" parent="TextAppearance.EducationPlatform.V24.BodyFirstBold"/>
+    <style name="TextAppearance.EducationPlatform.UserNameText" parent="TextAppearance.EducationPlatform.V24.UserNameText"/>
+    <style name="TextAppearance.EducationPlatform.ButtonText" parent="TextAppearance.EducationPlatform.V24.ButtonText"/>
+
+</resources>

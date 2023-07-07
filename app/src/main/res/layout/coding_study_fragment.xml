@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/title_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center_horizontal"
+            android:textAppearance="@style/TextAppearance.EducationPlatform.HeaderThird"
+            tools:text="Title" />
+
+        <TextView
+            android:id="@+id/info_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:textAppearance="@style/TextAppearance.EducationPlatform.BodyFirst"
+            tools:text="Здесь описание этапа, которое может быть вообще любым, маленьким, большим, полезным или не очень, короче..." />
+
+        <jp.wasabeef.richeditor.RichEditor
+            android:id="@+id/text_editor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp">
+
+        </jp.wasabeef.richeditor.RichEditor>
+
+        <include
+            android:id="@id/tests_button"
+            layout="@layout/test_button_layout"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/test_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/gray_200"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/input_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:text="@string/input_data_label"
+                android:textAppearance="@style/TextAppearance.EducationPlatform.BodyFirst"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/input_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="8dp"
+                android:textAppearance="@style/TextAppearance.EducationPlatform.BodyFirst"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/input_label"
+                tools:text="4 5\n1" />
+
+            <TextView
+                android:id="@+id/output_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:text="@string/output_data_label"
+                android:textAppearance="@style/TextAppearance.EducationPlatform.BodyFirst"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/input_data" />
+
+            <TextView
+                android:id="@+id/output_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
+                android:textAppearance="@style/TextAppearance.EducationPlatform.BodyFirst"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/output_label"
+                tools:text="4 5\n1" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/language_text"
+            android:textAppearance="@style/TextAppearance.EducationPlatform.BodyFirst"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:paddingVertical="8dp"
+            android:paddingHorizontal="16dp"
+            tools:text="Java"
+            />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:paddingVertical="1dp"
+            android:background="@drawable/border_shape_rect">
+
+            <de.markusressel.kodeeditor.library.view.CodeEditorLayout
+                android:id="@+id/codeEditorLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:ke_divider_color="?android:attr/textColorPrimary"
+                app:ke_divider_enabled="true"
+                app:ke_editor_backgroundColor="?android:attr/windowBackground"
+                app:ke_editor_followCursor="true"
+                app:ke_editor_maxZoom="10.0"
+                app:ke_lineNumbers_backgroundColor="#ccc"
+                app:ke_lineNumbers_textColor="#000"
+                app:ke_minimap_borderColor="#000"
+                app:ke_minimap_enabled="true"
+                app:ke_minimap_indicatorColor="#f00"
+                app:ke_minimap_maxDimension="200dp" />
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/process_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            android:gravity="center">
+
+            <com.github.ybq.android.spinkit.SpinKitView
+                android:id="@+id/loading_bar"
+                style="@style/SpinKitView.Large.RotatingCircle"
+                android:layout_margin="16dp"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                app:SpinKit_Color="@color/blue_900"/>
+
+            <TextView
+                android:textAppearance="@style/TextAppearance.EducationPlatform.BodyFirstBold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/code_check_process"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/console_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:background="@drawable/corner_background"
+            android:padding="8dp"
+            android:textAppearance="@style/TextAppearance.EducationPlatform.BodyFirst"
+            tools:text="Failed. Wrang answer\nThis is a Sample"
+            android:visibility="gone" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="8dp">
+
+            <Button
+                android:id="@+id/check_button"
+                style="@style/Widget.EducationPlatform.SecondaryButton"
+                android:layout_width="wrap_content"
+                android:layout_above="@+id/next_button"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal|bottom"
+                android:layout_marginBottom="8dp"
+                android:text="@string/check_button_label"
+                app:layout_constraintBottom_toTopOf="@+id/next_button"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <Button
+                android:id="@+id/next_button"
+                style="@style/Widget.EducationPlatform.PrimaryButton"
+                android:layout_width="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal|bottom"
+                android:layout_marginBottom="8dp"
+                android:text="@string/next_button_label"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+
+</ScrollView>

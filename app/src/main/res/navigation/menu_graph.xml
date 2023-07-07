@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/menu_graph"
+    app:startDestination="@id/home">
+
+    <fragment
+        android:id="@+id/catalog"
+        android:name="com.example.educationplatform.presentation.catalog.CatalogFragment"
+        android:label="CatalogFragment" />
+    <fragment
+        android:id="@+id/home"
+        android:name="com.example.educationplatform.presentation.home.HomeFragment"
+        android:label="HomeFragment" />
+    <fragment
+        android:id="@+id/profile"
+        android:name="com.example.educationplatform.presentation.profile.ProfileFragment"
+        android:label="ProfileFragment" >
+        <action
+            android:id="@+id/action_profile_to_personalInformationDialog"
+            app:destination="@id/personalInformationDialog" />
+        <action
+            android:id="@+id/action_profile_to_changePasswordDialog"
+            app:destination="@id/changePasswordDialog" />
+        <action
+            android:id="@+id/action_profile_to_changeEmailDialog"
+            app:destination="@id/changeEmailDialog" />
+        <action
+            android:id="@+id/action_profile_to_sendChangeStatusDialog"
+            app:destination="@id/sendChangeStatusDialog" />
+    </fragment>
+    <fragment
+        android:id="@+id/chat"
+        android:name="com.example.educationplatform.presentation.chat.ChatFragment"
+        android:label="ChatFragment" />
+    <dialog
+        android:id="@+id/personalInformationDialog"
+        android:name="com.example.educationplatform.presentation.profile.PersonalInformationDialog"
+        android:label="PersonalInformationDialog" />
+    <dialog
+        android:id="@+id/changePasswordDialog"
+        android:name="com.example.educationplatform.presentation.profile.ChangePasswordDialog"
+        android:label="ChangePasswordDialog" />
+    <dialog
+        android:id="@+id/changeEmailDialog"
+        android:name="com.example.educationplatform.presentation.profile.ChangeEmailDialog"
+        android:label="ChangeEmailDialog" />
+    <dialog
+        android:id="@+id/sendChangeStatusDialog"
+        android:name="com.example.educationplatform.presentation.profile.SendChangeStatusDialog"
+        android:label="SendChangeStatusDialog" />
+</navigation>

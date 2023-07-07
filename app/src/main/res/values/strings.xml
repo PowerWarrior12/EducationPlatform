@@ -1,0 +1,98 @@
+<resources>
+    <string name="app_name">ITReserve</string>
+    <string name="loading_data_error_label">Error loading data. Try again</string>
+    <string name="try_again_label">Try again</string>
+    //Registration and Login block
+    <string name="login_label">Login</string>
+    <string name="registration_label">Registration</string>
+    <string name="email_label">e-mail</string>
+    <string name="password_label">password</string>
+    <string name="name_label">name</string>
+    <string name="second_name_label">second name</string>
+    <string name="reply_password_label">reply password</string>
+    <string name="confirm_label">Confirm</string>
+    <string name="error_validation_label">Error validation</string>
+    //Bottom menu
+    <string name="home_item">Home</string>
+    <string name="catalog_item">Catalog</string>
+    <string name="profile_item">Profile</string>
+    <string name="chat_item">Chat</string>
+    //Home screen
+    <string name="home_toolbar">HOME</string>
+    <string name="takes_courses_label">My courses</string>
+    <string name="edit_courses_label">Created courses</string>
+    <string name="continue_education_button">Continue studying</string>
+    <string name="create_course_button">Create new course</string>
+    //Course create screen
+    <string name="create_course_toolbar">New course</string>
+    <string name="update_course_toolbar">Update course</string>
+    <string name="course_title_label">Title</string>
+    <string name="score_label">Score</string>
+    <string name="course_title_hint">Enter the course name</string>
+    <string name="course_direction_hint">Choose the direction of course</string>
+    <string name="course_info_hint">Enter the information of course</string>
+    <string name="create_button">Create</string>
+    <string name="update_button">Update</string>
+    //Course edit screen
+    <string name="info_tab">Information</string>
+    <string name="structure_tab">Structure</string>
+    <string name="state_tab">Statistic</string>
+    <string name="empty_structure_block">Module title</string>
+    <string name="add_module_label">Add module</string>
+    <string name="add_stage_label">Add stage</string>
+    <string name="select_stage_type_label">Select stage type</string>
+    <string name="info_label">Information</string>
+    <string name="save_button">Save</string>
+    <string name="base_code_label">Enter the base code</string>
+    <string name="enter_input_output_label">Enter input and output test data</string>
+    <string name="enter_task_label">Enter the task</string>
+    <string name="test_case_label">Test case #</string>
+    <string name="input_data_label">Input</string>
+    <string name="enter_language_label">Chose language</string>
+    <string name="output_data_label">Output</string>
+    <string name="add_test_case_button">Add new test case</string>
+    <string name="task_label">Task</string>
+    <string name="block_diagram_label">Block diagram</string>
+    <string name="test_data_label">Test cases</string>
+    <string name="delete_label">Delete course</string>
+    <string name="edit_label">Edit</string>
+    //Catalog screen
+    <string name="catalog_toolbar">CATALOG</string>
+    //Course screen
+    <string name="submit_label">Subscribe</string>
+    <string name="unsubscribe_label">Unsubscribe</string>
+    <string name="reports_label">Reports</string>
+    <string name="modules_label">Modules</string>
+    <string name="report_hint">Enter your report here</string>
+    <string name="step_module_label">Step %1$d of %2$d</string>
+    <string name="next_button_label">Continue</string>
+    <string name="check_button_label">Check</string>
+    <string name="verify_button_label">Verify</string>
+    <string name="test_data_example_label">Test data example</string>
+    <string name="edit_block_diagram_label">EDIT BLOCK DIAGRAM</string>
+    <string name="block_diagram_check_process">Checking the chart…</string>
+    <string name="code_check_process">Checking the code…</string>
+    //Profile
+    <string name="personal_information_label">Personal information</string>
+    <string name="change_personal_information_label">Change personal information</string>
+    <string name="change_password_label">Change password</string>
+    <string name="change_email_label">Change e-mail</string>
+    <string name="exit_label">Exit</string>
+    <string name="current_password_label">Current password</string>
+    <string name="new_password_label">New password</string>
+    <string name="send_change_password_request_label">Send a status change request</string>
+    <string name="send_request_label">Send</string>
+    <string name="send_request_hint">Enter a message for the request</string>
+    //Chat
+    <string name="chats_label">CHAT</string>
+    <string name="message_label">Message</string>
+    //Block diagram train
+    <string name="train_title">Блок схемы - обучение</string>
+    <string name="train_block_first"><b>1)</b> Для создания блока выберите нужный блок в меню блоков, сделайте долгий клик по нему и перетащите на рабочую поверхность.\n\n<b>2)</b> Отменить изменения\n\n<b>3)</b> Сохранить изменения\n\n<b>4)</b> Созданный блок отображается на рабоченй области </string>
+    <string name="train_block_second"> Что бы выделить блок, необходимо сделать по нему одиночный клик, в этом случае появится контекстное меню со следующими возможностями:\n\n<b>1)</b> Удалить выделенный блок и все связи, входящие и исходящие из него\n\n<b>2)</b> Изменить высоту и ширину блока можно потянув за эти интерфейсные элементы\n\n<b>3)</b> Это исходящий узел. Из него можно провести линию связи к другому блоку.</string>
+    <string name="train_block_third"> Если потянуть линию из исходящего узла блока то:\n\n<b>1)</b> Появится визуальное отображение линии связи\n\n<b>2)</b> Станут видимы все входящие узлы, в которые можно протянуть связь из выбранного блока</string>
+    <string name="train_block_fourth"> В блоки можно вводить данные, благодаря которым будут осуществляться расчёты в построенной блок схеме.\n\n Что бы ввести данные в блок, необходимо сделать двойной клик по нужному блоку\n\n В стартовый блок можно внести данные о параметрах, которые поступят в начале работы блок схемы. Множественное количество параметров вводится через запятую.\n\n Формат ввода следующий: <b>Тип</b> параметра <b>Имя</b> параметра\n\n В блок схеме доступны следующие типы данных:\n\n<b>1)</b> int - целочисленный тип\n\n<b>2)</b> float - дробный тип\n\n<b>3)</b> int[], float[] - массивы</string>
+    <string name="train_block_fifth"> В блок вычислений можно вводить команды для проведения вычислений\n\n Формат ввода следующий: <b>Имя</b> переменной = <b>Команда</b>\n\n Изменяемая переменная может быть ранее объявленной, либо ранее не объявляной. В команде могут использоваться только ранее объявленые переменные</string>
+    <string name="train_block_sixth"> В блок условий (Condition Block, While-Do Block и т.д.) вводятся условия, в зависимости от которого выбирается дальнейшее направление работы блок схемы\n\n В условном выражении могут использоваться следующие операторы:\n\n<b>1)</b> &lt;, &gt; - операторы сравнения\n\n<b>2)</b> ||, &amp;&amp; - логическое сложение и логическое умножение </string>
+    <string name="train_block_seventh"> При возникновении синтаксической или иной ошибки в введённом в блок тексте, он будет выделен <b>красным</b> цветом.\n\n В данном случае в команде блока вычислений используется необъявленная переменная</string>
+</resources>

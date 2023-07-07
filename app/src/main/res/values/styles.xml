@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Widget.EducationPlatform.V24.HeaderFirstTextView" parent="Widget.AppCompat.TextView">
+        <item name="android:textAppearance">@style/TextAppearance.EducationPlatform.Header</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
+    </style>
+
+    <style name="Widget.EducationPlatform.V24.HeaderSecondTextView" parent="Widget.AppCompat.TextView">
+        <item name="android:textAppearance">@style/TextAppearance.EducationPlatform.HeaderSecond</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
+    </style>
+
+    <style name="Widget.EducationPlatform.V24.HeaderThirdTextView" parent="Widget.AppCompat.TextView">
+        <item name="android:textAppearance">@style/TextAppearance.EducationPlatform.HeaderThird</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
+    </style>
+
+    <style name="Widget.EducationPlatform.V24.EditTextView" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxBackgroundColor">@color/white</item>
+        <item name="android:textAppearance">@style/TextAppearance.EducationPlatform.BodyFirst</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_marginStart">@dimen/edit_text_margin</item>
+        <item name="android:layout_marginEnd">@dimen/edit_text_margin</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
+    </style>
+
+    <style name="Widget.EducationPlatform.V24.MessageTextView" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
+        <item name="boxBackgroundColor">@color/white</item>
+        <item name="android:textAppearance">@style/TextAppearance.EducationPlatform.BodyFirst</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="android:padding">0dp</item>
+        <item name="boxStrokeWidth">0dp</item>
+    </style>
+
+    <style name="Widget.EducationPlatform.V24.ImportantTextView" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textAppearance">@style/TextAppearance.EducationPlatform.HeaderThird</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="android:background">?attr/colorPrimary</item>
+        <item name="android:paddingVertical">8dp</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="Widget.EducationPlatform.V24.PrimaryButton" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textAppearance">@style/TextAppearance.EducationPlatform.ButtonText</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="backgroundTint">?attr/colorPrimary</item>
+        <item name="rippleColor">?attr/colorPrimaryVariant</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.Material3.Corner.ExtraSmall</item>
+        <item name="android:elevation">@dimen/primary_elevation</item>
+        <item name="android:paddingStart">@dimen/button_padding_horizontal</item>
+        <item name="android:paddingEnd">@dimen/button_padding_horizontal</item>
+    </style>
+
+    <style name="Widget.EducationPlatform.V24.SecondaryButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:textAppearance">@style/TextAppearance.EducationPlatform.ButtonText</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="backgroundTint">?attr/colorOnPrimary</item>
+        <item name="strokeColor">?attr/colorPrimary</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.Material3.Corner.ExtraSmall</item>
+        <item name="android:elevation">@dimen/primary_elevation</item>
+        <item name="android:paddingStart">@dimen/button_padding_horizontal</item>
+        <item name="android:paddingEnd">@dimen/button_padding_horizontal</item>
+        <item name="strokeWidth">@dimen/primary_button_border</item>
+    </style>
+
+    <style name="Widget.EducationPlatform.V24.PropertiesButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:textAppearance">@style/TextAppearance.EducationPlatform.BodyFirst</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="backgroundTint">?attr/colorOnPrimary</item>
+        <item name="android:paddingVertical">8dp</item>
+        <item name="android:paddingHorizontal">0dp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="strokeColor">@android:color/transparent</item>
+        <item name="android:gravity">start</item>
+    </style>
+
+    <style name="Widget.EducationPlatform.V24.IconButton" parent="Widget.Material3.Button.IconButton">
+        <item name="android:layout_height">@dimen/icon_size</item>
+        <item name="android:layout_width">@dimen/icon_size</item>
+        <item name="android:foreground">@drawable/menu_item_ripple</item>
+        <item name="tint">@color/blue_900</item>
+    </style>
+
+    <style name="Widget.EducationPlatform.EditTextView" parent="Widget.EducationPlatform.V24.EditTextView"/>
+
+    <style name="Widget.EducationPlatform.MessageTextView" parent="Widget.EducationPlatform.V24.MessageTextView"/>
+
+    <style name="Widget.EducationPlatform.HeaderFirstTextView" parent="Widget.EducationPlatform.V24.HeaderFirstTextView"/>
+
+    <style name="Widget.EducationPlatform.HeaderSecondTextView" parent="Widget.EducationPlatform.V24.HeaderSecondTextView"/>
+
+    <style name="Widget.EducationPlatform.HeaderThirdTextView" parent="Widget.EducationPlatform.V24.HeaderThirdTextView"/>
+
+    <style name="Widget.EducationPlatform.PrimaryButton" parent="Widget.EducationPlatform.V24.PrimaryButton"/>
+
+    <style name="Widget.EducationPlatform.SecondaryButton" parent="Widget.EducationPlatform.V24.SecondaryButton"/>
+
+    <style name="Widget.EducationPlatform.PropertiesButton" parent="Widget.EducationPlatform.V24.PropertiesButton"/>
+
+    <style name="Widget.EducationPlatform.IconButton" parent="Widget.EducationPlatform.V24.IconButton"/>
+
+    <style name="Widget.EducationPlatform.ImportantTextView" parent="Widget.EducationPlatform.V24.ImportantTextView"/>
+
+</resources>

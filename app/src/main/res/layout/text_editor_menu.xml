@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="utf-8"?>
+<HorizontalScrollView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/gray_200"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageButton
+            style="@style/Widget.EducationPlatform.IconButton"
+            android:id="@+id/action_undo"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:scaleType="centerCrop"
+            android:src="@drawable/undo" />
+
+        <ImageButton
+            style="@style/Widget.EducationPlatform.IconButton"
+            android:id="@+id/action_redo"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:scaleType="centerCrop"
+            android:src="@drawable/redo" />
+
+        <ImageButton
+            style="@style/Widget.EducationPlatform.IconButton"
+            android:id="@+id/action_bold"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:scaleType="centerCrop"
+            android:src="@drawable/bold" />
+
+        <ImageButton
+            style="@style/Widget.EducationPlatform.IconButton"
+            android:id="@+id/action_italic"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:scaleType="centerCrop"
+            android:src="@drawable/italic" />
+
+        <ImageButton
+            style="@style/Widget.EducationPlatform.IconButton"
+            android:id="@+id/action_subscript"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:scaleType="centerCrop"
+            android:src="@drawable/subscript" />
+
+        <ImageButton
+            style="@style/Widget.EducationPlatform.IconButton"
+            android:id="@+id/action_superscript"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:scaleType="centerCrop"
+            android:src="@drawable/superscript" />
+
+        <ImageButton
+            style="@style/Widget.EducationPlatform.IconButton"
+            android:id="@+id/action_strikethrough"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:scaleType="centerCrop"
+            android:src="@drawable/strikethrough" />
+
+        <ImageButton
+            style="@style/Widget.EducationPlatform.IconButton"
+            android:id="@+id/action_underline"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:scaleType="centerCrop"
+            android:src="@drawable/underline" />
+
+        <ImageButton
+            style="@style/Widget.EducationPlatform.IconButton"
+            android:id="@+id/action_heading1"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:scaleType="centerCrop"
+            android:src="@drawable/h1" />
+
+        <ImageButton
+            style="@style/Widget.EducationPlatform.IconButton"
+            android:id="@+id/action_heading2"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:scaleType="centerCrop"
+            android:src="@drawable/h2" />
+
+        <ImageButton
+            style="@style/Widget.EducationPlatform.IconButton"
+            android:id="@+id/action_heading3"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:scaleType="centerCrop"
+            android:src="@drawable/h3" />
+
+        <ImageButton
+            style="@style/Widget.EducationPlatform.IconButton"
+            android:id="@+id/action_heading4"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:scaleType="centerCrop"
+            android:src="@drawable/h4" />
+
+        <ImageButton
+            style="@style/Widget.EducationPlatform.IconButton"
+            android:id="@+id/action_heading5"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:scaleType="centerCrop"
+            android:src="@drawable/h5" />
+
+        <ImageButton
+            style="@style/Widget.EducationPlatform.IconButton"
+            android:id="@+id/action_heading6"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:scaleType="centerCrop"
+            android:src="@drawable/h6" />
+
+        <ImageButton
+            style="@style/Widget.EducationPlatform.IconButton"
+            android:id="@+id/action_txt_color"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:scaleType="centerCrop"
+            android:src="@drawable/txt_color" />
+
+        <ImageButton
+            style="@style/Widget.EducationPlatform.IconButton"
+            android:id="@+id/action_bg_color"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:scaleType="centerCrop"
+            android:src="@drawable/bg_color" />
+
+
+        <ImageButton
+            style="@style/Widget.EducationPlatform.IconButton"
+            android:id="@+id/action_indent"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:scaleType="centerCrop"
+            android:src="@drawable/indent" />
+
+        <ImageButton
+            style="@style/Widget.EducationPlatform.IconButton"
+            android:id="@+id/action_outdent"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:scaleType="centerCrop"
+            android:src="@drawable/outdent" />
+
+        <ImageButton
+            style="@style/Widget.EducationPlatform.IconButton"
+            android:id="@+id/action_align_left"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:scaleType="centerCrop"
+            android:src="@drawable/justify_left" />
+
+        <ImageButton
+            style="@style/Widget.EducationPlatform.IconButton"
+            android:id="@+id/action_align_center"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:scaleType="centerCrop"
+            android:src="@drawable/justify_center" />
+
+        <ImageButton
+            style="@style/Widget.EducationPlatform.IconButton"
+            android:id="@+id/action_align_right"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:scaleType="centerCrop"
+            android:src="@drawable/justify_right" />
+
+        <ImageButton
+            style="@style/Widget.EducationPlatform.IconButton"
+            android:id="@+id/action_insert_bullets"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:scaleType="centerCrop"
+            android:src="@drawable/bullets" />
+
+        <ImageButton
+            style="@style/Widget.EducationPlatform.IconButton"
+            android:id="@+id/action_insert_numbers"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:scaleType="centerCrop"
+            android:src="@drawable/numbers" />
+
+        <ImageButton
+            style="@style/Widget.EducationPlatform.IconButton"
+            android:id="@+id/action_blockquote"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:scaleType="centerCrop"
+            android:src="@drawable/blockquote" />
+
+        <ImageButton
+            style="@style/Widget.EducationPlatform.IconButton"
+            android:id="@+id/action_insert_link"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:scaleType="centerCrop"
+            android:src="@drawable/insert_link" />
+
+        <ImageButton
+            style="@style/Widget.EducationPlatform.IconButton"
+            android:id="@+id/action_insert_checkbox"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:scaleType="centerCrop"
+            android:src="@android:drawable/checkbox_on_background" />
+
+        <ImageButton
+            style="@style/Widget.EducationPlatform.IconButton"
+            android:id="@+id/action_insert_image"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:scaleType="centerCrop"
+            android:src="@drawable/image_icon" />
+
+    </LinearLayout>
+</HorizontalScrollView>

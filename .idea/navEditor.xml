@@ -1,0 +1,544 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="navEditor-manualLayoutAlgorithm2">
+    <option name="myPositions">
+      <map>
+        <entry key="block_diagram_graph.xml">
+          <value>
+            <LayoutPositions>
+              <option name="myPositions">
+                <map>
+                  <entry key="blockDiagramDisplayFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="40" />
+                            <option name="y" value="40" />
+                          </Point>
+                        </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_blockDiagramDisplayFragment_to_blockDiagramEditFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="blockDiagramEditFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="295" />
+                            <option name="y" value="41" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </LayoutPositions>
+          </value>
+        </entry>
+        <entry key="main_graph.xml">
+          <value>
+            <LayoutPositions>
+              <option name="myPositions">
+                <map>
+                  <entry key="action_global_authorizationFragment">
+                    <value>
+                      <LayoutPositions />
+                    </value>
+                  </entry>
+                  <entry key="action_global_bottomMenuFragment">
+                    <value>
+                      <LayoutPositions />
+                    </value>
+                  </entry>
+                  <entry key="action_global_courseCreateFragment">
+                    <value>
+                      <LayoutPositions />
+                    </value>
+                  </entry>
+                  <entry key="action_global_courseEditFragment">
+                    <value>
+                      <LayoutPositions />
+                    </value>
+                  </entry>
+                  <entry key="action_global_courseFragment">
+                    <value>
+                      <LayoutPositions />
+                    </value>
+                  </entry>
+                  <entry key="action_global_messengerFragment">
+                    <value>
+                      <LayoutPositions />
+                    </value>
+                  </entry>
+                  <entry key="authorizationFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="12" />
+                            <option name="y" value="724" />
+                          </Point>
+                        </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_authorizationFragment_to_registrationFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="bottomMenuFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="12" />
+                            <option name="y" value="12" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="courseCreateFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="12" />
+                            <option name="y" value="368" />
+                          </Point>
+                        </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_courseCreateFragment_to_courseEditFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="course_graph">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="248" />
+                            <option name="y" value="106" />
+                          </Point>
+                        </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_global_moduleFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                            <entry key="blockDiagramEditFragment">
+                              <value>
+                                <LayoutPositions>
+                                  <option name="myPosition">
+                                    <Point>
+                                      <option name="x" value="514" />
+                                      <option name="y" value="12" />
+                                    </Point>
+                                  </option>
+                                  <option name="myPositions">
+                                    <map>
+                                      <entry key="action_blockDiagramEditFragment_to_blockDiagramTrainDialog">
+                                        <value>
+                                          <LayoutPositions />
+                                        </value>
+                                      </entry>
+                                    </map>
+                                  </option>
+                                </LayoutPositions>
+                              </value>
+                            </entry>
+                            <entry key="blockDiagramTrainDialog">
+                              <value>
+                                <LayoutPositions>
+                                  <option name="myPosition">
+                                    <Point>
+                                      <option name="x" value="775" />
+                                      <option name="y" value="13" />
+                                    </Point>
+                                  </option>
+                                </LayoutPositions>
+                              </value>
+                            </entry>
+                            <entry key="courseFragment">
+                              <value>
+                                <LayoutPositions>
+                                  <option name="myPosition">
+                                    <Point>
+                                      <option name="x" value="12" />
+                                      <option name="y" value="12" />
+                                    </Point>
+                                  </option>
+                                  <option name="myPositions">
+                                    <map>
+                                      <entry key="action_courseFragment_to_moduleFragment">
+                                        <value>
+                                          <LayoutPositions />
+                                        </value>
+                                      </entry>
+                                    </map>
+                                  </option>
+                                </LayoutPositions>
+                              </value>
+                            </entry>
+                            <entry key="moduleFragment">
+                              <value>
+                                <LayoutPositions>
+                                  <option name="myPosition">
+                                    <Point>
+                                      <option name="x" value="267" />
+                                      <option name="y" value="11" />
+                                    </Point>
+                                  </option>
+                                  <option name="myPositions">
+                                    <map>
+                                      <entry key="action_moduleFragment_to_blockDiagramEditFragment">
+                                        <value>
+                                          <LayoutPositions />
+                                        </value>
+                                      </entry>
+                                    </map>
+                                  </option>
+                                </LayoutPositions>
+                              </value>
+                            </entry>
+                          </map>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="edit_course_graph">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="256" />
+                            <option name="y" value="477" />
+                          </Point>
+                        </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="blockStageCreateFragment">
+                              <value>
+                                <LayoutPositions>
+                                  <option name="myPosition">
+                                    <Point>
+                                      <option name="x" value="378" />
+                                      <option name="y" value="962" />
+                                    </Point>
+                                  </option>
+                                </LayoutPositions>
+                              </value>
+                            </entry>
+                            <entry key="codeStageCreateFragment">
+                              <value>
+                                <LayoutPositions>
+                                  <option name="myPosition">
+                                    <Point>
+                                      <option name="x" value="500" />
+                                      <option name="y" value="588" />
+                                    </Point>
+                                  </option>
+                                </LayoutPositions>
+                              </value>
+                            </entry>
+                            <entry key="courseEditFragment">
+                              <value>
+                                <LayoutPositions>
+                                  <option name="myPosition">
+                                    <Point>
+                                      <option name="x" value="-85" />
+                                      <option name="y" value="154" />
+                                    </Point>
+                                  </option>
+                                  <option name="myPositions">
+                                    <map>
+                                      <entry key="action_courseEditFragment_to_blockStageCreateFragment">
+                                        <value>
+                                          <LayoutPositions />
+                                        </value>
+                                      </entry>
+                                      <entry key="action_courseEditFragment_to_codeStageCreateFragment">
+                                        <value>
+                                          <LayoutPositions />
+                                        </value>
+                                      </entry>
+                                      <entry key="action_courseEditFragment_to_lectureStageCreateFragment">
+                                        <value>
+                                          <LayoutPositions />
+                                        </value>
+                                      </entry>
+                                      <entry key="action_courseEditFragment_to_moduleCreateDialogFragment">
+                                        <value>
+                                          <LayoutPositions />
+                                        </value>
+                                      </entry>
+                                      <entry key="action_courseEditFragment_to_selectStageTypeDialog">
+                                        <value>
+                                          <LayoutPositions />
+                                        </value>
+                                      </entry>
+                                      <entry key="action_courseEditFragment_to_updateMainInformation">
+                                        <value>
+                                          <LayoutPositions />
+                                        </value>
+                                      </entry>
+                                    </map>
+                                  </option>
+                                </LayoutPositions>
+                              </value>
+                            </entry>
+                            <entry key="lectureStageCreateFragment">
+                              <value>
+                                <LayoutPositions>
+                                  <option name="myPosition">
+                                    <Point>
+                                      <option name="x" value="500" />
+                                      <option name="y" value="232" />
+                                    </Point>
+                                  </option>
+                                </LayoutPositions>
+                              </value>
+                            </entry>
+                            <entry key="moduleCreateDialogFragment">
+                              <value>
+                                <LayoutPositions>
+                                  <option name="myPosition">
+                                    <Point>
+                                      <option name="x" value="327" />
+                                      <option name="y" value="-77" />
+                                    </Point>
+                                  </option>
+                                </LayoutPositions>
+                              </value>
+                            </entry>
+                            <entry key="selectStageTypeDialog">
+                              <value>
+                                <LayoutPositions>
+                                  <option name="myPosition">
+                                    <Point>
+                                      <option name="x" value="113" />
+                                      <option name="y" value="578" />
+                                    </Point>
+                                  </option>
+                                  <option name="myPositions">
+                                    <map>
+                                      <entry key="action_selectStageTypeDialog_to_blockStageCreateFragment">
+                                        <value>
+                                          <LayoutPositions />
+                                        </value>
+                                      </entry>
+                                      <entry key="action_selectStageTypeDialog_to_codeStageCreateFragment">
+                                        <value>
+                                          <LayoutPositions />
+                                        </value>
+                                      </entry>
+                                      <entry key="action_selectStageTypeDialog_to_lectureStageCreateFragment">
+                                        <value>
+                                          <LayoutPositions />
+                                        </value>
+                                      </entry>
+                                    </map>
+                                  </option>
+                                </LayoutPositions>
+                              </value>
+                            </entry>
+                            <entry key="updateMainInformation">
+                              <value>
+                                <LayoutPositions>
+                                  <option name="myPosition">
+                                    <Point>
+                                      <option name="x" value="56" />
+                                      <option name="y" value="-220" />
+                                    </Point>
+                                  </option>
+                                </LayoutPositions>
+                              </value>
+                            </entry>
+                          </map>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="messengerFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="574" />
+                            <option name="y" value="-1" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="registrationFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="256" />
+                            <option name="y" value="724" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </LayoutPositions>
+          </value>
+        </entry>
+        <entry key="menu_graph.xml">
+          <value>
+            <LayoutPositions>
+              <option name="myPositions">
+                <map>
+                  <entry key="catalog">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="-40" />
+                            <option name="y" value="-122" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="changeEmailDialog">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="560" />
+                            <option name="y" value="666" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="changePasswordDialog">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="536" />
+                            <option name="y" value="-38" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="chat">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="-14" />
+                            <option name="y" value="747" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="home">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="248" />
+                            <option name="y" value="-186" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="personalInformationDialog">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="561" />
+                            <option name="y" value="310" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="profile">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="-6" />
+                            <option name="y" value="336" />
+                          </Point>
+                        </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_profile_to_changeEmailDialog">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                            <entry key="action_profile_to_changePasswordDialog">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                            <entry key="action_profile_to_personalInformationDialog">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="sendChangeStatusDialog">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="564" />
+                            <option name="y" value="990" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </LayoutPositions>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout android:id="@+id/tests_button"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingVertical="8dp"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:foreground="@drawable/simple_ripple"
+    android:background="@color/gray_200"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ImageView
+        android:id="@+id/arrow_image"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:layout_marginStart="16dp"
+        android:src="@drawable/right_arrow"/>
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textAppearance="@style/TextAppearance.EducationPlatform.BodyFirst"
+        android:text="@string/test_data_example_label"
+        android:textColor="@color/black"/>
+
+</LinearLayout>
