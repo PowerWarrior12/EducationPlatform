@@ -38,7 +38,7 @@ class ChatRepositoryRemotePlug @Inject constructor(): ChatRepositoryRemote {
                 for (i in 0..100) {
                     delay(5000)
                     val newMessages = messengerFlow.value.toMutableList()
-                    newMessages.add(Message( "https://ibb.co/j3TmXGc", "Maria", "Ну чё народ, погнали нахуй, ЁБАНЫЙ ВРООТ"))
+                    newMessages.add(Message( "https://ibb.co/j3TmXGc", "Maria", "Ну чё народ"))
                     messengerFlow.value = newMessages
                 }
             }
